@@ -1,0 +1,12 @@
+services:
+  - type: web
+    name: smart-agri-backend
+    runtime: docker
+    dockerfilePath: backend/Dockerfile
+    env: docker
+    port: 8000
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: smartagri-db
+          property: connectionString

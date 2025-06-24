@@ -12,7 +12,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY . .
 
 #Expose port
-EXPOSURE 8000
+EXPOSE 8000
 
 #run the application
 
