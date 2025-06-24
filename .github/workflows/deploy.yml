@@ -1,7 +1,7 @@
 name: Deployment and production
 
 on: 
-    work_run:
+    workflow_run:
         workflows: ["Backend CI", "Frontend CI"]
         branches: [ main ]
         types: 
@@ -14,9 +14,9 @@ jobs:
             - name: SSH and deploy
               uses: appleboy/ssh-action@v1
               with:
-                host: 
-                username: 
-                key:
+                host: ${{ secrets.SERVER_IP }}
+                username: ${{ secrets.SERVER_USER }}
+                key: ${{ secrets.SSH_PRIVATE_KEY }}
                 script: |
                    docker-compose pull
                    docker-compose up -d
