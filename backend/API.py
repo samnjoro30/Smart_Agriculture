@@ -1,21 +1,17 @@
 from fastapi import FastAPI 
-from fastapi.middleware.cores import CORSMiddleware
-from backend.db.database import Base, engine, get_db
+from fastapi.middleware.cors import CORSMiddleware
+from db.postgre_db import Base, engine, get_db
 
 app = FastAPI()
 
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["http://localhost:3000"], 
-    allow_origins=["*"]
-    allow_methods = ["*"]
-    allow_headers = [ "*"]
+    
+    # allow_methods = ["*"]
+    # allow_headers = [ "*"]
 )
 
 app.include_router(auth.router)
 
-@app.get("/login")
-def login():
-    user = 
-    return user
 
