@@ -43,4 +43,4 @@ jobs:
                       with: 
                         context: ./frontend
                         push: true
-                        tags: myusername/frontend-app:latest
+                        tags: samnjoro/frontend-app:latest
