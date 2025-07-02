@@ -19,6 +19,7 @@ jobs:
                 node-version: 18
             
             - name: Install depencies
+              working-directory: ./frontend
               run:  | 
                 cd frontend
                 npm install

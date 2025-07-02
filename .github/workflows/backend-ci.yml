@@ -17,6 +17,7 @@ jobs:
                 python-version: '3.9'
 
             - name: Install dependencies
+              working-directory: ./backend
               run: |
                 cd backend
                 pip install -r requirements.txt
@@ -42,4 +43,4 @@ jobs:
               with:
                 context:  ./backend
                 push: true
-                tags: samnjoro/backend-app:latest
+                tags: myusername/backend-app:latest
