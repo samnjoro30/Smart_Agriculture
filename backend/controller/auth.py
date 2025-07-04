@@ -14,7 +14,6 @@ async def login_user(login_req: LoginRequest, response: Response):
         raise HTTPException(status_code=401, detail="Invalid credentials")
 
     token = create_access_token({"sub": user.username})
-    
     response.set_cookie(
         key="token",
         value=token,
@@ -25,3 +24,7 @@ async def login_user(login_req: LoginRequest, response: Response):
     )
     
     return {"token": token}
+
+@router.post("/api/register", response_model=)
+async def register_farm(user: RegisteredUser):
+    

@@ -26,21 +26,10 @@ jobs:
               run: |
                 cd backend
                 pytest -v
-    build-docker:
-            needs: test
-            runs-on: ubuntu-latest
-            steps:   
-            - uses: actions/checkout@@v4
+
+            - name: Run backend and deploy
+              run:  |
+                cd backend
+                uvicorn main:app --reload 
             
-            - name: log in to Docker Hub
-              uses: docker/login-actions@v2
-              with:
-                username: ${{ secrets.DOCKER_HUB_USER}}
-                password: ${{ secrets.DOCKER_PASS}}
-            
-            - name: Build and push
-              uses: docker/build-push-action@v4
-              with:
-                context:  ./backend
-                push: true
-                tags: myusername/backend-app:latest
+    
