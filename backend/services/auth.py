@@ -1,4 +1,4 @@
-from db.postgre_db import AsyncSessionLocal
+from db.postgre_db import SessionLocal
 from sqlalchemy import text
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -13,7 +13,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 #     return None
 
 async def create_user(user_data: dict):
-    async with AsyncSessionLocal() as db:
+    with SessionLocal() as db:
        
         query = text("""
         
