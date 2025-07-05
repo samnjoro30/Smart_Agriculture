@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import axiosInstance from '../API/axiosInstance';
 import { useRouter } from 'next/navigation';
+import axios from 'axios';
 
 type FormData = {
     username: string;
@@ -18,6 +19,7 @@ const Register = () => {
     const [error, setError] = useState<string>('');
     const [loading, setLoading] = useState<boolean>(false);
     const [toogle, setToogle] = useState<boolean>(false)
+    const [showPassword, setShowPassword] = useState<boolean>(false)
     const [confirmPassword, setConfirmPassword] = useState('');
     const [formData, setFormData] = useState<FormData>({
         username: '',
@@ -41,24 +43,32 @@ const Register = () => {
         setError('');
         try{
 
-            const response = await axiosInstance.post('/api/register',
-                formData
+            const response = await axios.post('http://127.0.0.0:8000/api/register',
+            {
+                username: formData.username,
+                email: formData.email,
+                farmName: formData.farmName,
+                phoneNumber: formData.phoneNumber,
+                password: formData.password
+            }
             )
             if (response.data.success){
                 router.push('/verification');
-            }
+            }else[
+                setError(response.data.message || "Registration failed")
+            ]
             
-        }catch(err: unknown){
+        }catch(err: any){
             console.error("Error registering from backend", err);
             setError("Error registering. Try again");
         }finally{
+            setLoading(false);
 
         }
     }
 
     const toogleVisibility = () => {
-
-
+        setShowPassword(!showPassword);
     }
     const passwordConfirmation = () => {
 
@@ -133,6 +143,13 @@ const Register = () => {
                            required
                         />
                     </div>
+                    <button 
+                       type="submit"
+                       disabled={loading}
+
+                    >
+                        {loading ? 'Registering...' : 'Register'}
+                    </button>
                 </form>
             </div>
         </div>
