@@ -43,20 +43,21 @@ const Register = () => {
         setError('');
         try{
 
-            const response = await axios.post('http://127.0.0.0:8000/api/register',
+            const response = await axiosInstance.post('/register',
             {
                 username: formData.username,
                 email: formData.email,
                 farmName: formData.farmName,
                 phoneNumber: formData.phoneNumber,
-                password: formData.password
+                password: formData.password,
+                confirmPassword: formData.confirmPassword
             }
             )
             if (response.data.success){
                 router.push('/verification');
-            }else[
+            }else{
                 setError(response.data.message || "Registration failed")
-            ]
+            }
             
         }catch(err: any){
             console.error("Error registering from backend", err);
@@ -76,7 +77,7 @@ const Register = () => {
     return(
         <div className="">
             <div className="">
-                <h2> Register Panel</h2>
+                <h2 className='ext-2xl font-bold mb-6 text-center'> Register Panel</h2>
                 <p>To enjoy seamless Agriculture insight register</p>
                 <form onSubmit={handleSubmit}>
                     <div className="">
@@ -146,7 +147,7 @@ const Register = () => {
                     <button 
                        type="submit"
                        disabled={loading}
-
+                       className="btn btn-primary w-80"
                     >
                         {loading ? 'Registering...' : 'Register'}
                     </button>
