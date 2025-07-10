@@ -1,26 +1,36 @@
-from sqlalchemy import create_engine
+from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession
 from sqlalchemy.orm import sessionmaker, declarative_base
 import os
 from dotenv import load_dotenv
 
 load_dotenv()
 
-USER = os.getenv("user")
-PASSWORD = os.getenv("password")
-HOST = os.getenv("host")
-PORT = os.getenv("port")
-DBNAME = os.getenv("dbname")
+USER = os.getenv('USER')
+PASSWORD = os.getenv('PASSWORD')
+HOST = os.getenv('HOST')
+PORT = os.getenv('PORT')
+DBNAME =  os.getenv('DBNAME')
 
-#DATABASE_URL = f"postgresql+psycopg2://{USER}:{PASSWORD}@{HOST}:{PORT}/{DBNAME}?sslmode=require"
-DATABASE_URL=os.getenv('DB_URL_POSTGRE')
 
-engine = create_engine(DATABASE_URL)
-SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+DATABASE_URL = f"postgresql+asyncpg://{USER}:{PASSWORD}@{HOST}:{PORT}/{DBNAME}" #?sslmode=require
+#print("database url", DATABASE_URL)
+#DATABASE_URL=os.getenv('DB_URL_POSTGRE')
+
+engine = create_async_engine(DATABASE_URL, echo=True)
+
+# ✅ Create async sessionmaker
+AsyncSessionLocal = sessionmaker(
+    bind=engine,
+    expire_on_commit=False,
+    class_=AsyncSession,
+)
+
 Base = declarative_base()
 
-def get_db():
-    db = SessionLocal()
-    try:
-        yield db
-    finally:
-        db.close()
+# ✅ Dependency to get DB session
+async def get_db():
+    async with AsyncSessionLocal() as session:
+        yield session
+
+
+       
