@@ -22,18 +22,22 @@ It is built using a full-stack, cloud-native approach with technologies like Fas
  - **python 3.9 and above**
  - **FastAPI** - High-performance API
  - **Uvicorn** - ASGI server
+ - **Node.js** - 
 
  ### 🌐 Frontend
 - **Next.js 14**
 - **TypeScript**
 - **Tailwind CSS** – Utility-first CSS framework
+- **DaisyUI**
 
 ### 🐳 Infrastructure
 - **Docker** – Containerization
-- **NGINX** – Reverse proxy and frontend static file serving
+- **NGINX** – Reverse proxy, load balancer and frontend static file serving
 - **GitHub Actions** – CI/CD automation
-- **Render**
+- **Render** - backend hosting
 - **supabase**
+- **vercel** - frontend hosting
+- **Firebase** - frontend hosting
 
 ---
 
