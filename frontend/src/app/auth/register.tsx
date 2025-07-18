@@ -16,7 +16,7 @@ type FormData = {
 
 const Register = () => {
 
-    const [error, setError] = useState<string>('');
+    const [error, setError] = useState<string | null>(null);
     const [loading, setLoading] = useState<boolean>(false);
     const [toogle, setToogle] = useState<boolean>(false)
     const [showPassword, setShowPassword] = useState<boolean>(false)
@@ -152,6 +152,7 @@ const Register = () => {
                         {loading ? 'Registering...' : 'Register'}
                     </button>
                 </form>
+                {error && <p style={{ color: "red"}}>{error}</p>}
             </div>
         </div>
 

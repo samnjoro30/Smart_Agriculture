@@ -31,7 +31,7 @@ const Verification = () => {
         try{
             const res = await axiosInstance.post('/api/verification', formData);
             if ( res.data.success){
-                router.push('/login');
+                router.push('/dashboard');
             }
         }catch(err){
             console.error("Error occurred during verification", err);
