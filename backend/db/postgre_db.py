@@ -16,13 +16,15 @@ DBNAME =  os.getenv('dbname')
 
 encoded_password = urllib.parse.quote(PASSWORD)
 
-RENDER_DB = os.getenv("RENDER_DB")
+#RENDER_DB = os.getenv("RENDER_DB")
+
+FIREBASE_DB = os.getenv("FIREBASE_API_DB")
 
 #DATABASE_URL = f"postgresql+psycopg2://{USER}:{encoded_password}@{HOST}:{PORT}/{DBNAME}" #?sslmode=require
 #print("database url", DATABASE_URL)
 #DATABASE_URL=os.getenv('DB_URL_POSTGRE')
 
-engine = create_engine(RENDER_DB, echo=True)
+engine = create_engine(FIREBASE_DB, echo=True)
 
 # ✅ Create async sessionmaker
 # AsyncSessionLocal = sessionmaker(
