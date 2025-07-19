@@ -15,8 +15,8 @@ def get_user_by_username(username: str):
 
 def create_user(user_data: dict, db: Session):
     query = text("""
-        INSERT INTO users (username, email, farm_name, phone_number, password)
-        VALUES (:username, :email, :farm_name, :phone_number, :password)
+        INSERT INTO mkulimafinest (username, email, farmname, phonenumber, password)
+        VALUES (:username, :email, :farmname, :phonenumber, :password)
     """)
     db.execute(query, user_data)
     db.commit()

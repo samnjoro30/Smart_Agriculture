@@ -11,29 +11,29 @@ from sqlalchemy.orm import Session
 
 router =  APIRouter()
 
-@router.post("/login", response_model=TokenResponse)
-async def login_user(login_req: LoginRequest, response: Response):
-    user = get_user_by_username(login_req.username)
+# @router.post("/login", response_model=TokenResponse)
+# async def login_user(login_req: LoginRequest, response: Response):
+#     user = get_user_by_username(login_req.username)
     
-    if not user or user.password != login_req.password:
-        raise HTTPException(status_code=401, detail="Invalid credentials")
+#     if not user or user.password != login_req.password:
+#         raise HTTPException(status_code=401, detail="Invalid credentials")
 
-    token = create_access_token({"sub": user.username})
-    response.set_cookie(
-        key="token",
-        value=token,
-        httponly=True,
-        secure=True,
-        samesite="Lax",
-        max_age=3600
-    )
+#     token = create_access_token({"sub": user.username})
+#     response.set_cookie(
+#         key="token",
+#         value=token,
+#         httponly=True,
+#         secure=True,
+#         samesite="Lax",
+#         max_age=3600
+#     )
     
-    return {"token": token}
+#     return {"token": token}
 
 @router.post("/api/register", status_code= HTTP_201_CREATED)
 def register_farm(payload: RegisterRequest, db: Session = Depends(get_db) ):
-    if payload.password != payload.confirmPassword:
-        raise HTTPException(status_code=400, detail="Passwords do not match")
+    # if payload.password != payload.confirmPassword:
+    #     raise HTTPException(status_code=400, detail="Passwords do not match")
     # existing_user = get_user_by_username(payload.username)
     # if existing_user:
     #     raise HTTPException(status_code=409, detail="Username already exists")
@@ -43,8 +43,8 @@ def register_farm(payload: RegisterRequest, db: Session = Depends(get_db) ):
     user_dict = {
         "username": payload.username,
         "email": payload.email,
-        "farm_name": payload.farmName,
-        "phone_number": payload.phoneNumber,
+        "farmname": payload.farmname,
+        "phonenumber": payload.phonenumber,
         "password": hashed_pw,
     }
 

@@ -16,9 +16,9 @@ DBNAME =  os.getenv('dbname')
 
 encoded_password = urllib.parse.quote(PASSWORD)
 
-#RENDER_DB = os.getenv("RENDER_DB")
+RENDER_DB = os.getenv("RENDER_DB")
 
-FIREBASE_DB = os.getenv("FIREBASE_API_DB")
+FIREBASE_DB = os.getenv("RENDER_DB")
 
 #DATABASE_URL = f"postgresql+psycopg2://{USER}:{encoded_password}@{HOST}:{PORT}/{DBNAME}" #?sslmode=require
 #print("database url", DATABASE_URL)
