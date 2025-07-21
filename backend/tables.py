@@ -1,9 +1,11 @@
 # main.py or a separate create_tables.py script
+import asyncio
 from db.postgre_db import engine
 from model.tables import Base  # where your Users class is
 
-def create_tables():
-    Base.metadata.create_all(bind=engine)
+async def create_tables():
+    async with engine.begin() as conn:
+        await conn.run_sync(Base.metadata.create_all)
 
 if __name__ == "__main__":
-    create_tables()
+    asyncio.run(create_tables())
