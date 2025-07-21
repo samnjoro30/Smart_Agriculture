@@ -8,26 +8,27 @@ import axios from 'axios';
 type FormData = {
     username: string;
     email: string;
-    farmName: string;
-    phoneNumber: string;
+    farmname: string;
+    phonenumber: string;
     password: string;
-    confirmPassword: string;
+    confirmpassword: string;
 }
 
 const Register = () => {
 
     const [error, setError] = useState<string | null>(null);
     const [loading, setLoading] = useState<boolean>(false);
+    const [message, setMessage] = useState<string | null>('');
     const [toogle, setToogle] = useState<boolean>(false)
     const [showPassword, setShowPassword] = useState<boolean>(false)
     const [confirmPassword, setConfirmPassword] = useState('');
     const [formData, setFormData] = useState<FormData>({
         username: '',
         email: '',
-        farmName: '',
-        phoneNumber: '',
+        farmname: '',
+        phonenumber: '',
         password:'',
-        confirmPassword: '',
+        confirmpassword: '',
     })
     const router = useRouter();
 
@@ -47,14 +48,16 @@ const Register = () => {
             {
                 username: formData.username,
                 email: formData.email,
-                farmName: formData.farmName,
-                phoneNumber: formData.phoneNumber,
+                farmname: formData.farmname,
+                phonenumber: formData.phonenumber,
                 password: formData.password,
-                confirmPassword: formData.confirmPassword
+                confirmpassword: formData.confirmpassword
             }
             )
             if (response.data.success){
+                setMessage(response.data);
                 router.push('/verification');
+                
             }else{
                 setError(response.data.message || "Registration failed")
             }
@@ -95,8 +98,8 @@ const Register = () => {
                         <label>Farm Name:</label>
                         <input
                             type="text"
-                            name="farmName"
-                            value={formData.farmName}
+                            name="farmname"
+                            value={formData.farmname}
                             onChange={ handleChange}
                             placeholder="smartfarm"
                             required
@@ -117,8 +120,8 @@ const Register = () => {
                         <label>Phone Number</label>
                         <input
                             type="text"
-                            name="phoneNumber"
-                            value={formData.phoneNumber}
+                            name="phonenumber"
+                            value={formData.phonenumber}
                             onChange= {handleChange}
                             placeholder="07xxxxxx"
                             required
@@ -138,8 +141,8 @@ const Register = () => {
                         <label> Confirm Password:</label>
                         <input
                            type="password"
-                           name="confirmPassword"
-                           value={ formData.confirmPassword}
+                           name="confirmpassword"
+                           value={ formData.confirmpassword}
                            onChange={ handleChange}
                            required
                         />
@@ -152,12 +155,10 @@ const Register = () => {
                         {loading ? 'Registering...' : 'Register'}
                     </button>
                 </form>
+                {message && <p style={{ color: "green"}}> {message} </p>}
                 {error && <p style={{ color: "red"}}>{error}</p>}
             </div>
         </div>
-
     )
-
 }
-
 export default Register;
