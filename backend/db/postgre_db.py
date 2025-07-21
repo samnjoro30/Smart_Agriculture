@@ -4,29 +4,12 @@ import os
 from sqlalchemy import create_engine
 from dotenv import load_dotenv
 import asyncio
-import urllib.parse
 
 load_dotenv()
 
-USER = os.getenv('user')
-PASSWORD = os.getenv('password')
-HOST = os.getenv('host')
-PORT = os.getenv('port')
-DBNAME =  os.getenv('dbname')
-
-encoded_password = urllib.parse.quote(PASSWORD)
-
-#RENDER_DB = os.getenv("RENDER_DB")
-
-#FIREBASE_DB = os.getenv("RENDER_DB")
 DB = os.getenv("pooler_supabase")
 
-#DATABASE_URL = f"postgresql+psycopg2://{USER}:{encoded_password}@{HOST}:{PORT}/{DBNAME}" #?sslmode=require
-#print("database url", DATABASE_URL)
-#DATABASE_URL=os.getenv('DB_URL_POSTGRE')
 engine = create_async_engine(DB, poolclass=None, echo=True)
-
-#engine = create_engine(DATABASE_URL, pool_pre_ping=True, echo=True)
 
 # ✅ Create async sessionmaker
 AsyncSessionLocal = sessionmaker(
@@ -34,18 +17,10 @@ AsyncSessionLocal = sessionmaker(
     expire_on_commit=False,
     class_=AsyncSession,
 )
-# SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
-
 
 Base = declarative_base()
 
-
-
-# ✅ Dependency to get DB session
-# def get_db():
-#     with AsyncSessionLocal() as session:
-#         yield session
-
+# function to run db
 async def get_db():
     async  with AsyncSessionLocal() as session:
         yield session
