@@ -55,19 +55,16 @@ const Register = () => {
             }
             )
             if (response.data.success){
-                setMessage(response.data);
+                setMessage(response.data.message || 'Registered successfully!');
                 router.push('/verification');
-                
             }else{
                 setError(response.data.message || "Registration failed")
             }
-            
         }catch(err: any){
             console.error("Error registering from backend", err);
             setError("Error registering. Try again");
         }finally{
             setLoading(false);
-
         }
     }
 
