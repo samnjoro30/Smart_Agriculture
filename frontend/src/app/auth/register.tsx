@@ -56,7 +56,9 @@ const Register = () => {
             )
             if (response.data.success){
                 setMessage(response.data.message || 'Registered successfully!');
-                router.push('/verification');
+                setTimeout(() => {
+                    router.push('/verification');
+                }, 1000)
             }else{
                 setError(response.data.message || "Registration failed")
             }

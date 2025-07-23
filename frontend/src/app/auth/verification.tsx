@@ -31,13 +31,15 @@ const Verification = () => {
         try{
             const res = await axiosInstance.post('/api/verification', formData);
             if ( res.data.success){
-                router.push('/dashboard');
+                setTimeout(() => {
+                    router.push('/dashboard')
+                })
             }
         }catch(err){
             console.error("Error occurred during verification", err);
             setError("Error Occured during verification, try checking verification code ");
         }finally {
-
+            setLoading(false)
         }
     }
     return(
@@ -63,6 +65,13 @@ const Verification = () => {
                            required
                         />
                     </div>
+                    <button
+                      type="submit"
+                      className=""
+                    >
+                        {loading ? 'verify...' : 'Verify' }
+                    </button>
+                    {error && <p style={{ color:'red' }}> {error}</p>}
                 </form>
             </div>
         </div>
