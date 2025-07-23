@@ -13,7 +13,7 @@ def get_user_by_username(username: str):
         return {"username": row[0], "password": row[1]}
     return None
 
-aysnc def create_user(user_data: dict, db: AsyncSession):
+async def create_user(user_data: dict, db: AsyncSession):
     query = text("""
         INSERT INTO mkulimafinest (username, email, farmname, phonenumber, password)
         VALUES (:username, :email, :farmname, :phonenumber, :password)

@@ -11,8 +11,10 @@ from sqlalchemy.orm import Session
 
 router =  APIRouter()
 
+@router.post("/auth/login", response_model=Token)
 
-@router.post("/api/register", status_code= HTTP_201_CREATED)
+
+@router.post("/auth/register", status_code= HTTP_201_CREATED)
 async def register_farm(payload: RegisterRequest, db: AsyncSession = Depends(get_db) ):
     # if payload.password != payload.confirmPassword:
     #     raise HTTPException(status_code=400, detail="Passwords do not match")

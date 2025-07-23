@@ -11,7 +11,7 @@ DB = os.getenv("pooler_supabase")
 
 engine = create_async_engine(DB, poolclass=None, echo=True)
 
-# ✅ Create async sessionmaker
+# Create async sessionmaker
 AsyncSessionLocal = sessionmaker(
     bind=engine,
     expire_on_commit=False,
