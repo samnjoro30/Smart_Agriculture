@@ -3,14 +3,12 @@ from sqlalchemy import text
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import Session
 
-def get_user_by_username(username: str):
-    conn = get_db()
-    cur = conn.cursor()
-    cur.execute("SELECT username, password FROM users WHERE username = %s", (username,))
-    row = cur.fetchone()
-    conn.close()
+async def get_user_by_username(username:str, db: AsyncSession):
+    query = text("SELECT username, password FROM mkulima WHERE username = :username")
+    results = await db.execute(query, {"username": username})
+    row = results.fetchone()
     if row:
-        return {"username": row[0], "password": row[1]}
+        return { "username" : row.username, "password": row.password}
     return None
 
 async def create_user(user_data: dict, db: AsyncSession):
