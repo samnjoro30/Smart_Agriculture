@@ -7,3 +7,6 @@ class RegisterRequest(BaseModel):
     phonenumber: str
     password: constr(min_length=6)
     confirmpassword: str
+class Token(BaseModel):
+    access_token: str
+    token_type: str
