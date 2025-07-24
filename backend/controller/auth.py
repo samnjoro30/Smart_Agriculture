@@ -1,4 +1,4 @@
-from fastapi import APIRouter, HTTPException, Depends, Response
+from fastapi import APIRouter, HTTPException, Depends, Response, Resquest
 from model.auth import  RegisterRequest, Token
 from db.postgre_db import get_db
 from services.auth import create_user, get_user_by_username
@@ -63,4 +63,18 @@ async def register_farm(payload: RegisterRequest, db: AsyncSession = Depends(get
 
     await create_user(user_dict, db)
     return {"message": "User registered successfully"}  
+
+@router.post("/auth/logout")
+async def logout(request: Resquest, db: AsyncSession = Depends=(get_db)):
+    body = await request.json()
+    token = body.get("refresh_token")
+    if not token:
+        raise HTTPException(status_code= 401, details = "Missing token")
+    
+    await revoke_refresh_token(db, token)
+
+    return {
+        "message": "Logged out Successfully"
+    }
+
 
