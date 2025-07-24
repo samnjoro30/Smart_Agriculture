@@ -18,8 +18,10 @@ async def login_farmer(payload: RegisterRequest, db: AsyncSession = Depends(get_
         raise HTTPException(status_code= 400, details = "Invalid credentials, Username not found")
     hashed_password = None
     access_token = create_access_token(data={"sub": username})
+    refresh_token = refresh_token(data={"sub": username})
     return {
         "access_token": access_token,
+        "refresh_token": refresh_token,
         "token_type": "bearer",
     }
 
