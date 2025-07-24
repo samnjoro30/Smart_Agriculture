@@ -2,7 +2,7 @@ from fastapi import APIRouter, HTTPException, Depends, Response
 from model.auth import  RegisterRequest, Token
 from db.postgre_db import get_db
 from services.auth import create_user, get_user_by_username
-from utils.jwt import create_access_token
+from utils.jwt import create_access_token, refresh_token
 from utils.hashing import hash_password, verify_password
 from datetime import timedelta
 from sqlalchemy.ext.asyncio import AsyncSession
