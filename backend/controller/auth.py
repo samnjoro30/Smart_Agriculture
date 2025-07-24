@@ -11,6 +11,24 @@ from sqlalchemy.orm import Session
 
 router =  APIRouter()
 
+@router.post("/auth/refresh")
+async def refresh_token(request: Request):
+    try:
+        body = await request.json()
+        refresh_token = body.get("refresh_token")
+
+        payload = jwt.decode(refresh_token, SECRET_KEY, algorithm=ALGORITHM)
+        username = payload.get("sub")
+        if username is None:
+            raise HTTPException(status_code=401, detail="Invalid token")
+        new_access_token = create_access_token({ "sub": username})
+        return {
+            "access_token": new_access_token,
+            "token_type": "bearer"
+        }
+    except JWTError:
+        raise HTTPException(status_code=500, details="Expired refresh token")
+
 @router.post("/auth/login", response_model=Token)
 async def login_farmer(payload: RegisterRequest, db: AsyncSession = Depends(get_db)):
     existing_user = await get_user_by_username(payload.username, db)
@@ -45,3 +63,4 @@ async def register_farm(payload: RegisterRequest, db: AsyncSession = Depends(get
 
     await create_user(user_dict, db)
     return {"message": "User registered successfully"}  
+
