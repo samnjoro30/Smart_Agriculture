@@ -8,6 +8,7 @@ from datetime import timedelta
 from sqlalchemy.ext.asyncio import AsyncSession
 from starlette.status import HTTP_201_CREATED
 from sqlalchemy.orm import Session
+from datetime  import datetime, timedelta
 
 router =  APIRouter()
 
@@ -37,6 +38,8 @@ async def login_farmer(payload: RegisterRequest, db: AsyncSession = Depends(get_
     hashed_password = None
     access_token = create_access_token(data={"sub": username})
     refresh_token = refresh_token(data={"sub": username})
+    expires_at = datetime.utcnow() + timedelta(hours=24)
+
     return {
         "access_token": access_token,
         "refresh_token": refresh_token,
