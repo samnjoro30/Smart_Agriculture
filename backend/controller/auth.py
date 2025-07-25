@@ -9,7 +9,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from starlette.status import HTTP_201_CREATED
 from sqlalchemy.orm import Session
 from datetime  import datetime, timedelta
-from utils.otp import generate_otp
+from utils.otp import generate_otp, otp_expiry
 
 router =  APIRouter()
 
@@ -83,7 +83,19 @@ async def Verify_farmer(request: Request, db: AsyncSession = Depends(get_db)):
 
         if not username or otp:
             raise HTTPException(status_code=401, details="otp required")
-        
+
+        if user.otp != otp:
+            raise HTTPException(status_code=401, details="")
+        if user.otp_expires_at and datetime.utcnow > otp_expires_at:
+            raise HTTPException(status_code=401, details="Otp has expired, try resend new otp")
+
+        return
+    except 
+
+@router.post("/auth/reset-password")
+async def reset_password(request: Request, db: AsyncSession = depends(get_db)):
+    body = await request.json()
+   
 
 @router.post("/auth/logout")
 async def logout(request: Resquest, db: AsyncSession = Depends=(get_db)):
@@ -97,5 +109,4 @@ async def logout(request: Resquest, db: AsyncSession = Depends=(get_db)):
     return {
         "message": "Logged out Successfully"
     }
-
 
