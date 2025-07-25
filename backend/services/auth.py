@@ -20,7 +20,7 @@ async def create_user(user_data: dict, db: AsyncSession):
     await db.execute(query, user_data)
     await db.commit()
 
-async def store_refresh_token():
+async def store_refresh_token(username: str, token: str, expires_at: datetime, db: AsyncSession):
     query = text("""
         INSERT INTO refresh_tokens (username, token, expires_at)
         VALUES (:username, :token, :expires_at )
@@ -70,3 +70,24 @@ async def verified_upate(db):
     return {
         "message": "verification successful"
     }
+async def reset_password_check_user(db):
+    query = text("""
+        SELECT id FROM mkulimafinest WHERE email = :email
+    """)
+    results = await db.execute(query,{
+        "email": email
+    })
+    user_reset = results.fetchone
+    return user_reset
+async def reset_password_update(db):
+    query = text("""
+       UPDATE mkulimafinest 
+       SET password = :password,
+       WHERE email = :email
+    
+    """)
+    await db.execute(query,{
+        "password": password
+    })
+    user_update = await db.commit()
+    return user_update

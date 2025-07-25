@@ -1,7 +1,7 @@
 from fastapi import APIRouter, HTTPException, Depends, Response, Resquest
 from model.auth import  RegisterRequest, Token
 from db.postgre_db import get_db
-from services.auth import create_user, get_user_by_username
+from services.auth import create_user, get_user_by_username, store_refresh_token,  revoke_refresh_token, is_token_revoked, otp_verification, verified_upate, reset_password_check_user, reset_password_update  
 from utils.jwt import create_access_token, refresh_token
 from utils.hashing import hash_password, verify_password
 from datetime import timedelta
@@ -37,9 +37,15 @@ async def login_farmer(payload: RegisterRequest, db: AsyncSession = Depends(get_
     if not existing_user or not verify_password(payload.password, existing_user["password"]):
         raise HTTPException(status_code= 400, details = "Invalid credentials, Username not found")
     hashed_password = None
+
+    username = existing_user["username"]
     access_token = create_access_token(data={"sub": username})
     refresh_token = refresh_token(data={"sub": username})
     expires_at = datetime.utcnow() + timedelta(hours=24)
+
+    
+
+    await store_refresh_token(username, refresh_token, expires_at, db)
 
     return {
         "access_token": access_token,
@@ -57,6 +63,7 @@ async def register_farm(payload: RegisterRequest, db: AsyncSession = Depends(get
     
     hashed_pw = hash_password(payload.password)
     otp = generate_otp()
+    expires_at = otp_expiry
 
     user_dict = {
         "username": payload.username,
@@ -64,14 +71,14 @@ async def register_farm(payload: RegisterRequest, db: AsyncSession = Depends(get
         "farmname": payload.farmname,
         "phonenumber": payload.phonenumber,
         "otp": otp,
-        "otp_expires_at": ,
+        "otp_expires_at": expires_at,
         "is_verified": False,
         "password": hashed_pw,
     }
 
     await create_user(user_dict, db)
     return {
-        "message": "User registered successfully"
+        "message": "User registered {username} successfully"
     }  
 
 @router.post("/auth/verify")
@@ -81,7 +88,7 @@ async def Verify_farmer(request: Request, db: AsyncSession = Depends(get_db)):
         username =  body.get("username")
         otp = body.get("otp")
 
-        if not username or otp:
+        if not username or not otp:
             raise HTTPException(status_code=401, details="otp required")
 
         if user.otp != otp:
@@ -89,12 +96,25 @@ async def Verify_farmer(request: Request, db: AsyncSession = Depends(get_db)):
         if user.otp_expires_at and datetime.utcnow > otp_expires_at:
             raise HTTPException(status_code=401, details="Otp has expired, try resend new otp")
 
-        return
-    except 
+        return {
+            "message": " user verified successfully"
+        }
+    except  Exception as e:
+        raise HTTPException(status_code=500, details= str(e), "server error handling verification")
 
 @router.post("/auth/reset-password")
 async def reset_password(request: Request, db: AsyncSession = depends(get_db)):
     body = await request.json()
+    email = body.get("email")
+    newPassword = body.get("newPassword")
+    confirmPassword = body.get("confirmPassword")
+
+    if not email:
+        raise HTTPException(status_code=400, details="Email doesn't exist")
+    if newPassword != confirmPassword:
+        raise HTTPException(status_code=400, details="New password and confirm password do not correspond")
+
+    
    
 
 @router.post("/auth/logout")
