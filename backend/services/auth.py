@@ -14,8 +14,8 @@ async def get_user_by_username(username:str, db: AsyncSession):
 
 async def create_user(user_data: dict, db: AsyncSession):
     query = text("""
-        INSERT INTO mkulimafinest (username, email, farmname, phonenumber, password)
-        VALUES (:username, :email, :farmname, :phonenumber, :password)
+        INSERT INTO mkulimafinest (username, email, farmname, phonenumber, otp, is_verified, password)
+        VALUES (:username, :email, :farmname, :phonenumber, :otp, :is_verified, :password)
     """)
     await db.execute(query, user_data)
     await db.commit()
@@ -44,7 +44,6 @@ async def is_token_revoked(db, token: str):
         "token": token
     })
     row = results.fetchone()
-
     return row and row.is_revoked
 
 async def otp_verification(db):

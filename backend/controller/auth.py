@@ -9,6 +9,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from starlette.status import HTTP_201_CREATED
 from sqlalchemy.orm import Session
 from datetime  import datetime, timedelta
+from utils.otp import generate_otp
 
 router =  APIRouter()
 
@@ -55,17 +56,23 @@ async def register_farm(payload: RegisterRequest, db: AsyncSession = Depends(get
         raise HTTPException(status_code=409, detail="Username already exists")
     
     hashed_pw = hash_password(payload.password)
+    otp = generate_otp()
 
     user_dict = {
         "username": payload.username,
         "email": payload.email,
         "farmname": payload.farmname,
         "phonenumber": payload.phonenumber,
+        "otp": otp,
+        "otp_expires_at": ,
+        "is_verified": False,
         "password": hashed_pw,
     }
 
     await create_user(user_dict, db)
-    return {"message": "User registered successfully"}  
+    return {
+        "message": "User registered successfully"
+    }  
 
 @router.post("/auth/verify")
 async def Verify_farmer(request: Request, db: AsyncSession = Depends(get_db)):
