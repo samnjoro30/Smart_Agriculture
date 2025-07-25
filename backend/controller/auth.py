@@ -67,6 +67,17 @@ async def register_farm(payload: RegisterRequest, db: AsyncSession = Depends(get
     await create_user(user_dict, db)
     return {"message": "User registered successfully"}  
 
+@router.post("/auth/verify")
+async def Verify_farmer(request: Request, db: AsyncSession = Depends(get_db)):
+    try:
+        body = await request.json
+        username =  body.get("username")
+        otp = body.get("otp")
+
+        if not username or otp:
+            raise HTTPException(status_code=401, details="otp required")
+        
+
 @router.post("/auth/logout")
 async def logout(request: Resquest, db: AsyncSession = Depends=(get_db)):
     body = await request.json()

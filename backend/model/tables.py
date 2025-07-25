@@ -8,6 +8,8 @@ class Users(Base):
     username = Column(String(200), unique=True)
     email = Column(String(150), unique=True)
     farmname = Column(String(200))
+    is_verified = Column(Boolean())
+    otp = Column(String(8))
     phonenumber = Column(String(200), unique=True)
     password = Column(String(200))
 

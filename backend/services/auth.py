@@ -46,3 +46,28 @@ async def is_token_revoked(db, token: str):
     row = results.fetchone()
 
     return row and row.is_revoked
+
+async def otp_verification(db):
+    query = text("""
+        SELECT id, is_verified, otp, FROM mkulimefinest WHERE username = :username
+    """)
+
+    results = await db.execute(query,{
+        "username":  username
+    })
+    user  = results.fetchone()
+    return user
+
+async def verified_upate(db):
+    query = text("""
+        UPDATE mkulimafinest 
+        SET is_verified = True, otp = null
+        WHERE username = :username
+    """)
+    await db.execute(query, {
+        "username": username
+        })
+    await db.commit()
+    return {
+        "message": "verification successful"
+    }
