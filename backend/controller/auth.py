@@ -35,19 +35,19 @@ async def refresh_token(request: Request):
 
 @router.post("/auth/login", response_model=Token)
 async def login_farmer(payload: RegisterRequest, db: AsyncSession = Depends(get_db)):
-    existing_user = await get_user_by_username(payload.username, db)
+    existing_user = await get_user_by_username(payload.email, db)
     if not existing_user or not verify_password(payload.password, existing_user["password"]):
         raise HTTPException(status_code= 400, details = "Invalid credentials, Username not found")
     hashed_password = None
 
-    username = existing_user["username"]
-    access_token = create_access_token(data={"sub": username})
-    refresh_token = refresh_token(data={"sub": username})
+    username = existing_user["email"]
+    access_token = create_access_token(data={"sub": email})
+    refresh_token = refresh_token(data={"sub": email})
     expires_at = datetime.utcnow() + timedelta(hours=24)
 
     
 
-    await store_refresh_token(username, refresh_token, expires_at, db)
+    await store_refresh_token(email, refresh_token, expires_at, db)
 
     return {
         "access_token": access_token,

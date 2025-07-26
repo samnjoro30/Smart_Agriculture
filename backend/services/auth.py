@@ -5,11 +5,14 @@ from sqlalchemy.orm import Session
 from datetime import datetime, timedelta
 
 async def get_user_by_username(username:str, db: AsyncSession):
-    query = text("SELECT username, password FROM user WHERE username = :username")
+    query = text("SELECT email, password FROM user WHERE username = :username")
     results = await db.execute(query, {"username": username})
     row = results.fetchone()
     if row:
-        return { "username" : row.username, "password": row.password}
+        return { 
+            "email" : row.email, 
+            "password": row.password
+        }
     return None
 
 async def create_user(user_data: dict, db: AsyncSession):
