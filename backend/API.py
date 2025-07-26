@@ -17,8 +17,8 @@ app.add_middleware(
 app.include_router(auth_router)
 #Base.metadata.create_all(bind=engine)
 
-@app.get("/")
-def read_root():
-    return {"message" : "API is running"}
+# @app.get("/")
+# def read_root():
+#     return {"message" : "API is running"}
 
 

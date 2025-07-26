@@ -1,4 +1,4 @@
-from fastapi import APIRouter, HTTPException, Depends, Response, Resquest
+from fastapi import APIRouter, HTTPException, Depends, Response, Request
 from model.auth import  RegisterRequest, Token
 from db.postgre_db import get_db
 from services.auth import create_user, get_user_by_username, store_refresh_token,  revoke_refresh_token, is_token_revoked, otp_verification, verified_upate, reset_password_check_user, reset_password_update  
@@ -100,10 +100,10 @@ async def Verify_farmer(request: Request, db: AsyncSession = Depends(get_db)):
             "message": " user verified successfully"
         }
     except  Exception as e:
-        raise HTTPException(status_code=500, details= str(e), "server error handling verification")
+        raise HTTPException(status_code=500, details= str(e))
 
 @router.post("/auth/reset-password")
-async def reset_password(request: Request, db: AsyncSession = depends(get_db)):
+async def reset_password(request: Request, db: AsyncSession = Depends(get_db)):
     body = await request.json()
     email = body.get("email")
     newPassword = body.get("newPassword")
@@ -114,17 +114,29 @@ async def reset_password(request: Request, db: AsyncSession = depends(get_db)):
     if newPassword != confirmPassword:
         raise HTTPException(status_code=400, details="New password and confirm password do not correspond")
 
+    user = await reset_password_check_user(db, email)
+    if not user:
+        raise HTTPException(status_code=400, details="user credentials not found")
+
+    hash_new_password = hash_password(newPassword)
+    await reset_password_update(db, email, hash_new_password)
+
+    return {
+        "message": "Password reset succesfull"
+    }
+
     
    
 
 @router.post("/auth/logout")
-async def logout(request: Resquest, db: AsyncSession = Depends=(get_db)):
+async def logout(request: Request, db: AsyncSession = Depends(get_db)):
     body = await request.json()
     token = body.get("refresh_token")
     if not token:
         raise HTTPException(status_code= 401, details = "Missing token")
     
     await revoke_refresh_token(db, token)
+    await db.commit()
 
     return {
         "message": "Logged out Successfully"

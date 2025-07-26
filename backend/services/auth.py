@@ -25,7 +25,7 @@ async def store_refresh_token(username: str, token: str, expires_at: datetime, d
         INSERT INTO refresh_tokens (username, token, expires_at)
         VALUES (:username, :token, :expires_at )
     """)
-    await db.execute(query,,{
+    await db.execute(query,{
         "username": username,
         "token": token,
         "expires_at": expires_at
@@ -82,12 +82,13 @@ async def reset_password_check_user(db):
 async def reset_password_update(db):
     query = text("""
        UPDATE mkulimafinest 
-       SET password = :password,
+       SET password = :password
        WHERE email = :email
     
     """)
     await db.execute(query,{
-        "password": password
+        "password": password,
+        "email": email
     })
     user_update = await db.commit()
     return user_update
