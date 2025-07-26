@@ -85,10 +85,10 @@ async def register_farm(payload: RegisterRequest, db: AsyncSession = Depends(get
 async def Verify_farmer(request: Request, db: AsyncSession = Depends(get_db)):
     try:
         body = await request.json
-        username =  body.get("username")
+        email =  body.get("email")
         otp = body.get("otp")
 
-        if not username or not otp:
+        if not email or not otp:
             raise HTTPException(status_code=401, details="otp required")
 
         if user.otp != otp:
@@ -96,11 +96,13 @@ async def Verify_farmer(request: Request, db: AsyncSession = Depends(get_db)):
         if user.otp_expires_at and datetime.utcnow > otp_expires_at:
             raise HTTPException(status_code=401, details="Otp has expired, try resend new otp")
 
+        await verified_upate(db, email)
+
         return {
             "message": " user verified successfully"
         }
     except  Exception as e:
-        raise HTTPException(status_code=500, details= str(e))
+        raise HTTPException(status_code=500, details= f"Serve error verifying{str(e)}")
 
 @router.post("/auth/reset-password")
 async def reset_password(request: Request, db: AsyncSession = Depends(get_db)):
@@ -126,8 +128,6 @@ async def reset_password(request: Request, db: AsyncSession = Depends(get_db)):
     }
 
     
-   
-
 @router.post("/auth/logout")
 async def logout(request: Request, db: AsyncSession = Depends(get_db)):
     body = await request.json()

@@ -61,10 +61,10 @@ async def verified_upate(db):
     query = text("""
         UPDATE mkulimafinest 
         SET is_verified = True, otp = null
-        WHERE username = :username
+        WHERE email = :email
     """)
     await db.execute(query, {
-        "username": username
+        "email": email
         })
     await db.commit()
     return {
@@ -90,5 +90,5 @@ async def reset_password_update(db):
         "password": password,
         "email": email
     })
-    user_update = await db.commit()
-    return user_update
+    await db.commit()
+    
