@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import axiosInstance from "../API/axiosInstance";
+import axiosInstance from "../../API/axiosInstance";
 
 type FormData = {
     email: string;
@@ -32,7 +32,7 @@ const Verification = () => {
             const res = await axiosInstance.post('/api/verification', formData);
             if ( res.data.success){
                 setTimeout(() => {
-                    router.push('/dashboard')
+                    router.push('/login')
                 })
             }
         }catch(err){

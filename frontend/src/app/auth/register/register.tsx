@@ -1,7 +1,7 @@
 "use client"
 
 import React, { useState } from 'react';
-import axiosInstance from '../API/axiosInstance';
+import axiosInstance from '../../API/axiosInstance';
 import { useRouter } from 'next/navigation';
 import axios from 'axios';
 

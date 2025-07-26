@@ -73,7 +73,9 @@ export default function ResetPassword (){
                           required
                         />
                     </div>
-                    <button>
+                    <button
+                      type="submit"
+                    >
                        {loading ? 'Reseting ..' : 'Reset Password' }
                     </button>
                 </form>

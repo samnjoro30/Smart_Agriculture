@@ -1,6 +1,6 @@
 "use client"
 import React, { useState } from 'react';
-import axiosInstance from '../API/axiosInstance';
+import axiosInstance from '../../API/axiosInstance';
 import Cookies from 'js-cookie';
 import {useRouter} from 'next/navigation';
 import { parseSetCookie } from 'next/dist/compiled/@edge-runtime/cookies';
