@@ -57,15 +57,15 @@ async def login_farmer(payload: RegisterRequest, db: AsyncSession = Depends(get_
 
 @router.post("/auth/register", status_code= HTTP_201_CREATED)
 async def register_farm(payload: RegisterRequest, db: AsyncSession = Depends(get_db) ):
-    if payload.password != payload.confirmPassword:
-        raise HTTPException(status_code=400, detail="Passwords do not match")
+    # if payload.password != payload.confirmPassword:
+    #     raise HTTPException(status_code=400, detail="Passwords do not match")
     existing_user = await get_user_by_username(payload.username, db)
     if existing_user:
         raise HTTPException(status_code=409, detail="Username already exists")
     
     hashed_pw = hash_password(payload.password)
     otp = generate_otp()
-    expires_at = otp_expiry
+    expires_at = otp_expiry()
 
     user_dict = {
         "username": payload.username,

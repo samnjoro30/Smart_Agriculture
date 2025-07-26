@@ -5,7 +5,7 @@ from sqlalchemy.orm import Session
 from datetime import datetime, timedelta
 
 async def get_user_by_username(username:str, db: AsyncSession):
-    query = text("SELECT username, password FROM mkulima WHERE username = :username")
+    query = text("SELECT username, password FROM user WHERE username = :username")
     results = await db.execute(query, {"username": username})
     row = results.fetchone()
     if row:
@@ -14,7 +14,7 @@ async def get_user_by_username(username:str, db: AsyncSession):
 
 async def create_user(user_data: dict, db: AsyncSession):
     query = text("""
-        INSERT INTO mkulimafinest (username, email, farmname, phonenumber, otp, is_verified, password)
+        INSERT INTO user (username, email, farmname, phonenumber, otp, is_verified, password)
         VALUES (:username, :email, :farmname, :phonenumber, :otp, :is_verified, :password)
     """)
     await db.execute(query, user_data)
@@ -48,7 +48,7 @@ async def is_token_revoked(db, token: str):
 
 async def otp_verification(db):
     query = text("""
-        SELECT id, is_verified, otp, FROM mkulimefinest WHERE username = :username
+        SELECT id, is_verified, otp, FROM user WHERE username = :username
     """)
 
     results = await db.execute(query,{
@@ -59,7 +59,7 @@ async def otp_verification(db):
 
 async def verified_upate(db):
     query = text("""
-        UPDATE mkulimafinest 
+        UPDATE user 
         SET is_verified = True, otp = null
         WHERE email = :email
     """)
@@ -72,7 +72,7 @@ async def verified_upate(db):
     }
 async def reset_password_check_user(db):
     query = text("""
-        SELECT id FROM mkulimafinest WHERE email = :email
+        SELECT id FROM user WHERE email = :email
     """)
     results = await db.execute(query,{
         "email": email
@@ -81,7 +81,7 @@ async def reset_password_check_user(db):
     return user_reset
 async def reset_password_update(db):
     query = text("""
-       UPDATE mkulimafinest 
+       UPDATE user 
        SET password = :password
        WHERE email = :email
     

@@ -1,8 +1,8 @@
 from db.postgre_db import Base
-from sqlalchemy import Column, Integer, String, Boolean
+from sqlalchemy import Column, Integer, String, Boolean, DateTime
 
 class Users(Base):
-    __tablename__ = "mkulimafinest"
+    __tablename__ = "users"
 
     id = Column(Integer, primary_key=True, index=True)
     username = Column(String(200), unique=True)
