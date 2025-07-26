@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import axiosInstance from "../API/axiosInstance";
+import { useRouter } from 'next/navigation';
 
 interface FormData {
     email: string,
@@ -17,6 +18,7 @@ export default function ResetPassword (){
         newPassword: '',
         confirmPassword: ''
     })
+    const navigate = useRouter();
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>)=>{
         const { name, value } = e.target;
@@ -30,8 +32,10 @@ export default function ResetPassword (){
         try{
             "use server"
             const res = await axiosInstance.post("/auth/reset-password", formData);
-
-
+            setFormData(res.data.message);
+            setTimeout(() =>{
+                navigate.push("/login")
+            }, 1000)
         }catch(err){
             const error = err instanceof Error ? err : new Error(String(err));
             console.error("Error occurred during resetting, please try again: ", error)
