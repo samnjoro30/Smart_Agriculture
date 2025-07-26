@@ -16,3 +16,7 @@ app.add_middleware(
 
 app.include_router(auth_router)
 
+# @app.on_event("startup")
+# async def startup():
+#     async with engine.begin() as conn:
+#         await 
