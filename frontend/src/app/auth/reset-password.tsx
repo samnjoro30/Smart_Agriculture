@@ -1,23 +1,42 @@
 "use client"
 
+import { useState } from 'react';
 import axiosInstance from "../API/axiosInstance";
 
+interface FormData {
+    email: string,
+    newPassword: string,
+    confirmPassword: string
+}
+
 export default function ResetPassword (){
+    const [ loading, setLoading] = useState<boolean>(false);
+    const [ error, setError]  = useState<string>('')
+    const [ formData, setFormData] = useState <FormData> ({
+        email: '',
+        newPassword: '',
+        confirmPassword: ''
+    })
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>)=>{
         const { name, value } = e.target;
+        setFormData(prev =>({ ...prev, [name] : value}))
     }
 
     const handleSubmit = async (e: { preventDefault: () => void;}) => {
-
+        e.preventDefault();
+        setLoading(true)
+        setError('')
         try{
             "use server"
-            const res = await axiosInstance.post("/auth/reset-password")
+            const res = await axiosInstance.post("/auth/reset-password", formData);
 
 
         }catch(err){
             const error = err instanceof Error ? err : new Error(String(err));
             console.error("Error occurred during resetting, please try again: ", error)
+        }finally{
+            setLoading(false)
         }
     }
 
@@ -50,6 +69,9 @@ export default function ResetPassword (){
                           required
                         />
                     </div>
+                    <button>
+                       {loading ? 'Reseting ..' : 'Reset Password' }
+                    </button>
                 </form>
             </div>
         </div>
