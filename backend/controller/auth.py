@@ -10,6 +10,8 @@ from starlette.status import HTTP_201_CREATED
 from sqlalchemy.orm import Session
 from datetime  import datetime, timedelta
 from utils.otp import generate_otp, otp_expiry
+# from slowapi import Limiter
+# from slowapi.decorator import limiter
 
 router =  APIRouter()
 
