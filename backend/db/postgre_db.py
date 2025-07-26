@@ -9,7 +9,12 @@ load_dotenv()
 
 DB = os.getenv("pooler_supabase")
 
-engine = create_async_engine(DB, poolclass=None, echo=True, connect_args={"statement_cache_size": 0}, )
+engine = create_async_engine(
+    DB, 
+    poolclass=None, 
+    echo=True, 
+    connect_args={"statement_cache_size": 0}, 
+)
 
 # Create async sessionmaker
 AsyncSessionLocal = sessionmaker(
