@@ -31,7 +31,7 @@ target_metadata = Base.metadata
 # can be acquired:
 # my_important_option = config.get_main_option("my_important_option")
 # ... etc.
-db_url = os.getenv("pooler_supabase")
+db_url = os.getenv("DB")
 
 if not db_url:
     raise ValueError("DATABASE_URL environment variable not set")
@@ -79,6 +79,7 @@ async def run_migrations_online() -> None:
         await conn.run_sync(lambda sync_conn: context.configure(
             connection=sync_conn,
             target_metadata=target_metadata,
+            compare_type = True
         ))
         await conn.run_sync(context.run_migrations)
 

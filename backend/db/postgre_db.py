@@ -7,13 +7,11 @@ import asyncio
 
 load_dotenv()
 
-DB = os.getenv("pooler_supabase")
+DB = os.getenv("NEON_DB")
 
 engine = create_async_engine(
     DB, 
-    poolclass=None, 
     echo=True, 
-    connect_args={"statement_cache_size": 0}, 
 )
 
 # Create async sessionmaker
