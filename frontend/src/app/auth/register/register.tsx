@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import axiosInstance from '../../API/axiosInstance';
 import { useRouter } from 'next/navigation';
-import axios from 'axios';
+import { Eye, EyeOff} from 'lucide-react'
 
 type FormData = {
     username: string;
@@ -39,20 +39,28 @@ const Register = () => {
 
     const handleSubmit = async (e: { preventDefault: () => void; }) =>{
         e.preventDefault();
+
+        if (formData.password !== formData.confirmpassword) {
+            setError("Passwords do not match");
+            return;
+        }
+
         setLoading(true);
         setError('');
+        setMessage('')
         try{
 
-            const response = await axiosInstance.post('/register',
+            const response = await axiosInstance.post('/auth/register',
             {
                 username: formData.username,
                 email: formData.email,
                 farmname: formData.farmname,
                 phonenumber: formData.phonenumber,
                 password: formData.password,
-                confirmpassword: formData.confirmpassword
+                // confirmpassword: formData.confirmpassword
             }
             )
+            console.log("data", response)
             if (response.data.success){
                 setMessage(response.data.message || 'Registered successfully!');
                 setTimeout(() => {
@@ -69,9 +77,6 @@ const Register = () => {
         }
     }
 
-    const toogleVisibility = () => {
-        setShowPassword(!showPassword);
-    }
     const passwordConfirmation = () => {
 
     }
@@ -128,12 +133,17 @@ const Register = () => {
                     <div className="">
                         <label>Password:</label>
                         <input
-                            type="password"
+                            type={showPassword ? "text" : "password"}
                             name="password"
                             value={formData.password}
                             onChange= {handleChange}
                             required
                         />
+                        <span
+                          onClick={ ()=> setShowPassword(!showPassword)}
+                        >
+                            {showPassword ? <EyeOff /> : <Eye/>} 
+                        </span>
                     </div>
                     <div className="">
                         <label> Confirm Password:</label>
