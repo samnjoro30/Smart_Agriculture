@@ -22,6 +22,7 @@ const Register = () => {
     const [toogle, setToogle] = useState<boolean>(false)
     const [showPassword, setShowPassword] = useState<boolean>(false)
     const [confirmPassword, setConfirmPassword] = useState('');
+    const [passwordStrength, setPasswordStrength] = useState<{ strength: string, color: string }>({ strength: '', color: '' });
     const [formData, setFormData] = useState<FormData>({
         username: '',
         email: '',
@@ -32,19 +33,37 @@ const Register = () => {
     })
     const router = useRouter();
 
+    const getPasswordStrength = (password: string): { strength: string, color: string } => {
+        let strength = 0;
+    
+        if (password.length >= 8) strength++;
+        if (/[A-Z]/.test(password)) strength++;
+        if (/[a-z]/.test(password)) strength++;
+        if (/[0-9]/.test(password)) strength++;
+        if (/[^A-Za-z0-9]/.test(password)) strength++;
+    
+        if (strength <= 2) return { strength: "Weak", color: "red" };
+        else if (strength === 3 || strength === 4) return { strength: "Medium", color: "orange" };
+        else return { strength: "Strong", color: "green" };
+    };
+
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) =>{
+
         const { name, value } = e.target;
         setFormData(prev => ({ ...prev, [name]: value}));
+        if (name === "password") {
+            const strengthCheck = getPasswordStrength(value);
+            setPasswordStrength(strengthCheck);
+        }
+        
     }
 
     const handleSubmit = async (e: { preventDefault: () => void; }) =>{
         e.preventDefault();
-
         if (formData.password !== formData.confirmpassword) {
             setError("Passwords do not match");
             return;
         }
-
         setLoading(true);
         setError('');
         setMessage('')
@@ -144,6 +163,11 @@ const Register = () => {
                         >
                             {showPassword ? <EyeOff /> : <Eye/>} 
                         </span>
+                        {formData.password && (
+                            <p style={{ color: passwordStrength.color }} className="mt-1 text-sm">
+                                Password strength: {passwordStrength.strength}
+                            </p>
+                        )}
                     </div>
                     <div className="">
                         <label> Confirm Password:</label>
