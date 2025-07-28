@@ -39,8 +39,10 @@ async def login_farmer(payload: RegisterRequest, db: AsyncSession = Depends(get_
     if not existing_user or not verify_password(payload.password, existing_user["password"]):
         raise HTTPException(status_code= 400, details = "Invalid credentials, Username not found")
     hashed_password = None
+    if not existing_user.get("is_verified"):
+        raise HTTPException(status_code=403, detail="Account not verified")
 
-    username = existing_user["email"]
+    email = existing_user["email"]
     access_token = create_access_token(data={"sub": email})
     refresh_token = refresh_token(data={"sub": email})
     expires_at = datetime.utcnow() + timedelta(hours=24)
@@ -80,7 +82,7 @@ async def register_farm(payload: RegisterRequest, db: AsyncSession = Depends(get
 
     await create_user(user_dict, db)
     return {
-        "message": "User registered {username} successfully"
+        "message": "User registered ${username} successfully"
     }  
 
 @router.post("/auth/verify")
@@ -89,12 +91,16 @@ async def Verify_farmer(request: Request, db: AsyncSession = Depends(get_db)):
         body = await request.json
         email =  body.get("email")
         otp = body.get("otp")
+        user = await otp_verification(db, is_verified, otp)
 
         if not email or not otp:
             raise HTTPException(status_code=401, details="otp required")
+        
+        if user.is_verified:
+        raise HTTPException(status_code=400, detail="User already verified")
 
         if user.otp != otp:
-            raise HTTPException(status_code=401, details="")
+            raise HTTPException(status_code=401, details="Invalid otp")
         if user.otp_expires_at and datetime.utcnow > otp_expires_at:
             raise HTTPException(status_code=401, details="Otp has expired, try resend new otp")
 
