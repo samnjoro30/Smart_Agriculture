@@ -49,7 +49,7 @@ async def is_token_revoked(db, token: str):
     row = results.fetchone()
     return row and row.is_revoked
 
-async def otp_verification(db):
+async def otp_verification(db, username:str):
     query = text("""
         SELECT id, is_verified, otp, FROM user WHERE username = :username
     """)
@@ -57,10 +57,9 @@ async def otp_verification(db):
     results = await db.execute(query,{
         "username":  username
     })
-    user  = results.fetchone()
-    return user
+    return results.fetchone()
 
-async def verified_upate(db):
+async def verified_upate(db, username: str ):
     query = text("""
         UPDATE user 
         SET is_verified = True, otp = null

@@ -91,10 +91,13 @@ async def Verify_farmer(request: Request, db: AsyncSession = Depends(get_db)):
         body = await request.json
         email =  body.get("email")
         otp = body.get("otp")
-        user = await otp_verification(db, is_verified, otp)
 
         if not email or not otp:
             raise HTTPException(status_code=401, details="otp required")
+        
+        user = await otp_verification(db, username)
+        if not user:
+            raise HTTPException(status_code=404, detail="User not found")
         
         if user.is_verified:
         raise HTTPException(status_code=400, detail="User already verified")
@@ -107,7 +110,7 @@ async def Verify_farmer(request: Request, db: AsyncSession = Depends(get_db)):
         await verified_upate(db, email)
 
         return {
-            "message": " user verified successfully"
+            "message": "user verified successfully"
         }
     except  Exception as e:
         raise HTTPException(status_code=500, details= f"Serve error verifying{str(e)}")
