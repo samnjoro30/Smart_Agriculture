@@ -100,7 +100,7 @@ async def Verify_farmer(request: Request, db: AsyncSession = Depends(get_db)):
             raise HTTPException(status_code=404, detail="User not found")
         
         if user.is_verified:
-        raise HTTPException(status_code=400, detail="User already verified")
+            raise HTTPException(status_code=400, detail="User already verified")
 
         if user.otp != otp:
             raise HTTPException(status_code=401, details="Invalid otp")
