@@ -19,7 +19,6 @@ const Register = () => {
     const [error, setError] = useState<string | null>(null);
     const [loading, setLoading] = useState<boolean>(false);
     const [message, setMessage] = useState<string | null>('');
-    const [toogle, setToogle] = useState<boolean>(false)
     const [showPassword, setShowPassword] = useState<boolean>(false)
     const [confirmPassword, setConfirmPassword] = useState<boolean>(false);
     const [passwordStrength, setPasswordStrength] = useState<{ strength: string, color: string }>({ strength: '', color: '' });
@@ -65,6 +64,7 @@ const Register = () => {
         e.preventDefault();
         if (formData.password !== formData.confirmpassword) {
             setError("Passwords do not match");
+            setTimeout(() => setError(''), 3000);
             return;
         }
         setLoading(true);
@@ -84,16 +84,16 @@ const Register = () => {
             )
             console.log("data", response)
             if (response.data.success){
-                setMessage(response.data.message || 'Registered successfully!');
-                setTimeout(() => {
-                    router.push('/verification');
-                }, 1000)
+                setMessage('Registered successfully!');
+                router.push('/auth/verification');
+               
             }else{
                 setError(response.data.message || "Registration failed")
             }
         }catch(err: any){
             console.error("Error registering from backend", err);
             setError("Error registering. Try again");
+            setTimeout(() => setError(''), 3000)
         }finally{
             setLoading(false);
         }
