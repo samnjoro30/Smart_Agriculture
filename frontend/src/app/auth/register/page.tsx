@@ -79,17 +79,17 @@ const Register = () => {
                 farmname: formData.farmname,
                 phonenumber: formData.phonenumber,
                 password: formData.password,
-                // confirmpassword: formData.confirmpassword
             }
             )
             console.log("data", response)
             if (response.data.success){
-                setMessage('Registered successfully!');
+                setMessage(response.data.message || 'Registered successfully!');
                 router.push('/auth/verification');
-               
-            }else{
-                setError(response.data.message || "Registration failed")
             }
+               
+            // }else{
+            //     setError(response.data.message || "Registration failed")
+            // }
         }catch(err: any){
             console.error("Error registering from backend", err);
             setError("Error registering. Try again");
