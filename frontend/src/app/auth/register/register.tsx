@@ -32,6 +32,8 @@ const Register = () => {
         confirmpassword: '',
     })
     const router = useRouter();
+    const inputClass = "w-full px-4 py-2 border border-green-300 bg-green-50 text-green-900 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500";
+
 
     const getPasswordStrength = (password: string): { strength: string, color: string } => {
         let strength = 0;
@@ -96,99 +98,112 @@ const Register = () => {
         }
     }
 
-    const passwordConfirmation = () => {
-
-    }
     return(
-        <div className="">
-            <div className="">
-                <h2 className='ext-2xl font-bold mb-6 text-center'> Register Panel</h2>
-                <p>To enjoy seamless Agriculture insight register</p>
-                <form onSubmit={handleSubmit}>
-                    <div className="">
-                        <label>Username:</label>
+        <div className="min-h-screen flex items-center justify-center bg-green-50 p-4">
+            <div className="w-full max-w-3xl bg-white shadow-xl rounded-2xl p-8 space-y-6 ">
+                <h2 className="text-3xl font-extrabold text-center text-green-800">Register Panel</h2>
+            <p className="text-center text-green-700">To enjoy seamless Agriculture insight, register below</p>
+
+                <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4">
+                    <div>
+                        <label className="block text-green-700 mb-1">Username:</label>
                         <input
-                            type="text"
-                            name="username"
-                            value={formData.username}
-                            onChange= {handleChange}
-                            placeholder='samdoe'
-                            required
+                          type="text"
+                          name="username"
+                          value={formData.username}
+                          onChange={handleChange}
+                          placeholder="samdoe"
+                          required
+                          className={inputClass}
                         />
                     </div>
-                    <div className="">
-                        <label>Farm Name:</label>
+
+                    <div>
+                        <label className="block text-green-700 mb-1">Farm Name:</label>
                         <input
-                            type="text"
-                            name="farmname"
-                            value={formData.farmname}
-                            onChange={ handleChange}
-                            placeholder="smartfarm"
-                            required
+                          type="text"
+                          name="farmname"
+                          value={formData.farmname}
+                          onChange={handleChange}
+                          placeholder="smartfarm"
+                          required
+                          className={inputClass}
                         />
                     </div>
-                    <div className="">
-                        <label>Email:</label>
+
+                    <div>
+                        <label className="block text-green-700 mb-1">Email:</label>
                         <input
-                            type="text"
-                            name="email"
-                            value={formData.email}
-                            onChange= {handleChange}
-                            placeholder='sam@gmail.com'
-                            required
+                          type="email"
+                          name="email"
+                          value={formData.email}
+                          onChange={handleChange}
+                          placeholder="sam@gmail.com"
+                          required
+                          className={inputClass}
                         />
                     </div>
-                    <div className="">
-                        <label>Phone Number</label>
+
+                    <div>
+                        <label className="block text-green-700 mb-1">Phone Number:</label>
                         <input
-                            type="text"
-                            name="phonenumber"
-                            value={formData.phonenumber}
-                            onChange= {handleChange}
-                            placeholder="07xxxxxx"
-                            required
+                          type="text"
+                          name="phonenumber"
+                          value={formData.phonenumber}
+                          onChange={handleChange}
+                          placeholder="07xxxxxx"
+                          required
+                          className={inputClass}
                         />
                     </div>
-                    <div className="">
-                        <label>Password:</label>
-                        <input
-                            type={showPassword ? "text" : "password"}
-                            name="password"
-                            value={formData.password}
-                            onChange= {handleChange}
-                            required
-                        />
-                        <span
-                          onClick={ ()=> setShowPassword(!showPassword)}
-                        >
-                            {showPassword ? <EyeOff /> : <Eye/>} 
-                        </span>
+
+                    <div>
+                        <label className="block text-green-700 mb-1">Password:</label>
+                        <div className="relative">
+                            <input
+                              type={showPassword ? "text" : "password"}
+                              name="password"
+                              value={formData.password}
+                              onChange={handleChange}
+                              required
+                              className={inputClass}
+                            />
+                            <span
+                                onClick={() => setShowPassword(!showPassword)}
+                                className="absolute top-2 right-3 cursor-pointer text-green-600"
+                            >
+                                {showPassword ? <EyeOff /> : <Eye />}
+                            </span>
+                        </div>
                         {formData.password && (
-                            <p style={{ color: passwordStrength.color }} className="mt-1 text-sm">
+                            <p className="mt-1 text-sm" style={{ color: passwordStrength.color }}>
                                 Password strength: {passwordStrength.strength}
                             </p>
                         )}
                     </div>
-                    <div className="">
-                        <label> Confirm Password:</label>
+
+                    <div>
+                        <label className="block text-green-700 mb-1">Confirm Password:</label>
                         <input
-                           type="password"
-                           name="confirmpassword"
-                           value={ formData.confirmpassword}
-                           onChange={ handleChange}
-                           required
+                          type="password"
+                          name="confirmpassword"
+                          value={formData.confirmpassword}
+                          onChange={handleChange}
+                          required
+                          className={inputClass}
                         />
                     </div>
-                    <button 
-                       type="submit"
-                       disabled={loading}
-                       className="btn btn-primary w-80"
+
+                    <button
+                      type="submit"
+                      disabled={loading}
+                      className="w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-4 rounded-md transition duration-300"
                     >
-                        {loading ? 'Registering...' : 'Register'}
+                        {loading ? "Registering..." : "Register"}
                     </button>
                 </form>
-                {message && <p style={{ color: "green"}}> {message} </p>}
-                {error && <p style={{ color: "red"}}>{error}</p>}
+                {message && <p className="text-center text-green-700 font-medium">{message}</p>}
+                {error && <p className="text-center text-red-600 font-medium">{error}</p>}
             </div>
         </div>
     )
