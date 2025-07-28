@@ -21,7 +21,7 @@ const Register = () => {
     const [message, setMessage] = useState<string | null>('');
     const [toogle, setToogle] = useState<boolean>(false)
     const [showPassword, setShowPassword] = useState<boolean>(false)
-    const [confirmPassword, setConfirmPassword] = useState('');
+    const [confirmPassword, setConfirmPassword] = useState<boolean>(false);
     const [passwordStrength, setPasswordStrength] = useState<{ strength: string, color: string }>({ strength: '', color: '' });
     const [formData, setFormData] = useState<FormData>({
         username: '',
@@ -33,6 +33,7 @@ const Register = () => {
     })
     const router = useRouter();
     const inputClass = "w-full px-4 py-2 border border-green-300 bg-green-50 text-green-900 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500";
+    const label_styling = "block text-green-700 mb-1";
 
 
     const getPasswordStrength = (password: string): { strength: string, color: string } => {
@@ -102,11 +103,11 @@ const Register = () => {
         <div className="min-h-screen flex items-center justify-center bg-green-50 p-4">
             <div className="w-full max-w-3xl bg-white shadow-xl rounded-2xl p-8 space-y-6 ">
                 <h2 className="text-3xl font-extrabold text-center text-green-800">Register Panel</h2>
-            <p className="text-center text-green-700">To enjoy seamless Agriculture insight, register below</p>
+                <p className="text-center text-green-700">To enjoy seamless Agriculture insight, register below</p>
 
                 <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4">
                     <div>
-                        <label className="block text-green-700 mb-1">Username:</label>
+                        <label className={label_styling}>Username:</label>
                         <input
                           type="text"
                           name="username"
@@ -119,7 +120,7 @@ const Register = () => {
                     </div>
 
                     <div>
-                        <label className="block text-green-700 mb-1">Farm Name:</label>
+                        <label className={label_styling}>Farm Name:</label>
                         <input
                           type="text"
                           name="farmname"
@@ -132,7 +133,7 @@ const Register = () => {
                     </div>
 
                     <div>
-                        <label className="block text-green-700 mb-1">Email:</label>
+                        <label className={label_styling}>Email:</label>
                         <input
                           type="email"
                           name="email"
@@ -145,7 +146,7 @@ const Register = () => {
                     </div>
 
                     <div>
-                        <label className="block text-green-700 mb-1">Phone Number:</label>
+                        <label className={label_styling}>Phone Number:</label>
                         <input
                           type="text"
                           name="phonenumber"
@@ -158,7 +159,7 @@ const Register = () => {
                     </div>
 
                     <div>
-                        <label className="block text-green-700 mb-1">Password:</label>
+                        <label className={label_styling}>Password:</label>
                         <div className="relative">
                             <input
                               type={showPassword ? "text" : "password"}
@@ -183,15 +184,23 @@ const Register = () => {
                     </div>
 
                     <div>
-                        <label className="block text-green-700 mb-1">Confirm Password:</label>
-                        <input
-                          type="password"
-                          name="confirmpassword"
-                          value={formData.confirmpassword}
-                          onChange={handleChange}
-                          required
-                          className={inputClass}
-                        />
+                        <label className={label_styling}>Confirm Password:</label>
+                        <div className="relative">
+                            <input
+                              type={confirmPassword ? "text" : "password"}
+                              name="confirmpassword"
+                              value={formData.confirmpassword}
+                              onChange={handleChange}
+                              required
+                              className={inputClass}
+                            />
+                            <span
+                               onClick={() => setConfirmPassword(!confirmPassword)}
+                               className="absolute top-2 right-3 cursor-pointer text-green-600"
+                            >
+                               {confirmPassword ? <EyeOff /> : <Eye />}
+                            </span>
+                        </div>
                     </div>
 
                     <button
