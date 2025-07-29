@@ -59,6 +59,15 @@ async def otp_verification(db, username:str):
     })
     return results.fetchone()
 
+async def retrieve_otp(email:str, db):
+    query = text("""
+        SELECT id, otp, FROM user WHERE email= : email
+    """)
+    result = await db.execute(query,{
+        "email": email
+    })
+    return result.fetchone()
+
 async def verified_upate(db, username: str ):
     query = text("""
         UPDATE user 
