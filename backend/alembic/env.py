@@ -7,6 +7,7 @@ from sqlalchemy import pool
 from alembic import context
 
 from db.postgre_db import Base, get_db
+from model.tables import Users, RefreshToken
 import os
 from dotenv import load_dotenv
 
