@@ -5,28 +5,39 @@ import Cookies from 'js-cookie';
 import {useRouter} from 'next/navigation';
 import { parseSetCookie } from 'next/dist/compiled/@edge-runtime/cookies';
 
+interface FormData {
+  email: string,
+  password: string,
+}
+
 
 export default function Login() {
-   const [username, setUsername] = useState('')
-   const [password, setPassword] = useState('')
-   const [loading, setLoading] = useState(false);
-   const [error, setError] = useState('');
-   const Router = useRouter();
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+  const Router = useRouter();
 
-   const [formData, setFormData] = useState({ username: '', password: '' });
+  const [formData, setFormData] = useState<FormData>({ 
+    email: '', 
+    password: ''
+  });
+  
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) =>{
+    const { name, value } = e.target;
+    setFormData(prev => ({ ...prev, [name]: value}));
+  }
 
-   const handleSubmit = async (e: { preventDefault: () => void; }) => {
-      setLoading(true);
-      setError('');
-      try {
-         const res = await axiosInstance.post('/login',{
-            username,
-            password
-         });
-         Cookies.set('token', res.data.token);
-         Router.push('/dashboard')
+
+  const handleSubmit = async (e: { preventDefault: () => void; }) => {
+    e.preventDefault();
+    setLoading(true);
+    setError('');
+    try {
+      const res = await axiosInstance.post('/login', formData)
+      Cookies.set('token', res.data.token);
+
+      Router.push('/dashboard')
       }catch(err){
-          console.error("Error trying to login", err);
+        console.error("Error trying to login", err);
       }
    }
    
@@ -47,17 +58,15 @@ export default function Login() {
             <div className="rounded-md shadow-sm space-y-4">
               <div>
                 <label htmlFor="username" className="block text-sm font-medium text-gray-700">
-                  Username
+                  email
                 </label>
                 <input
                   id="username"
-                  name="username"
+                  name="email"
                   type="text"
-                  required
                   className="mt-1 appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                  placeholder="Enter your username"
-                  value={username}
-                  onChange={(e) => setUsername(e.target.value)}
+                  value={formData.email}
+                  onChange={handleChange}
                 />
               </div>
   
@@ -72,8 +81,8 @@ export default function Login() {
                   required
                   className="mt-1 appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                   placeholder="Enter your password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
+                  value={formData.password}
+                  onChange={handleChange}
                 />
               </div>
             </div>
