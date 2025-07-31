@@ -81,15 +81,8 @@ const Register = () => {
                 password: formData.password,
             }
             )
-            console.log("data", response)
-            if (response.data.success){
-                setMessage(response.data.message || 'Registered successfully!');
-                router.push('/auth/verification');
-            }
-               
-            // }else{
-            //     setError(response.data.message || "Registration failed")
-            // }
+            setMessage(response.data.message || 'Registered successfully!');
+            router.push('/auth/verification');
         }catch(err: unknown){
             console.error("Error registering from backend", err);
             setError("Error registering. Try again");
