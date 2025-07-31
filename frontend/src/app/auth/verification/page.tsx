@@ -12,6 +12,7 @@ type FormData = {
 const Verification = () => {
     const router = useRouter();
     const [error, setError ] = useState<string>('')
+    const [message, setMessage] = useState<string>('')
     const [loading, setLoading] = useState<boolean>(false);
     const [formData, setFormData ] = useState<FormData>({
         email: '',
@@ -32,6 +33,7 @@ const Verification = () => {
             const res = await axiosInstance.post('/api/verification', formData);
             if ( res.data.success){
                 setTimeout(() => {
+                    setMessage('Verification successfull. Redirecting...')
                     router.push('/login')
                 })
             }
@@ -71,6 +73,7 @@ const Verification = () => {
                     >
                         {loading ? 'verify...' : 'Verify' }
                     </button>
+                    {message && <p style={{ color: 'green'}}>{message}</p>}
                     {error && <p style={{ color:'red' }}> {error}</p>}
                 </form>
             </div>

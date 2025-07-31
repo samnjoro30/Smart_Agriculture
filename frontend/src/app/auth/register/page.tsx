@@ -90,7 +90,7 @@ const Register = () => {
             // }else{
             //     setError(response.data.message || "Registration failed")
             // }
-        }catch(err: any){
+        }catch(err: unknown){
             console.error("Error registering from backend", err);
             setError("Error registering. Try again");
             setTimeout(() => setError(''), 3000)
