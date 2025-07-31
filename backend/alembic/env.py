@@ -31,7 +31,7 @@ target_metadata = Base.metadata
 # can be acquired:
 # my_important_option = config.get_main_option("my_important_option")
 # ... etc.
-db_url = os.getenv("DB")
+db_url = os.getenv("NEON_DB")
 
 if not db_url:
     raise ValueError("DATABASE_URL environment variable not set")
@@ -71,17 +71,20 @@ async def run_migrations_online() -> None:
     """
     connectable = create_async_engine(
         db_url,
-        poolclass=pool.NullPool,
-        connect_args={"statement_cache_size": 0}, 
+        future=True
     )
 
-    async with connectable.begin() as conn:
-        await conn.run_sync(lambda sync_conn: context.configure(
-            connection=sync_conn,
-            target_metadata=target_metadata,
-            compare_type = True
-        ))
-        await conn.run_sync(context.run_migrations)
+    async with connectable.connect() as conn:
+        def do_run_migrations(sync_connection):
+            context.configure(
+                connection=sync_connection,
+                target_metadata=target_metadata,
+                compare_type=True,
+            )
+            with context.begin_transaction():
+                context.run_migrations()
+
+        await conn.run_sync(do_run_migrations)
 
     await connectable.dispose()
     # connectable = engine_from_config(
