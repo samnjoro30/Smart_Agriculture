@@ -7,6 +7,9 @@ from db.postgre_db import Base, engine
 from slowapi import Limiter, _rate_limit_exceeded_handler
 from slowapi.util import get_remote_address
 from slowapi.errors import RateLimitExceeded
+from alembic import command
+from alembic.config import Config
+import os
 
 app = FastAPI()
 
@@ -27,4 +30,7 @@ app.include_router(auth_router)
 
 @app.on_event("startup")
 async def startup():
-    pass
+    if os.getenv("RUN_MIGRATIONS") == "true":
+        alembic_cfg = Config("alembic.ini")
+        command.upgrade(alembic_cfg, "head")
+
