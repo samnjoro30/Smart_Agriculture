@@ -22,7 +22,8 @@ It is built using a full-stack, cloud-native approach with technologies like Fas
  - **python 3.9 and above**
  - **FastAPI** - High-performance API
  - **Uvicorn** - ASGI server
- - **Node.js** - 
+ - **Node.js** - backend components
+ - **Alembic** - handling db migrations
 
  ### 🌐 Frontend
 - **Next.js 14**
@@ -35,7 +36,8 @@ It is built using a full-stack, cloud-native approach with technologies like Fas
 - **NGINX** – Reverse proxy, load balancer and frontend static file serving
 - **GitHub Actions** – CI/CD automation
 - **Render** - backend hosting
-- **supabase**
+- **supabase** - postgre db
+- **Neon** - Postgre db
 - **vercel** - frontend hosting
 - **Firebase** - frontend hosting
 
