@@ -1,7 +1,7 @@
 "use client"
 
 import { useState } from 'react';
-import axiosInstance from "../API/axiosInstance";
+import axiosInstance from "../../API/axiosInstance";
 import { useRouter } from 'next/navigation';
 
 interface FormData {
