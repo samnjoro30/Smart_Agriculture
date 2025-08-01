@@ -59,7 +59,7 @@ const Verification = () => {
                             onChange={handleChange}
                             required
                             className="w-full px-4 py-2 border border-green-300 bg-green-50 text-green-900 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
-                            placeholder="you@example.com"
+                            placeholder="you@gmail.com"
                         />
                     </div>
 

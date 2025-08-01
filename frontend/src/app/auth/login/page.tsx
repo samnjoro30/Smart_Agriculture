@@ -21,6 +21,8 @@ export default function Login() {
     email: '', 
     password: ''
   });
+  const labelStyle="block text-green-700 font-bold mb-1"
+  const InputStyle="w-full px-4 py-2 border border-green-300 bg-green-50 text-green-900 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
   
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) =>{
     const { name, value } = e.target;
@@ -50,40 +52,40 @@ export default function Login() {
    }
    
    return (
-      <div className="">
-        <div className="">
+      <div className="min-h-screen flex items-center justify-center bg-green-50 px-4">
+        <div className="w-full max-w-md bg-white shadow-lg rounded-xl p-8 space-y-6">
           <div className="text-center">
-            <h2 className="">Sign in to your account</h2>
-            <div className="flex justify-center">
-              <Image src="/logo.png" alt="Logo" width={80} height={40} className="rounded-full" />
+            <div className="flex justify-centre">
+              <Image src="/logo.png" alt="Logo" width={80} height={40} className="mx-auto mb-2 rounded-full" />
             </div>
+            <h2 className="text-2xl font-bold text-green-800">Sign in to your account</h2>
           </div>
-          <form className="" onSubmit={handleSubmit}>
+          <form className="space-y-8" onSubmit={handleSubmit}>
             <div className="">
               <div>
-                <label htmlFor="email" className="">
-                  email
+                <label htmlFor="email" className={labelStyle}>
+                  Email:
                 </label>
                 <input
                   id="username"
                   name="email"
                   type="text"
-                  className=""
+                  className={InputStyle}
                   value={formData.email}
                   onChange={handleChange}
                 />
               </div>
   
               <div>
-                <label htmlFor="password" className="">
-                  Password
+                <label htmlFor="password" className={labelStyle}>
+                  Password:
                 </label>
                 <input
                   id="password"
                   name="password"
                   type="password"
                   required
-                  className=""
+                  className={InputStyle}
                   placeholder="Enter your password"
                   value={formData.password}
                   onChange={handleChange}
@@ -91,21 +93,21 @@ export default function Login() {
               </div>
             </div>
   
-            <div className="">
+            <div className="flex items-center justify-between text-sm">
               <div className="">
+              <label htmlFor="remember-me" className="flex items-center text-green-700">
                 <input
                   id="remember-me"
                   name="remember-me"
                   type="checkbox"
-                  className=""
+                  className="mr-2 rounded border-green-300 text-green-600 focus:ring-green-500"
                 />
-                <label htmlFor="remember-me" className="">
                   Remember me
                 </label>
               </div>
   
               <div className="text-sm">
-                <a href="#" className="">
+                <a href="#" className="text-green-600 hover:underline">
                   Forgot your password?
                 </a>
               </div>
@@ -116,7 +118,9 @@ export default function Login() {
               <button
                 type="submit"
                 disabled={loading}
-                className={`group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 ${loading ? 'opacity-75 cursor-not-allowed' : ''}`}
+                className={`w-full flex justify-center items-center py-2 px-4 bg-green-600 hover:bg-green-700 text-white font-semibold rounded-md transition duration-300 ${
+                  loading ? "opacity-70 cursor-not-allowed" : ""
+                }`}
               >
                 {loading ? (
                   <>
