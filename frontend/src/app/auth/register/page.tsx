@@ -97,10 +97,11 @@ const Register = () => {
         <div className="min-h-screen flex items-center justify-center bg-green-50 p-4">
             <div className="w-full max-w-3xl bg-white shadow-xl rounded-2xl p-8 space-y-6 ">
                 <h2 className="text-3xl font-extrabold text-center text-green-800">Register Panel</h2>
-                <p className="text-center text-green-700">To enjoy seamless Agriculture insight, register below</p>
                 <div className="flex justify-center">
                    <Image src="/logo.png" alt="Logo" width={80} height={40} className="rounded-full" />
                 </div>
+                <p className="text-center text-green-700">To enjoy seamless Agriculture insight, register below</p>
+
                 <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4">
                     <div>
                         <label className={label_styling}>Username:</label>
