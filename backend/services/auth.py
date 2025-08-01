@@ -17,8 +17,8 @@ async def get_user_by_username(username: str, db: AsyncSession):
 
 async def create_user(user_data: dict, db: AsyncSession):
     query = text("""
-        INSERT INTO users (username, email, farmname, phonenumber, otp, is_verified, password)
-        VALUES (:username, :email, :farmname, :phonenumber, :otp, :is_verified, :password)
+        INSERT INTO users (username, email, farmname, phonenumber, otp, otp_expires_at, is_verified, password)
+        VALUES (:username, :email, :farmname, :phonenumber, :otp, :otp_expires_at, :is_verified, :password)
     """)
     await db.execute(query, user_data)
     await db.commit()
