@@ -111,8 +111,8 @@ async def Verify_farmer(request: Request, db: AsyncSession = Depends(get_db)):
 
         if user.otp != otp:
             raise HTTPException(status_code=401, details="Invalid otp")
-        # if user.otp_expires_at and datetime.utcnow() > otp_expires_at:
-        #     raise HTTPException(status_code=401, detail="Otp has expired, try resend new otp")
+        if user.otp_expires_at and datetime.utcnow() > otp_expires_at:
+            raise HTTPException(status_code=401, detail="Otp has expired, try resend new otp")
 
         await verified_upate(db, email)
 
