@@ -20,6 +20,9 @@ export default function ResetPassword (){
     })
     const navigate = useRouter();
 
+    const labelStyle = "block text-green-700 font-bold mb-1";
+    const inputStyling = "w-full px-4 py-2 border border-green-300 bg-green-50 text-green-900 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500";
+
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>)=>{
         const { name, value } = e.target;
         setFormData(prev =>({ ...prev, [name] : value}))
@@ -45,36 +48,41 @@ export default function ResetPassword (){
     }
 
     return(
-        <div>
-            <div>
-                <h1>Reset Password</h1>
-                <form onSubmit={handleSubmit}>
+        <div className="min-h-screen flex items-center justify-center bg-green-50 px-4">
+            <div className="w-full max-w-md bg-white shadow-lg rounded-xl p-8 space-y-6">
+                <h1 className="text-2xl font-bold text-green-800 text-center">Reset Password</h1>
+                <form onSubmit={handleSubmit} className="space-y-4" >
                     <div>
-                        <label>Email:</label>
+                        <label className={labelStyle}>Email:</label>
                         <input
                           type=""
                           onChange={handleChange}
+                          className={inputStyling}
                           required
                         />
                     </div>
                     <div>
-                        <label>New Password:</label>
+                        <label className={labelStyle}>New Password:</label>
                         <input
                           type=""
                           onChange={handleChange}
+                          className={inputStyling}
                           required
                         />
                     </div>
                     <div>
-                        <label>Confirm New Password:</label>
+                        <label className={labelStyle}>Confirm New Password:</label>
                         <input
                           type=""
                           onChange={handleChange}
+                          className={inputStyling}
                           required
                         />
                     </div>
                     <button
                       type="submit"
+                      disabled={loading}
+                      className={`w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-4 rounded-md transition duration-300 ${loading ? 'opacity-70 cursor-not-allowed' : ''}`}
                     >
                        {loading ? 'Reseting ..' : 'Reset Password' }
                     </button>
