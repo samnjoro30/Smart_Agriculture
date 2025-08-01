@@ -15,6 +15,7 @@ from utils.otp import generate_otp, otp_expiry
 
 router =  APIRouter()
 
+
 @router.post("/auth/refresh")
 async def refresh_token(request: Request):
     try:
@@ -34,7 +35,7 @@ async def refresh_token(request: Request):
         raise HTTPException(status_code=500, details="Expired refresh token")
 
 @router.post("/auth/login", response_model=Token)
-async def login_farmer(payload: RegisterRequest, db: AsyncSession = Depends(get_db)):
+async def login_farmer(payload: RegisterRequest, response:db: AsyncSession = Depends(get_db)):
     existing_user = await get_user_by_username(payload.email, db)
     if not existing_user or not verify_password(payload.password, existing_user["password"]):
         raise HTTPException(status_code= 400, details = "Invalid credentials, Username not found")
@@ -47,14 +48,20 @@ async def login_farmer(payload: RegisterRequest, db: AsyncSession = Depends(get_
     refresh_token = refresh_token(data={"sub": email})
     expires_at = datetime.utcnow() + timedelta(hours=24)
 
-    
-
     await store_refresh_token(email, refresh_token, expires_at, db)
 
+    response.set_cookie(
+        key="access_token",
+        value=token,
+        httponly=True,
+        secure=True, 
+        samesite="Lax"
+    )
     return {
         "access_token": access_token,
         "refresh_token": refresh_token,
         "token_type": "bearer",
+        "message": "successful login"
     }
 
 @router.post("/auth/register", status_code= HTTP_201_CREATED)
