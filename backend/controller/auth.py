@@ -92,17 +92,17 @@ async def register_farm(payload: RegisterRequest, db: AsyncSession = Depends(get
         "message": "User registered ${username} successfully"
     }  
 
-@router.post("/auth/verify")
+@router.post("/auth/verification")
 async def Verify_farmer(request: Request, db: AsyncSession = Depends(get_db)):
     try:
-        body = await request.json
+        body = await request.json()
         email =  body.get("email")
         otp = body.get("otp")
 
         if not email or not otp:
-            raise HTTPException(status_code=401, details="otp required")
+            raise HTTPException(status_code=401, detail="otp required")
         
-        user = await otp_verification(db, username)
+        user = await otp_verification(db, email)
         if not user:
             raise HTTPException(status_code=404, detail="User not found")
         
@@ -111,8 +111,8 @@ async def Verify_farmer(request: Request, db: AsyncSession = Depends(get_db)):
 
         if user.otp != otp:
             raise HTTPException(status_code=401, details="Invalid otp")
-        if user.otp_expires_at and datetime.utcnow > otp_expires_at:
-            raise HTTPException(status_code=401, details="Otp has expired, try resend new otp")
+        # if user.otp_expires_at and datetime.utcnow() > otp_expires_at:
+        #     raise HTTPException(status_code=401, detail="Otp has expired, try resend new otp")
 
         await verified_upate(db, email)
 
@@ -120,7 +120,7 @@ async def Verify_farmer(request: Request, db: AsyncSession = Depends(get_db)):
             "message": "user verified successfully"
         }
     except  Exception as e:
-        raise HTTPException(status_code=500, details= f"Serve error verifying{str(e)}")
+        raise HTTPException(status_code=500, detail= f"Serve error verifying{str(e)}")
 
 @router.post("/auth/reset-password")
 async def reset_password(request: Request, db: AsyncSession = Depends(get_db)):
