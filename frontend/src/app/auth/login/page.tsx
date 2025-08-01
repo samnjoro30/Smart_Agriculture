@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import axiosInstance from '../../API/axiosInstance';
+import Image from 'next/image';
 import {useRouter} from 'next/navigation';
 
 interface FormData {
@@ -53,6 +54,9 @@ export default function Login() {
         <div className="">
           <div className="text-center">
             <h2 className="">Sign in to your account</h2>
+            <div className="flex justify-center">
+              <Image src="/logo.png" alt="Logo" width={80} height={40} className="rounded-full" />
+            </div>
           </div>
           <form className="" onSubmit={handleSubmit}>
             <div className="">
