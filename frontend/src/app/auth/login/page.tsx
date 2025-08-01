@@ -12,8 +12,9 @@ interface FormData {
 
 
 export default function Login() {
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
+  const [loading, setLoading] = useState<boolean>(false);
+  const [error, setError] = useState<string>('');
+  const [message, setMessage] = useState<string>('')
   const Router = useRouter();
 
   const [formData, setFormData] = useState<FormData>({ 
@@ -26,15 +27,15 @@ export default function Login() {
     setFormData(prev => ({ ...prev, [name]: value}));
   }
 
-
   const handleSubmit = async (e: { preventDefault: () => void; }) => {
     e.preventDefault();
     setLoading(true);
     setError('');
     try {
-      const res = await axiosInstance.post('/login', formData)
-      Cookies.set('token', res.data.token);
-
+      const res = await axiosInstance.post('/login', formData,{
+        withCredentials: true,
+      });
+      setMessage(res.data.message || "login successful");
       Router.push('/dashboard')
       }catch(err){
         console.error("Error trying to login", err);
@@ -42,36 +43,29 @@ export default function Login() {
    }
    
    return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-md w-full space-y-8 bg-white p-8 rounded-lg shadow-md">
+      <div className="">
+        <div className="">
           <div className="text-center">
-            <h2 className="mt-6 text-3xl font-extrabold text-gray-900">Sign in to your account</h2>
+            <h2 className="">Sign in to your account</h2>
           </div>
-          
-          {error && (
-            <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
-              <span className="block sm:inline">{error}</span>
-            </div>
-          )}
-  
-          <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
-            <div className="rounded-md shadow-sm space-y-4">
+          <form className="" onSubmit={handleSubmit}>
+            <div className="">
               <div>
-                <label htmlFor="username" className="block text-sm font-medium text-gray-700">
+                <label htmlFor="email" className="">
                   email
                 </label>
                 <input
                   id="username"
                   name="email"
                   type="text"
-                  className="mt-1 appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                  className=""
                   value={formData.email}
                   onChange={handleChange}
                 />
               </div>
   
               <div>
-                <label htmlFor="password" className="block text-sm font-medium text-gray-700">
+                <label htmlFor="password" className="">
                   Password
                 </label>
                 <input
@@ -79,7 +73,7 @@ export default function Login() {
                   name="password"
                   type="password"
                   required
-                  className="mt-1 appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                  className=""
                   placeholder="Enter your password"
                   value={formData.password}
                   onChange={handleChange}
@@ -87,21 +81,21 @@ export default function Login() {
               </div>
             </div>
   
-            <div className="flex items-center justify-between">
-              <div className="flex items-center">
+            <div className="">
+              <div className="">
                 <input
                   id="remember-me"
                   name="remember-me"
                   type="checkbox"
-                  className="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded"
+                  className=""
                 />
-                <label htmlFor="remember-me" className="ml-2 block text-sm text-gray-900">
+                <label htmlFor="remember-me" className="">
                   Remember me
                 </label>
               </div>
   
               <div className="text-sm">
-                <a href="#" className="font-medium text-indigo-600 hover:text-indigo-500">
+                <a href="#" className="">
                   Forgot your password?
                 </a>
               </div>
@@ -126,6 +120,13 @@ export default function Login() {
               </button>
             </div>
           </form>
+          {error && (
+            <p style={{ color: 'red'}}>{error}</p>
+           
+          )}
+          {message && (
+            <p style={{ color: 'green'}}>{message}</p>
+          )}
         </div>
       </div>
     );
