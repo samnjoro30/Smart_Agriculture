@@ -32,11 +32,9 @@ const Verification = () => {
         try{
             "use server"
             const res = await axiosInstance.post('/auth/verification', formData);
-            if ( res.data.success){
-                setMessage('Verification successfull. Redirecting...')
-                setTimeout(() => setMessage(''))
-                router.push('/auth/login')
-            }
+            
+            setMessage( res.data.message || 'Verification successfull. Redirecting...')
+            router.push('/auth/login')
         }catch(err: unknown){
             console.error("Error occurred during verification", err);
             setError("Error Occured during verification, try checking verification code ");
