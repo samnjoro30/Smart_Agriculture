@@ -1,9 +1,8 @@
 "use client"
+
 import React, { useState } from 'react';
 import axiosInstance from '../../API/axiosInstance';
-import Cookies from 'js-cookie';
 import {useRouter} from 'next/navigation';
-import { parseSetCookie } from 'next/dist/compiled/@edge-runtime/cookies';
 
 interface FormData {
   email: string,
@@ -31,14 +30,21 @@ export default function Login() {
     e.preventDefault();
     setLoading(true);
     setError('');
+    setMessage('')
     try {
+      "use server"
       const res = await axiosInstance.post('/login', formData,{
         withCredentials: true,
       });
       setMessage(res.data.message || "login successful");
-      Router.push('/dashboard')
-      }catch(err){
+      setTimeout(() =>{
+        setMessage('')
+        Router.push('/dashboard')
+      }, 1000)
+      }catch(err: any){
         console.error("Error trying to login", err);
+        setError(err?.response?.data?.message || "Error loging try again")
+        setTimeout(() => setError(''), 3000);
       }
    }
    
