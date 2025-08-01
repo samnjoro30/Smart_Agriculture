@@ -32,12 +32,12 @@ const Verification = () => {
 
         try{
             "use server"
-            const res = await axiosInstance.post('/api/verification', formData);
+            const res = await axiosInstance.post('/auth/verification', formData);
             if ( res.data.success){
                 setMessage('Verification successfull. Redirecting...')
                 setTimeout(() => {
                     setMessage('')
-                    router.push('/login')
+                    router.push('/auth/login')
                 })
             }
         }catch(err: unknown){
