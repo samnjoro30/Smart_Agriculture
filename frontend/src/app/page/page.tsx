@@ -7,7 +7,8 @@ export  default function Homepage() {
 
     const currentYear = new Date().getFullYear();
 
-    const liStyling = "hover:text-green-600 cursor-pointer";
+    const liStyling = "hover:text-green hover:underline transition duration-200 cursor-pointer";
+
     return(
         <div className="min-h-screen flex flex-col">
             <header className="bg-green-500 shadow-md py-4 px-6 flex items-center justify-between">
@@ -77,7 +78,7 @@ export  default function Homepage() {
                 <section>
                     <h3>What Farmers are saying</h3>
                 </section>
-                <section>
+                <section className="">
                     <h2>Trusted By and Powered by/Partners</h2>
                 </section>
                 

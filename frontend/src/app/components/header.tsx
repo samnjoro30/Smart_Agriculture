@@ -37,7 +37,7 @@ export default function Header (){
                     {theme === 'light' ? 'Dark Mode' : 'Light Mode'}
                 </button>
                 <button
-                 onClick={handleLogout}
+                  onClick={handleLogout}
                 >
                     Logout
                 </button>
