@@ -23,19 +23,30 @@ export  default function Homepage() {
             </header>
             <main>
                 <section>
+                   <h1>Empowering Farmers with Smart Technology</h1>
                     <div>
+                        <div>
+                            <video autoPlay muted loop>
+                                <source src="/background.mp4" type="video/mp4" />
+                            </video>
+                        </div>
                         <p>This is a platform designed to help farmers track and improve productiivity in there farms by simple clicks where you enjoy seamless advantages of AI, ML prediction and timely production</p>
 
                         <p> Farmers First choice</p>
                     </div>
                 </section>
                 <section>
+                    <h2>services</h2>
                     <div>
 
                     </div>
                     <div>
-                        
+
                     </div>
+                </section>
+                <section>
+                    <h2>impact</h2>
+
                 </section>
                 
 
