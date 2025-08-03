@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import axiosInstance from '../../API/axiosInstance';
 import Image from 'next/image';
 import {useRouter} from 'next/navigation';
+import Link from 'next/link'
 
 interface FormData {
   email: string,
@@ -107,9 +108,9 @@ export default function Login() {
               </div>
   
               <div className="text-sm">
-                <a href="#" className="text-green-600 hover:underline">
+                <Link href="/auth/reset-password" className="text-green-600 hover:underline">
                   Forgot your password?
-                </a>
+                </Link>
               </div>
               
             </div>
@@ -141,6 +142,7 @@ export default function Login() {
           {message && (
             <p style={{ color: 'green'}}>{message}</p>
           )}
+          <Link href="/auth/register">Or Register </Link>
         </div>
       </div>
     );

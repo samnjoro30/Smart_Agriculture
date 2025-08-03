@@ -4,7 +4,8 @@ import React, { useState } from 'react';
 import axiosInstance from '../../API/axiosInstance';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
-import { Eye, EyeOff} from 'lucide-react'
+import { Eye, EyeOff} from 'lucide-react';
+import Link from 'next/link';
 
 type FormData = {
     username: string;
@@ -210,6 +211,7 @@ const Register = () => {
                 </form>
                 {message && <p className="text-center text-green-700 font-medium">{message}</p>}
                 {error && <p className="text-center text-red-600 font-medium">{error}</p>}
+                <Link href="/auth/login">or Login</Link>
             </div>
         </div>
     )

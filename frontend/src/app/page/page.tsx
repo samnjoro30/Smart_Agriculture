@@ -1,6 +1,7 @@
 
 import Image from 'next/image';
 import FooterHome from '../components/footerHome';
+import Link from 'next/link';
 
 export  default function Homepage() {
 
@@ -13,12 +14,14 @@ export  default function Homepage() {
                 </div>
                 <h1>Smart Agriculture </h1>
                 <nav>
-                    <li>
-                        <ul>Home</ul>
-                        <ul>services</ul>
-                        <ul>Impact</ul>
-                        <ul>Contact</ul>
-                    </li>
+                    <ul>
+                        <li>Home</li>
+                        <li>services</li>
+                        <li>Impact</li>
+                        <Link href="/auth/login">login</Link>
+                        <Link href="/auth/register">Register</Link>
+                        <li>Contact</li>
+                    </ul>
                 </nav>
             </header>
             <main>
@@ -38,9 +41,11 @@ export  default function Homepage() {
                 <section>
                     <h2>services</h2>
                     <div>
+                        <h3>Farm Inventory</h3>
 
                     </div>
                     <div>
+                        <h3></h3>
 
                     </div>
                 </section>
