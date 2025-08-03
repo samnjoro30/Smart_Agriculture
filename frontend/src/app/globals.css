@@ -4,7 +4,7 @@
 :root {
   --background: #ffffff;
   --foreground: #171717;
-  --pageformatcolor: rgb(75, 154, 75);
+  --pageformatcolor: rgb(163, 173, 165);
 }
 @tailwindcss base;
 @tailwindcss components;

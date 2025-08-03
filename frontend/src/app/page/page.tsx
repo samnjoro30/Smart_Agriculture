@@ -12,14 +12,14 @@ export  default function Homepage() {
                 <div>
                     <Image src="/logo.png" alt="Logo" width={80} height={40} className="rounded-full" />
                 </div>
-                <h1>Smart Agriculture </h1>
+                <h1>Smart Farm Agriculture </h1>
                 <nav>
                     <ul>
                         <li>Home</li>
                         <li>services</li>
                         <li>Impact</li>
-                        <Link href="/auth/login">login</Link>
-                        <Link href="/auth/register">Register</Link>
+                        <li><Link href="/auth/login">login</Link></li>
+                        <li><Link href="/auth/register">Register</Link></li>
                         <li>Contact</li>
                     </ul>
                 </nav>
@@ -45,13 +45,31 @@ export  default function Homepage() {
 
                     </div>
                     <div>
-                        <h3></h3>
+                        <h3>AI-powered Insights on your farm</h3>
+
+                    </div>
+                    <div>
+                        <h3>Real-time Farm Analytics</h3>
+
+                    </div>
+                    <div>
+                        <h3>Samrt Irrigation</h3>
+
+                    </div>
+                    <div>
+                        <h3>Breeding Tracking</h3>
 
                     </div>
                 </section>
                 <section>
-                    <h2>impact</h2>
+                    <h2>Farm Management Resources</h2>
 
+                </section>
+                <section>
+                    <h3>What Farmers are saying</h3>
+                </section>
+                <section>
+                    <h2>Trusted By and Powered by/Partners</h2>
                 </section>
                 
 
