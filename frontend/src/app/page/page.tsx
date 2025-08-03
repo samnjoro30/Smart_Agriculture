@@ -22,25 +22,27 @@ export  default function Homepage() {
                 </nav>
             </header>
             <main>
-                <div>
-                    <p>This is a platform designed to help farmers track and improve productiivity in there farms by simple clicks where you enjoy seamless advantages of AI, ML prediction and timely production</p>
+                <section>
+                    <div>
+                        <p>This is a platform designed to help farmers track and improve productiivity in there farms by simple clicks where you enjoy seamless advantages of AI, ML prediction and timely production</p>
 
-                    <p> Farmers First choice</p>
-                </div>
-                <div>
+                        <p> Farmers First choice</p>
+                    </div>
+                </section>
+                <section>
+                    <div>
 
-                </div>
-                <div>
-
-                </div>
-                <div>
-                    
-                </div>
+                    </div>
+                    <div>
+                        
+                    </div>
+                </section>
+                
 
             </main>
             <footer>
                 <FooterHome />
-                <div>
+                <div className="">
                     <p> &copy; {currentYear} Smart Farm. All Rights reserved </p>
                 </div>
             </footer>
