@@ -6,36 +6,45 @@ import Link from 'next/link';
 export  default function Homepage() {
 
     const currentYear = new Date().getFullYear();
+
+    const liStyling = "hover:text-green-600 cursor-pointer";
     return(
-        <div>
-            <header>
-                <div>
+        <div className="min-h-screen flex flex-col">
+            <header className="bg-green-500 shadow-md py-4 px-6 flex items-center justify-between">
+                <div className="flex items-center space-x-3">
                     <Image src="/logo.png" alt="Logo" width={80} height={40} className="rounded-full" />
+                    <h1 className="text-xl md:text-2xl font-bold text-green-700">Smart Farm Agriculture </h1>
                 </div>
-                <h1>Smart Farm Agriculture </h1>
                 <nav>
-                    <ul>
-                        <li>Home</li>
-                        <li>services</li>
-                        <li>Impact</li>
-                        <li><Link href="/auth/login">login</Link></li>
-                        <li><Link href="/auth/register">Register</Link></li>
-                        <li>Contact</li>
+                    <ul className="flex space-x-6 text-green-800 font-medium">
+                        <li className={liStyling}>Home</li>
+                        <li className={liStyling}>services</li>
+                        <li className={liStyling}>Impact</li>
+                        <li className={liStyling}><Link href="/auth/login">login</Link></li>
+                        <li className={liStyling}><Link href="/auth/register">Register</Link></li>
+                        <li className={liStyling}>Contact</li>
                     </ul>
                 </nav>
             </header>
             <main>
-                <section>
+                <section className="relative h-screen w-full overflow-hidden">
                    <h1>Empowering Farmers with Smart Technology</h1>
                     <div>
                         <div>
-                            <video autoPlay muted loop>
+                            <video 
+                              autoPlay 
+                              muted 
+                              loop
+                              className="absolute top-0 left-0 w-full h-50 object-cover z-0"
+                            >
                                 <source src="/background.mp4" type="video/mp4" />
                             </video>
                         </div>
-                        <p>This is a platform designed to help farmers track and improve productiivity in there farms by simple clicks where you enjoy seamless advantages of AI, ML prediction and timely production</p>
+                        <div className="relative z-20 flex flex-col items-center justify-center h-full px-4 text-center text-white space-y-6">
+                            <p className="max-w-2xl text-lg md:text-xl">This is a platform designed to help farmers track and improve productiivity in there farms by simple clicks where you enjoy seamless advantages of AI, ML prediction and timely production</p>
 
-                        <p> Farmers First choice</p>
+                            <p className="text-green-200 font-semibold text-lg"> Farmers First choice</p>
+                        </div>
                     </div>
                 </section>
                 <section>
@@ -76,7 +85,7 @@ export  default function Homepage() {
             </main>
             <footer>
                 <FooterHome />
-                <div className="">
+                <div className="border-t bg-green-200 border-green-700 h-10 pt-2 text-center text-sm text-green-400">
                     <p> &copy; {currentYear} Smart Farm. All Rights reserved </p>
                 </div>
             </footer>
