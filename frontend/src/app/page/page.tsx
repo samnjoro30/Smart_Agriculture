@@ -1,7 +1,10 @@
 
 import Image from 'next/image';
+import FooterHome from '../components/footerHome';
 
 export  default function Homepage() {
+
+    const currentYear = new Date().getFullYear();
     return(
         <div>
             <header>
@@ -21,6 +24,8 @@ export  default function Homepage() {
             <main>
                 <div>
                     <p>This is a platform designed to help farmers track and improve productiivity in there farms by simple clicks where you enjoy seamless advantages of AI, ML prediction and timely production</p>
+
+                    <p> Farmers First choice</p>
                 </div>
                 <div>
 
@@ -34,7 +39,10 @@ export  default function Homepage() {
 
             </main>
             <footer>
-
+                <FooterHome />
+                <div>
+                    <p> &copy; {currentYear} Smart Farm. All Rights reserved </p>
+                </div>
             </footer>
         </div>
     )
