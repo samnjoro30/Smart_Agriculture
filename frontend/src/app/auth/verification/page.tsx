@@ -35,8 +35,9 @@ const Verification = () => {
             
             setMessage( res.data.message || 'Verification successfull. Redirecting...')
             router.push('/auth/login')
-        }catch(err: unknown){
-            console.error("Error occurred during verification", err);
+        }catch(err){
+            const error = err instanceof Error ? err : new Error(String(err));
+            console.error("Error occurred during verification", error);
             setError("Error Occured during verification, try checking verification code ");
             setTimeout(() => setError(''), 3000);
         }finally {

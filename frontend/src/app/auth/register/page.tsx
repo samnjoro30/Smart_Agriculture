@@ -85,8 +85,9 @@ const Register = () => {
             )
             setMessage(response.data.message || 'Registered successfully!');
             router.push('/auth/verification');
-        }catch(err: unknown){
-            console.error("Error registering from backend", err);
+        }catch(err){
+            const error = err instanceof Error ? err : new Error(String(err));
+            console.error("Error registering from backend", error);
             setError("Error registering. Try again");
             setTimeout(() => setError(''), 3000)
         }finally{

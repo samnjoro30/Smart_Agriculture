@@ -87,6 +87,7 @@ export default function ResetPassword (){
                        {loading ? 'Reseting ..' : 'Reset Password' }
                     </button>
                 </form>
+                {error && <p style={{ color: 'red'}}>{error}</p>}
             </div>
         </div>
     )

@@ -45,9 +45,10 @@ export default function Login() {
         setMessage('')
         Router.push('/dashboard')
       }, 1000)
-      }catch(err: any){
-        console.error("Error trying to login", err);
-        setError(err?.response?.data?.message || "Error loging try again")
+      }catch(err){
+        const error = err instanceof Error ? err : new Error(String(err));
+        console.error("Error trying to login", error);
+        setError("Error loging try again")
         setTimeout(() => setError(''), 3000);
       }
    }
