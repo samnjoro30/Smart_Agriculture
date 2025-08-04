@@ -36,7 +36,6 @@ export default function Login() {
     setError('');
     setMessage('')
     try {
-      "use server"
       const res = await axiosInstance.post('/login', formData,{
         withCredentials: true,
       });

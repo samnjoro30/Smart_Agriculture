@@ -30,7 +30,6 @@ const Verification = () => {
         setError('');
         setMessage('');
         try{
-            "use server"
             const res = await axiosInstance.post('/auth/verification', formData);
             
             setMessage( res.data.message || 'Verification successfull. Redirecting...')

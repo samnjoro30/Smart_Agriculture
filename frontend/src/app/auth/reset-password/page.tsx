@@ -33,7 +33,6 @@ export default function ResetPassword (){
         setLoading(true)
         setError('')
         try{
-            "use server"
             const res = await axiosInstance.post("/auth/reset-password", formData);
             setFormData(res.data.message);
             setTimeout(() =>{

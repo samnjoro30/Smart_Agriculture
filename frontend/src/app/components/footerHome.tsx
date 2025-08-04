@@ -15,8 +15,8 @@ export default function FooterHome (){
                 <div>
                     <h3 className="text-lg font-semibold mb-3">Quick Links</h3>
                     <ul className="space-y-2 text-sm">
-                       <li><a href="/" className="hover:underline">Home</a></li>
-                       <li><a href="/auth/register" className="hover:underline">Register</a></li>
+                       <li><Link href="/" className="hover:underline">Home</Link></li>
+                       <li><Link href="/auth/register" className="hover:underline">Register</Link></li>
                        <li><Link href="/auth/login" className="hover:underline">Login</Link></li>
                        <li><Link href="/" className="hover:underline">Services</Link></li>
                     </ul>
