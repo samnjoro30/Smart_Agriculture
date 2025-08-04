@@ -36,7 +36,7 @@ export  default function Homepage() {
                               autoPlay 
                               muted 
                               loop
-                              className="absolute top-0 left-0 w-full h-50 object-cover z-0"
+                              className="absolute top-0 left-0 w-full h-full object-cover z-0"
                             >
                                 <source src="/background.mp4" type="video/mp4" />
                             </video>
@@ -48,31 +48,41 @@ export  default function Homepage() {
                         </div>
                     </div>
                 </section>
-                <section>
-                    <h2>services</h2>
-                    <div>
+                <section className="py-12 px-4 bg-green-100 shadow-black">
+                    <h2 className="">services</h2>
+                    <div className="">
+                        <Image  src="/logo.png" alt="logo" width={80} height={40}/>
                         <h3>Farm Inventory</h3>
+                        <p>You get your record well architectured and simplified for you to understand. The inventory helps you to plan for the farm management </p>
 
                     </div>
-                    <div>
+                    <div className="">
+                        <Image  src="/logo.png" alt="logo" width={80} height={40}/>
                         <h3>AI-powered Insights on your farm</h3>
-
+                        <p>Help analyze upto 97% correct prediction of the outcome of your produce and recommendation on how on steps to take to have a higher yield outcome</p>
                     </div>
-                    <div>
+                    <div className="">
+                        <Image  src="/logo.png" alt="logo" width={80} height={40}/>
                         <h3>Real-time Farm Analytics</h3>
+                        <p>You get real-time updates on  your farm management and where to put more effort for higher productivity</p>
+                    </div>
+                    <div className="">
+                        <Image  src="/logo.png" alt="logo" width={80} height={40}/>
+                        <h3>Smart Irrigation</h3>
+                        <p>The Platform is designed to help you as a farmer migrate  and get started with modern and emerging  Agricultural technology form irrifation to dairy farming and many more</p>
 
                     </div>
-                    <div>
-                        <h3>Samrt Irrigation</h3>
-
-                    </div>
-                    <div>
+                    <div className="">
+                        <Image  src="/logo.png" alt="logo" width={80} height={40}/>
                         <h3>Breeding Tracking</h3>
-
+                        <p>We are helping farmers track there breeding enabling upto 99% correct prediction of breeding interval, type of breed</p>
                     </div>
                 </section>
                 <section>
                     <h2>Farm Management Resources</h2>
+                    <div>
+
+                    </div>
 
                 </section>
                 <section>
@@ -80,13 +90,14 @@ export  default function Homepage() {
                 </section>
                 <section className="">
                     <h2>Trusted By and Powered by/Partners</h2>
-                </section>
-                
+                    <div className="">
 
+                    </div>
+                </section>
             </main>
             <footer>
                 <FooterHome />
-                <div className="border-t bg-green-200 border-green-700 h-10 pt-2 text-center text-sm text-green-400">
+                <div className="border-t bg-green-700 border-white-700 h-10 px-6 pt-2 text-center text-sm text-green-400">
                     <p> &copy; {currentYear} Smart Farm. All Rights reserved </p>
                 </div>
             </footer>

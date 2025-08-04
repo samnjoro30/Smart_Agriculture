@@ -1,5 +1,5 @@
 
-
+import Link from 'next/link';
 
 export default function FooterHome (){
     return(
@@ -17,16 +17,16 @@ export default function FooterHome (){
                     <ul className="space-y-2 text-sm">
                        <li><a href="/" className="hover:underline">Home</a></li>
                        <li><a href="/auth/register" className="hover:underline">Register</a></li>
-                       <li><a href="/auth/login" className="hover:underline">Login</a></li>
-                       <li><a href="#" className="hover:underline">Services</a></li>
+                       <li><Link href="/auth/login" className="hover:underline">Login</Link></li>
+                       <li><Link href="/" className="hover:underline">Services</Link></li>
                     </ul>
                 </div>
 
                 <div>
                     <h3 className="text-lg font-semibold mb-3">Contact</h3>
                     <ul className="space-y-2 text-sm">
-                        <li>Email: support@smartfarm.com</li>
-                        <li>Phone: +254 712 345 678</li>
+                        <li>Email: samnjorokibandi@gmail.com</li>
+                        <li>Phone: +254 799 169 720</li>
                         <li>Location: Nairobi, Kenya</li>
                     </ul>
                 </div>
@@ -37,7 +37,7 @@ export default function FooterHome (){
                     <input
                       type="email"
                       placeholder="Enter your email"
-                      className="w-full px-3 py-2 rounded-md text-green-900 focus:outline-none"
+                      className="w-full px-3 py-2 rounded-md text-white-900 border-2 focus:outline-none"
                     />
                     <button className="mt-2 w-full bg-white text-green-900 font-semibold py-2 px-4 rounded-md hover:bg-gray-200 transition">
                         Subscribe
