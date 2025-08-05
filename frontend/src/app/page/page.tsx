@@ -1,6 +1,7 @@
 
 import Image from 'next/image';
 import FooterHome from '../components/footerHome';
+import HeaderHome from '../components/headerHomepage';
 import Link from 'next/link';
 
 export  default function Homepage() {
@@ -17,8 +18,9 @@ export  default function Homepage() {
 
     return(
         <div className="min-h-screen flex flex-col">
-            <header className="bg-green-500 shadow-md py-4 px-6 flex items-center justify-between">
-                <div className="flex items-center space-x-3">
+            <header className="">
+                < HeaderHome />
+                {/* <div className="flex items-center space-x-3">
                     <Image src="/logo.png" alt="Logo" width={80} height={40} className="rounded-full" />
                     <h1 className="text-xl md:text-2xl font-bold text-green-700">Smart Farm Agriculture </h1>
                 </div>
@@ -31,7 +33,7 @@ export  default function Homepage() {
                         <li className={liStyling}><Link href="/auth/register">Register</Link></li>
                         <li className={liStyling}>Contact</li>
                     </ul>
-                </nav>
+                </nav> */}
             </header>
             <main>
                 <section className="relative h-[60vh] w-full overflow-hidden">
