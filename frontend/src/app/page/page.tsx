@@ -58,34 +58,52 @@ export  default function Homepage() {
                     <h2 className="text-3xl md:text-4xl font-bold text-center text-green-700 mb-12">services</h2>
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10 max-w-6xl mx-auto">
                         <div className={serviceDiv}>
-                            <Image  src="/agri_cow.jpg" alt="Inventory" width={100} height={40} className={ImageDiv}/>
+                            <div className={ImageDiv}>
+                                <Image  src="/agri_cow.jpg" alt="Inventory" layout="fill" objectFit="cover" />
+                            </div>
                             <h3 className={Hdiv}>Farm Inventory</h3>
                             <p className={pservice}>You get your record well architectured and simplified for you to understand. The inventory helps you to plan for the farm management </p>
                         </div>
 
                         <div className={serviceDiv}>
-                            <Image  src="/Agri4.jpg" alt="AI image" width={100} height={40} className={ImageDiv} />
+                            <div className={ImageDiv}>
+                                <Image  src="/Agri4.jpg" alt="AI image" layout="fill" objectFit="cover"/>
+                            </div>
                             <h3 className={Hdiv}>AI-powered Insights on your farm</h3>
                             <p className={pservice}>Help analyze upto 97% correct prediction of the outcome of your produce and recommendation on how on steps to take to have a higher yield outcome</p>
                             
                         </div>
 
                         <div className={serviceDiv}>
-                            <Image  src="/Agri5.png" alt="Real-analytics" width={100} height={40} className={ImageDiv}/>
+                            <div className={ImageDiv}>
+                                <Image  src="/Agri5.png" alt="Real-analytics" layout="fill" objectFit="cover"/>
+                            </div>
                             <h3 className={Hdiv}>Real-time Farm Analytics</h3>
                             <p className={pservice}>You get real-time updates on  your farm management and where to put more effort for higher productivity</p>
                         </div>
 
                         <div className={serviceDiv}>
-                            <Image  src="/agri2.jpg" alt="Irrigation" width={100} height={40} className={ImageDiv}/>
+                            <div className={ImageDiv}>
+                                <Image  src="/agri2.jpg" alt="Irrigation" layout="fill" objectFit="cover"/>
+                            </div>
                             <h3 className={Hdiv}>Smart Irrigation</h3>
                             <p className={pservice}>The Platform is designed to help you as a farmer migrate  and get started with modern and emerging  Agricultural technology form irrifation to dairy farming and many more</p>
                         </div>
 
                         <div className={serviceDiv}>
-                            <Image  src="/cow3.jpg" alt="breeding" width={100} height={40} className={ImageDiv} />
+                            <div className={ImageDiv}>
+                                <Image  src="/cow3.jpg" alt="breeding" layout="fill" objectFit="cover"/>
+                            </div>
                             <h3 className={Hdiv}>Breeding Tracking</h3>
                             <p className={pservice}>Track breeding cycles with up to 99% accuracy, ensuring optimal timing and better breed management.</p>
+                        </div>
+                        <div className={serviceDiv}>
+                            <div className={ImageDiv}>
+                                <Image src="/Agri3.jpg" alt="Animal health" layout="fill" objectFit="cover"/>
+                            </div>
+                            <h3 className={Hdiv}>Animal health</h3>
+                            <p className={pservice}></p>
+
                         </div>
                         
                     </div>
