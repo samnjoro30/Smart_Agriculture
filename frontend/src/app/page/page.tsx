@@ -110,15 +110,15 @@ export  default function Homepage() {
                     <h3 className="text-3xl md:text-4xl font-bold text-center text-green-700 mb-10">What Farmers are saying</h3>
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
                         <div className="bg-green-50 p-6 rounded-xl shadow-md hover:shadow-lg transition-shadow duration-300">
-                            <p className={pFarmersSay}>"Since I started using Smart Farm, managing my crops and livestock has become easier and more productive. The AI insights have helped me plan better."</p>
+                            <p className={pFarmersSay}>&quot;Since I started using Smart Farm, managing my crops and livestock has become easier and more productive. The AI insights have helped me plan better.&quot;</p>
                             <p className={pFarmerName}>- Nancy .W., Smallholder Farmer in Muranga</p>
                         </div>
                         <div className="bg-green-50 p-6 rounded-xl shadow-md hover:shadow-lg transition-shadow duration-300">
-                            <p className={pFarmersSay}>"The platform's real-time analytics allowed me to identify water stress in my farm early. Smart Irrigation suggestions saved my entire season."</p>
-                            <p className={pFarmerName}>- John K., Dairy Farmer in Nyandarua</p>
+                            <p className={pFarmersSay}>&quot;The platform's real-time analytics allowed me to identify water stress in my farm early. Smart Irrigation suggestions saved my entire season.&quot;</p>
+                            <p className={pFarmerName}>- John K., Farmer in Nyandarua</p>
                         </div>
                         <div className="bg-green-50 p-6 rounded-xl shadow-md hover:shadow-lg transition-shadow duration-300">
-                            <p className={pFarmersSay}>"Breeding tracking has never been this accurate. Now I have a predictable cycle for my dairy cows, and milk production has increased."</p>
+                            <p className={pFarmersSay}>&quot;Breeding tracking has never been this accurate. Now I have a predictable cycle for my dairy cows, and milk production has increased.&quot;</p>
                             <p className={pFarmerName}>- Agnes M., Dairy Farmer in Nyeri</p>
                         </div>
                     </div>
