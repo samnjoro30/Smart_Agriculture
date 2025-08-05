@@ -212,7 +212,7 @@ const Register = () => {
                 </form>
                 {message && <p className="text-center text-green-700 font-medium">{message}</p>}
                 {error && <p className="text-center text-red-600 font-medium">{error}</p>}
-                <Link href="/auth/login">or Login</Link>
+                <Link href="/auth/login" className="text-green-600 hover:underline">or Login</Link>
             </div>
         </div>
     )
