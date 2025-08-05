@@ -88,10 +88,10 @@ export  default function Homepage() {
                         </div>
                         <div className={serviceDiv}>
                             <div className={ImageDiv}>
-                                <Image src="/Agri3.jpg" alt="Animal health" layout="fill" objectFit="cover"/>
+                                <Image src="/Agri7.jpg" alt="Animal health" layout="fill" objectFit="cover"/>
                             </div>
-                            <h3 className={Hdiv}>Animal health</h3>
-                            <p className={pservice}></p>
+                            <h3 className={Hdiv}>Farm health Insights</h3>
+                            <p className={pservice}> We offer recommendation for farms in controlling pesticide and how to fight animal diseases</p>
 
                         </div>
                         
