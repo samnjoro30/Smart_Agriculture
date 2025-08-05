@@ -2,13 +2,11 @@
 import Image from 'next/image';
 import FooterHome from '../components/footerHome';
 import HeaderHome from '../components/headerHomepage';
-import Link from 'next/link';
 
 export  default function Homepage() {
 
     const currentYear = new Date().getFullYear();
 
-    const liStyling = "hover:text-green hover:underline transition duration-200 cursor-pointer";
     const serviceDiv ="bg-white rounded-xl shadow-md p-6 text-center hover:shadow-lg transition-shadow duration-300";
     const Hdiv = "text-xl font-semibold text-green-800 mb-2";
     const pservice = "text-gray-700 text-sm";
@@ -20,23 +18,10 @@ export  default function Homepage() {
         <div className="min-h-screen flex flex-col">
             <header className="">
                 < HeaderHome />
-                {/* <div className="flex items-center space-x-3">
-                    <Image src="/logo.png" alt="Logo" width={80} height={40} className="rounded-full" />
-                    <h1 className="text-xl md:text-2xl font-bold text-green-700">Smart Farm Agriculture </h1>
-                </div>
-                <nav>
-                    <ul className="flex space-x-6 text-green-800 font-medium">
-                        <li className={liStyling}>Home</li>
-                        <li className={liStyling}>services</li>
-                        <li className={liStyling}>Impact</li>
-                        <li className={liStyling}><Link href="/auth/login">login</Link></li>
-                        <li className={liStyling}><Link href="/auth/register">Register</Link></li>
-                        <li className={liStyling}>Contact</li>
-                    </ul>
-                </nav> */}
+                
             </header>
             <main>
-                <section className="relative h-[60vh] w-full overflow-hidden">
+                <section className="relative h-[50vh] w-full overflow-hidden">
                     <video 
                         autoPlay 
                         muted 
@@ -124,11 +109,11 @@ export  default function Homepage() {
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
                         <div className="bg-green-50 p-6 rounded-xl shadow-md hover:shadow-lg transition-shadow duration-300">
                             <p className={pFarmersSay}>"Since I started using Smart Farm, managing my crops and livestock has become easier and more productive. The AI insights have helped me plan better."</p>
-                            <p className={pFarmerName}>- Mary W., Smallholder Farmer in Nakuru</p>
+                            <p className={pFarmerName}>- Nancy .W., Smallholder Farmer in Muranga</p>
                         </div>
                         <div className="bg-green-50 p-6 rounded-xl shadow-md hover:shadow-lg transition-shadow duration-300">
                             <p className={pFarmersSay}>"The platform's real-time analytics allowed me to identify water stress in my farm early. Smart Irrigation suggestions saved my entire season."</p>
-                            <p className={pFarmerName}>- John K., Irrigation Farmer in Kitale</p>
+                            <p className={pFarmerName}>- John K., Dairy Farmer in Nyandarua</p>
                         </div>
                         <div className="bg-green-50 p-6 rounded-xl shadow-md hover:shadow-lg transition-shadow duration-300">
                             <p className={pFarmersSay}>"Breeding tracking has never been this accurate. Now I have a predictable cycle for my dairy cows, and milk production has increased."</p>
