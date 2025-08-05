@@ -14,6 +14,8 @@ export  default function Homepage() {
     const pFarmersSay = "text-gray-800 italic mb-4";
     const pFarmerName = "text-green-800 font-semibold text-sm";
 
+    const Description ="This is a platform designed to help farmers track and improve productiivity in there farms by simple clicks where you enjoy seamless advantages of AI, ML prediction and timely production"
+
     return(
         <div className="min-h-screen flex flex-col">
             <header className="">
@@ -34,7 +36,7 @@ export  default function Homepage() {
                         <h1 className="text-2xl md:text-4xl font-bold mb-4 drop-shadow-md">
                             Empowering Farmers with Smart Technology
                         </h1>
-                        <p className="max-w-3xl text-base md:text-lg font-medium leading-relaxed text-green-100 mb-2 drop-shadow">This is a platform designed to help farmers track and improve productiivity in there farms by simple clicks where you enjoy seamless advantages of AI, ML prediction and timely production</p>
+                        <p className="max-w-3xl text-base md:text-lg font-medium leading-relaxed text-green-100 mb-2 drop-shadow">{Description}</p>
                         <p className="text-green-200 font-semibold text-lg md:text-xl animate-pulse">
                             🌱 Make Chaguo Smart for your Farm — Register with us!
                         </p>
