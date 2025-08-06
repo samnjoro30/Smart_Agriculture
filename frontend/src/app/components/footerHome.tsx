@@ -44,7 +44,6 @@ export default function FooterHome (){
                     </button>
                 </div>
             </div>
-        
         </footer>
     )
 }
