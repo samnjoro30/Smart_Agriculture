@@ -52,14 +52,12 @@ const Register = () => {
     };
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) =>{
-
         const { name, value } = e.target;
         setFormData(prev => ({ ...prev, [name]: value}));
         if (name === "password") {
             const strengthCheck = getPasswordStrength(value);
             setPasswordStrength(strengthCheck);
         }
-        
     }
 
     const handleSubmit = async (e: { preventDefault: () => void; }) =>{
@@ -107,7 +105,7 @@ const Register = () => {
                 <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4">
                     <div>
                         <label className={label_styling}>Username:</label>
-                        <input
+                        <input 
                           type="text"
                           name="username"
                           value={formData.username}

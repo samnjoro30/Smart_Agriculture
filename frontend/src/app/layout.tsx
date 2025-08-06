@@ -13,7 +13,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "smart Agriculture",
+  title: "Smart Agriculture",
   description: "Enhancing agriculture production by use of technology",
 };
 
