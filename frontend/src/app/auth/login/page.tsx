@@ -5,6 +5,7 @@ import axiosInstance from '../../API/axiosInstance';
 import Image from 'next/image';
 import {useRouter} from 'next/navigation';
 import Link from 'next/link'
+import { EyeOff, Eye } from 'lucide-react';
 
 interface FormData {
   email: string,
@@ -15,6 +16,7 @@ interface FormData {
 export default function Login() {
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string>('');
+  const [showPassword, setShowPassword] = useState<boolean>(false);
   const [message, setMessage] = useState<string>('')
   const Router = useRouter();
 
@@ -81,16 +83,24 @@ export default function Login() {
                 <label htmlFor="password" className={labelStyle}>
                   Password:
                 </label>
+                <div className="relative">
                 <input
                   id="password"
                   name="password"
-                  type="password"
+                  type={showPassword ? "text" : "password"}
                   required
                   className={InputStyle}
                   placeholder="Enter your password"
                   value={formData.password}
                   onChange={handleChange}
                 />
+                <span
+                  onClick={()=> setShowPassword(!showPassword)}
+                  className="absolute top-2 right-3 cursor-pointer text-green-600"
+                >
+                  {showPassword ? <EyeOff/> : <Eye/>}
+                </span>
+                </div>
               </div>
             </div>
   
@@ -142,7 +152,8 @@ export default function Login() {
           {message && (
             <p style={{ color: 'green'}}>{message}</p>
           )}
-          <Link href="/auth/register" className="text-green-600 hover:underline">Or Register </Link>
+          <Link href="/" className="text-green-600 hover:underline ml-5"> ← Back to Home</Link>
+          <Link href="/auth/register" className="text-green-600 hover:underline mr-10">Or Register </Link>
         </div>
       </div>
     );
