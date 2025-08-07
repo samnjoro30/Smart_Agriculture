@@ -46,7 +46,9 @@ export  default function Homepage() {
                     >
                         <source src="/background.mp4" type="video/mp4" />
                     </video>
-                    <div className="relative z-10 flex flex-col items-center justify-center h-full text-white px-4 text-center bg-black bg-opacity-40">
+                    <div className="relative z-10 flex flex-col items-center justify-center h-full text-white px-4 text-center backdrop-blur-sm bg-white/10 rounded-xl">
+
+
                         <h1 className="text-2xl md:text-4xl font-bold mb-4 drop-shadow-md">
                         🌿 Empowering Farmers with Smart Technology
                         </h1>
