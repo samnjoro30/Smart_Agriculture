@@ -1,7 +1,12 @@
+"use client"
 
 import Image from 'next/image';
 import FooterHome from '../components/footerHome';
 import HeaderHome from '../components/headerHomepage';
+import { Swiper, SwiperSlide } from 'swiper/react';
+import 'swiper/css';
+import 'swiper/css/autoplay';
+import { Autoplay } from 'swiper/modules';
 
 export  default function Homepage() {
 
@@ -15,6 +20,15 @@ export  default function Homepage() {
     const pFarmerName = "text-green-800 font-semibold text-sm";
 
     const Description ="This is a platform designed to help farmers track and improve productiivity in there farms by simple clicks where you enjoy seamless advantages of AI, ML prediction and timely production"
+
+    const logos =[
+        {src: '/logo.png',  alt: 'logo' },
+        {src: '/logo.png',  alt: 'logo' },
+        {src: '/cow3.jpg',  alt: 'logo' },
+        {src: '/logo.png',  alt: 'logo' },
+        {src: '/logo.png',  alt: 'logo' },
+       
+    ]
 
     return(
         <div className="min-h-screen flex flex-col">
@@ -34,7 +48,7 @@ export  default function Homepage() {
                     </video>
                     <div className="relative z-10 flex flex-col items-center justify-center h-full text-white px-4 text-center bg-black bg-opacity-40">
                         <h1 className="text-2xl md:text-4xl font-bold mb-4 drop-shadow-md">
-                            Empowering Farmers with Smart Technology
+                        🌿 Empowering Farmers with Smart Technology
                         </h1>
                         <p className="max-w-3xl text-base md:text-lg font-medium leading-relaxed text-green-100 mb-2 drop-shadow">{Description}</p>
                         <p className="text-green-200 font-semibold text-lg md:text-xl animate-pulse">
@@ -73,7 +87,7 @@ export  default function Homepage() {
 
                         <div className={serviceDiv}>
                             <div className={ImageDiv}>
-                                <Image  src="/agri2.jpg" alt="Irrigation" fill className="cover"/>
+                                <Image  src="/Agri3.jpg" alt="Irrigation" fill className="cover"/>
                             </div>
                             <h3 className={Hdiv}>Smart Irrigation</h3>
                             <p className={pservice}>The Platform is designed to help you as a farmer migrate  and get started with modern and emerging  Agricultural technology form irrifation to dairy farming and many more</p>
@@ -124,9 +138,40 @@ export  default function Homepage() {
                     </div>
                 </section>
 
-                <section className="">
-                    <h2>Trusted By and Powered by/Partners</h2>
-                    <div className="">
+                <section className="bg-green-100 py-12 px-4">
+                    <div className="relative z-10 text-center mb-12">
+                        <h2 className="text-3xl md:text-4xl font-bold text-green-800 mb-4">
+                           🤝 Trusted By & Powered By
+                        </h2>
+                        <p className="text-gray-600 max-w-xl mx-auto">
+                            Our technology is backed by industry leaders and trusted by farmers worldwide.
+                        </p>
+                    </div>
+                    <div className="max-w-6xl mx-auto">
+                        <Swiper 
+                          modules ={[Autoplay]}
+                          spaceBetween={30}
+                          slidesPerView={2}
+                          breakpoints ={{
+                            640: { slidesPerView: 3},
+                            768: { slidesPerView: 4},
+                            1024: { slidesPerView: 5},
+                          }}
+                          loop ={true}
+                          autoplay={{ delay: 2000, disableOnInteraction: false}}
+                        >
+                            {logos.map((logo, index)=> (
+                               <SwiperSlide key ={index}  className="flex justify-center items-center">
+                                  <Image 
+                                      src={logo.src}
+                                      alt={logo.alt}
+                                      width={120}
+                                      height={80}
+                                      className="object-contain grayscale hover:grayscale-0 transition duration-300"
+                                    />
+                               </SwiperSlide>
+                            ))}
+                        </Swiper>
 
                     </div>
                 </section>
