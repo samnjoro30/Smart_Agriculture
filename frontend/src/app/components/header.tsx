@@ -2,6 +2,7 @@
 
 import { useState, useEffect} from 'react'
 import Image from 'next/image';
+// import { SunIcon, MoonIcon } from '@heroicons/react/24/solid';
 
 export default function Header (){
     const [theme, setTheme] = useState<'light' | 'dark'>('light');
@@ -30,7 +31,7 @@ export default function Header (){
     return(
         <div>
             <div>
-                <Image src="logo.png" width={70} height={50} alt="logo"/>
+                <Image src="/logo.png" width={70} height={50} alt="logo" className="rounded-full"/>
                 <h2>Smart Agriculture</h2>
                 <button
                  onClick={toggleTheme}
