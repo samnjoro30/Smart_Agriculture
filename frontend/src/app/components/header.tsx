@@ -1,6 +1,7 @@
 "use client"
 
 import { useState, useEffect} from 'react'
+import Image from 'next/image';
 
 export default function Header (){
     const [theme, setTheme] = useState<'light' | 'dark'>('light');
@@ -22,7 +23,6 @@ export default function Header (){
 
       const handleLogout = () => {
         // Clear auth token / call logout API
-        localStorage.removeItem('authToken');
         window.location.href = '/login'; // redirect to login
       };
 
@@ -30,6 +30,7 @@ export default function Header (){
     return(
         <div>
             <div>
+                <Image src="logo.png" width={70} height={50} alt="logo"/>
                 <h2>Smart Agriculture</h2>
                 <button
                  onClick={toggleTheme}
