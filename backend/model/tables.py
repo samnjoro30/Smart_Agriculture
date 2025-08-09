@@ -24,3 +24,8 @@ class RefreshToken(Base):
     expires_at = Column(DateTime, nullable=False)
     is_revoked = Column(Boolean, default=False)
 
+class NewsSubscribers(Base):
+    __tablename__ = "subscribers"
+
+    id = Column(Integer, primary_key=True, index=True)
+    email = Column(String(150), unique=True)

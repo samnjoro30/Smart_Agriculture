@@ -23,6 +23,14 @@ async def create_user(user_data: dict, db: AsyncSession):
     await db.execute(query, user_data)
     await db.commit()
 
+async def create_user_newsLetter(user: dict, db AsyncSession):
+    query = text("""
+        INSERT INTO subscribers (email)
+        VALUES (:email)
+    """)
+    await db.execute(query, user)
+    await db.commit()
+
 async def store_refresh_token(username: str, token: str, expires_at: datetime, db: AsyncSession):
     query = text("""
         INSERT INTO refresh_tokens (username, token, expires_at)
