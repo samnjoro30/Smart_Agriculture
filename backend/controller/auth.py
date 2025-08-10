@@ -17,12 +17,12 @@ router =  APIRouter()
 
 
 @router.post("/auth/refresh")
-async def refresh_token(request: Request):
+async def page_refresh_token(request: Request):
     try:
         body = await request.json()
-        refresh_token = body.get("refresh_token")
+        refresh_token_str = body.get("refresh_token")
 
-        payload = jwt.decode(refresh_token, SECRET_KEY, algorithm=ALGORITHM)
+        payload = jwt.decode(refresh_token_str, SECRET_KEY, algorithm=ALGORITHM)
         username = payload.get("sub")
         if username is None:
             raise HTTPException(status_code=401, detail="Invalid token")
@@ -45,7 +45,7 @@ async def login_farmer(payload: LoginRequest, response:Response, db: AsyncSessio
 
     email = existing_user["email"]
     access_token = create_access_token(data={"sub": email})
-    new_refresh_token = refresh_token(data={"sub": email})
+    new_refresh_token = refresh_token({"sub": email})
     expires_at = datetime.utcnow() + timedelta(hours=24)
 
     await store_refresh_token(email, new_refresh_token, expires_at, db)
