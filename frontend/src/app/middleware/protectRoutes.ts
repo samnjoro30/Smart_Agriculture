@@ -3,7 +3,7 @@ import { NextResponse } from 'next/server';
 import type { NextRequest } from "next/server";
 import { jwtVerify } from 'jose';
 
-export async function ProtectRoute (req: NextResponse){
+export async function ProtectRoute (req: NextRequest){
     const token = req.cookies.get('access_token')?.value;
 
     if (!token){
