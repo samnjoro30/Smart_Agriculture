@@ -11,7 +11,8 @@ async def get_user_by_email(email: str, db: AsyncSession):
     if row:
         return {
             "email": row.email,
-            "password": row.password
+            "password": row.password,
+            "is_verified": row.is_verified
         }
     return None
 
