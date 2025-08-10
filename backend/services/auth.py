@@ -4,9 +4,9 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import Session
 from datetime import datetime, timedelta
 
-async def get_user_by_username(username: str, db: AsyncSession):
-    query = text("SELECT email, password FROM users WHERE username = :username")
-    results = await db.execute(query, {"username": username})
+async def get_user_by_email(email: str, db: AsyncSession):
+    query = text("SELECT email, password FROM users WHERE email = :email")
+    results = await db.execute(query, {"email": email})
     row = results.fetchone()
     if row:
         return {
