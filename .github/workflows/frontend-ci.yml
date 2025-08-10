@@ -1,36 +1,37 @@
 name: Frontend CI
 
 on:
-    push:
-        branches: [ main ]
-        paths: [ 'frontend/**']
-    pull_request:
-          paths: [ 'frontend/**' ]
+  push:
+    branches: [ main ]
+    paths: [ 'frontend/**']
+  pull_request:
+    paths: [ 'frontend/**' ]
     
 jobs:
-    test:
-        runs-on: ubuntu-latest
-        steps:
-            - uses: actions/checkout@v4
 
-            - name: Use Node.js
-              uses: actions/setup-node@v3
-              with: 
-                node-version: 18
+  test:
+
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./frontend
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Use Node.js
+        uses: actions/setup-node@v4
+        with: 
+          node-version: '20'
             
-            - name: Install depencies
-              working-directory: ./frontend
-              run:  | 
-                cd frontend
-                npm install
-            - name: Run tests
-              run: | 
-                cd frontend
-                npm test
-            - name: Build and deploy
-              run: |
-                cd backend
-                next build
-                npm run build
+      - name: Install depencies
+        run: npm install
+
+      - name: Run tests
+        run: npm test -- --watchAll=false
+
+      - name: Build and deploy
+        run: npm run build
+         
                 
     

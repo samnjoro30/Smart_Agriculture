@@ -10,13 +10,16 @@ jobs:
     deploy:
         if: ${{ github.event.workflow_run.conclusion == 'success'}}
         runs-on: ubuntu-latest
-        # steps:
-            # - name: SSH and deploy
-            #   uses: appleboy/ssh-action@v1
-            #   with:
-            #     host: ${{ secrets.SERVER_IP }}
-            #     username: ${{ secrets.SERVER_USER }}
-            #     key: ${{ secrets.SSH_PRIVATE_KEY }}
-            #     script: |
-            #        docker-compose pull
-            #        docker-compose up -d
+
+        steps: 
+            - uses: actions/checkout@v4
+
+            - name: Deploy to render 
+              run: | 
+                echo "deploying to render ..."
+                curl -X POST "$RENDER_DEPLOY_HOOK"
+
+            - name: Deploy Frontend
+              run: |
+                echo "Deploying frontend to Vercel..."
+                npx vercel --token $VERCEL_TOKEN --prod

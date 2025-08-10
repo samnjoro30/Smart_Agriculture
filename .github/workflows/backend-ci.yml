@@ -14,22 +14,14 @@ jobs:
             - name: Set up Python
               uses: actions/setup-python@v4
               with:
-                python-version: '3.9'
+                python-version: '3.11'
 
             - name: Install dependencies
               working-directory: ./backend
               run: |
-                cd backend
+                python -m pip install --upgrade pip
                 pip install -r requirements.txt
-                pip install pytest
+                pip install pytest httpx pytest-asyncio
             - name: Run tests
-              run: |
-                cd backend
-                pytest -v
-
-            - name: Run backend and deploy
-              run:  |
-                cd backend
-                uvicorn main:app --reload 
-            
+              run: pytest --maxfail=1 --disable-warnings -v
     
