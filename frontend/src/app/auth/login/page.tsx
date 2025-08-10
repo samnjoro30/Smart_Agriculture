@@ -38,7 +38,7 @@ export default function Login() {
     setError('');
     setMessage('')
     try {
-      const res = await axiosInstance.post('/login', formData,{
+      const res = await axiosInstance.post('/auth/login', formData,{
         withCredentials: true,
       });
       setMessage(res.data.message || "login successful");
