@@ -45,7 +45,7 @@ async def login_farmer(payload: LoginRequest, response:Response, db: AsyncSessio
 
     email = existing_user["email"]
     access_token = create_access_token(data={"sub": email})
-    refresh_token = refresh_token(data={"sub": email})
+    create_refresh_token = refresh_token(data={"sub": email})
     expires_at = datetime.utcnow() + timedelta(hours=24)
 
     await store_refresh_token(email, refresh_token, expires_at, db)
@@ -59,7 +59,7 @@ async def login_farmer(payload: LoginRequest, response:Response, db: AsyncSessio
     )
     return {
         "access_token": access_token,
-        "refresh_token": refresh_token,
+        "refresh_token": create_refresh_token,
         "token_type": "bearer",
         "message": "successful login"
     }
