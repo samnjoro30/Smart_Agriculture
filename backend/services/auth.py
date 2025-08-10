@@ -5,7 +5,7 @@ from sqlalchemy.orm import Session
 from datetime import datetime, timedelta
 
 async def get_user_by_email(email: str, db: AsyncSession):
-    query = text("SELECT email, password FROM users WHERE email = :email")
+    query = text("SELECT email, password, is_verified FROM users WHERE email = :email")
     results = await db.execute(query, {"email": email})
     row = results.fetchone()
     if row:
