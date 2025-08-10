@@ -34,7 +34,7 @@ async def create_user_newsLetter(user: dict, db: AsyncSession):
 
 async def store_refresh_token(username: str, token: str, expires_at: datetime, db: AsyncSession):
     query = text("""
-        INSERT INTO refresh_tokens (username, token, expires_at)
+        INSERT INTO refresh_token (username, token, expires_at)
         VALUES (:username, :token, :expires_at )
     """)
     await db.execute(query,{
@@ -45,7 +45,7 @@ async def store_refresh_token(username: str, token: str, expires_at: datetime, d
     await db.commit()
 
 async def revoke_refresh_token(db, token: str):
-    query = text("UPDATE refresh_tokens SET is_revoked = TRUE WHERE token = :token")
+    query = text("UPDATE refresh_token SET is_revoked = TRUE WHERE token = :token")
     await db.execute(query, {
         "token": token
     })
