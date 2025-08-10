@@ -23,7 +23,7 @@ async def create_user(user_data: dict, db: AsyncSession):
     await db.execute(query, user_data)
     await db.commit()
 
-async def create_user_newsLetter(user: dict, db AsyncSession):
+async def create_user_newsLetter(user: dict, db: AsyncSession):
     query = text("""
         INSERT INTO subscribers (email)
         VALUES (:email)
