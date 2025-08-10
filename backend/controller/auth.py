@@ -1,5 +1,5 @@
 from fastapi import APIRouter, HTTPException, Depends, Response, Request
-from model.auth import  RegisterRequest, Token, RegisterSubscribers
+from model.auth import  RegisterRequest, Token, RegisterSubscribers, LoginRequest
 from db.postgre_db import get_db
 from services.auth import create_user, get_user_by_email, store_refresh_token,  revoke_refresh_token, is_token_revoked, otp_verification, verified_upate, reset_password_check_user, reset_password_update  
 from utils.jwt import create_access_token, refresh_token
@@ -35,7 +35,7 @@ async def refresh_token(request: Request):
         raise HTTPException(status_code=500, details="Expired refresh token")
 
 @router.post("/auth/login", response_model=Token)
-async def login_farmer(payload: RegisterRequest, response:Response, db: AsyncSession = Depends(get_db)):
+async def login_farmer(payload: LoginRequest, response:Response, db: AsyncSession = Depends(get_db)):
     existing_user = await get_user_by_email(payload.email, db)
     if not existing_user or not verify_password(payload.password, existing_user["password"]):
         raise HTTPException(status_code= 400, details = "Invalid credentials, Username not found")

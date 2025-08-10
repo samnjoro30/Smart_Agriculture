@@ -17,3 +17,7 @@ class Token(BaseModel):
 
 class RegisterSubscribers(BaseModel):
     email: EmailStr
+
+class LoginRequest(BaseModel):
+    email: EmailStr
+    password: constr(min_length=6)
