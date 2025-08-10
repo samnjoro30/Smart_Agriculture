@@ -33,6 +33,7 @@ app.add_middleware(
 
 app.include_router(auth_router)
 
+
 # @app.on_event("startup")
 # async def startup():
 #     if os.getenv("RUN_MIGRATIONS") == "true":
