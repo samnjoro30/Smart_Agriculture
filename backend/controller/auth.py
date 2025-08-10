@@ -45,21 +45,21 @@ async def login_farmer(payload: LoginRequest, response:Response, db: AsyncSessio
 
     email = existing_user["email"]
     access_token = create_access_token(data={"sub": email})
-    create_refresh_token = refresh_token(data={"sub": email})
+    new_refresh_token = refresh_token(data={"sub": email})
     expires_at = datetime.utcnow() + timedelta(hours=24)
 
-    await store_refresh_token(email, refresh_token, expires_at, db)
+    await store_refresh_token(email, new_refresh_token, expires_at, db)
 
     response.set_cookie(
         key="access_token",
-        value=token,
+        value=access_token,
         httponly=True,
         secure=True, 
         samesite="Lax"
     )
     return {
         "access_token": access_token,
-        "refresh_token": create_refresh_token,
+        "refresh_token": new_refresh_token,
         "token_type": "bearer",
         "message": "successful login"
     }
