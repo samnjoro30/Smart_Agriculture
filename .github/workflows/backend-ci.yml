@@ -9,6 +9,21 @@ on:
 jobs:
     test:
         runs-on: ubuntu-latest
+
+        services:
+          postgres:
+            image: postgres:15
+            env: 
+              POSTGRES_USER: test_user
+              POSTGRES_PASSWORD: test_password
+              POSTGRES_DB: test_db
+            ports:
+              - 5432:5432
+            options: >-
+              --health-cmd="pg_isready -U test_user"
+              --health-interval=10s
+              --health-timeout=5s
+              --health-retries=5
         steps:
             - uses: actions/checkout@v4
             - name: Set up Python
@@ -22,6 +37,23 @@ jobs:
                 python -m pip install --upgrade pip
                 pip install -r requirements.txt
                 pip install pytest httpx pytest-asyncio
+
+            - name: Posgre connection
+              run: |
+                until pg_isready -h localhost -p 5432 -U test_user; do
+                  echo "Waiting for Postgres..."
+                  sleep 2
+                done
+            
+            - name: Run migrations
+              working-directory: ./backend
+              env:
+                DATABASE_URL: postgresql+asyncpg://test_user:test_password@localhost:5432/test_db
+              run: |
+                alembic upgrade head
             - name: Run tests
+              working-directory: ./backend
+              env: 
+                 DATABASE_URL: postgresql+asyncpg://test_user:test_password@localhost:5432/test_db
               run: pytest --maxfail=1 --disable-warnings -v
     
