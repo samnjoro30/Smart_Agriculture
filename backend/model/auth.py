@@ -5,10 +5,7 @@ class RegisterRequest(BaseModel):
     email: EmailStr
     farmname: str
     phonenumber: constr(min_length=10, max_length=15)
-    # is_verified: str
-    # otp: str
     password: constr(min_length=6)
-    # confirmpassword: str
 
 class Token(BaseModel):
     access_token: str
