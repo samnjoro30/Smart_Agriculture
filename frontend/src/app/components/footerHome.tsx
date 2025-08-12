@@ -11,6 +11,7 @@ interface FormData{
 
 export default function FooterHome (){
     const [message, setMessage] = useState<string>('');
+    const [loading, setLoading] = useState<boolean>(false)
     const [formData, setFormData] = useState<FormData>({
         email: '',
     })
@@ -20,6 +21,7 @@ export default function FooterHome (){
     }
 
     const handleSubmit = async() =>{
+        setLoading(true);
         try{
             const res = await axiosInstance.post("/newsletter/subscribe", formData);
             setMessage(res.data.message || 'Successfully subscribed to news letter')
@@ -71,7 +73,7 @@ export default function FooterHome (){
                       className="w-full px-3 py-2 rounded-md text-white-900 border-2 focus:outline-none"
                     />
                     <button className="mt-2 w-full bg-white text-green-900 font-semibold py-2 px-4 rounded-md hover:bg-gray-200 transition">
-                        Subscribe
+                        {loading ? 'subscribe ...' : 'subscribe'}
                     </button>
                     </form>
                     {message && <p style={{ color: 'green'}}>{message}</p>}
