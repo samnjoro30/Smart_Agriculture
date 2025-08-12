@@ -18,7 +18,7 @@ export default function Login() {
   const [error, setError] = useState<string>('');
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const [message, setMessage] = useState<string>('')
-  const Router = useRouter();
+  const router = useRouter();
 
   const [formData, setFormData] = useState<FormData>({ 
     email: '', 
@@ -44,7 +44,7 @@ export default function Login() {
       setMessage(res.data.message || "login successful");
       setTimeout(() =>{
         setMessage('')
-        Router.push('/dashboard')
+        router.push('/dashboard')
       }, 1000)
       }catch(err){
         const error = err instanceof Error ? err : new Error(String(err));
