@@ -17,9 +17,9 @@ jobs:
             - name: Deploy to render 
               run: | 
                 echo "deploying to render ..."
-                curl -X POST "$RENDER_DEPLOY_HOOK"
+                curl -X POST "${{ secrets.RENDER_DEPLOY_HOOK }}"
 
             - name: Deploy Frontend
               run: |
                 echo "Deploying frontend to Vercel..."
-                npx vercel --token $VERCEL_TOKEN --prod
+                npx vercel --token ${{ secrets.VERCEL_TOKEN}} --prod
