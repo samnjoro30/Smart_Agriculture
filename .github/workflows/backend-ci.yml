@@ -48,12 +48,12 @@ jobs:
             - name: Run migrations
               working-directory: ./backend
               env:
-                DATABASE_URL: postgresql+asyncpg://test_user:test_password@localhost:5432/test_db
+                NEON_DB: postgresql+asyncpg://test_user:test_password@localhost:5432/test_db
               run: |
                 alembic upgrade head
             - name: Run tests
               working-directory: ./backend
               env: 
-                 DATABASE_URL: postgresql+asyncpg://test_user:test_password@localhost:5432/test_db
+                NEON_DB: postgresql+asyncpg://test_user:test_password@localhost:5432/test_db
               run: pytest --maxfail=1 --disable-warnings -v
     

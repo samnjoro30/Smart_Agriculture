@@ -7,10 +7,10 @@ import asyncio
 
 load_dotenv()
 
-DB = os.getenv("NEON_DB")
+NEON_DB = os.getenv("NEON_DB")
 
 engine = create_async_engine(
-    DB, 
+    NEON_DB, 
     echo=True, 
 )
 
