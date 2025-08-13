@@ -34,9 +34,9 @@ app.add_middleware(
 app.include_router(auth_router)
 
 
-# @app.on_event("startup")
-# async def startup():
-#     if os.getenv("RUN_MIGRATIONS") == "true":
-#         alembic_cfg = Config("alembic.ini")
-#         command.upgrade(alembic_cfg, "head")
+@app.on_event("startup")
+async def startup():
+    if os.getenv("RUN_MIGRATIONS") == "true":
+        alembic_cfg = Config("alembic.ini")
+        command.upgrade(alembic_cfg, "head")
 

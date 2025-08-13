@@ -144,7 +144,6 @@ async def reset_password(request: Request, db: AsyncSession = Depends(get_db)):
     return {
         "message": "Password reset succesfull"
     }
-
     
 @router.post("/auth/logout")
 async def logout(request: Request, db: AsyncSession = Depends(get_db)):
