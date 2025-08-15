@@ -10,6 +10,7 @@ from starlette.status import HTTP_201_CREATED
 from sqlalchemy.orm import Session
 from datetime  import datetime, timedelta
 from utils.otp import generate_otp, otp_expiry
+from utils.sendOtpEmail import sendOTP
 # from slowapi import Limiter
 # from slowapi.decorator import limiter
 
@@ -88,8 +89,11 @@ async def register_farm(payload: RegisterRequest, db: AsyncSession = Depends(get
     }
 
     await create_user(user_dict, db)
+    
+    await sendOTP(payload.email)
+   
     return {
-        "message": "User registered ${username} successfully"
+        "message": f"User registered {payload.username} successfully"
     }  
 
 @router.post("/auth/verification")
