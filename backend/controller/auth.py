@@ -1,7 +1,7 @@
 from fastapi import APIRouter, HTTPException, Depends, Response, Request
-from model.auth import  RegisterRequest, Token, RegisterSubscribers, LoginRequest
+from model.auth import  RegisterRequest, Token, RegisterSubscribers, LoginRequest, codeResend
 from db.postgre_db import get_db
-from services.auth import create_user, get_user_by_email, store_refresh_token,  revoke_refresh_token, is_token_revoked, otp_verification, verified_upate, reset_password_check_user, reset_password_update  
+from services.auth import create_user, get_user_by_email, store_refresh_token,  revoke_refresh_token, is_token_revoked, otp_verification, verified_upate, reset_password_check_user, reset_password_update, resendVerificationCode 
 from utils.jwt import create_access_token, refresh_token
 from utils.hashing import hash_password, verify_password
 from datetime import timedelta
@@ -175,3 +175,25 @@ async def RegisterForNewsLetter(request: RegisterSubscribers, db: AsyncSession =
     return {
         "message" : "Subscribed Successfully"
     }
+
+@router.post('/auth/resend-verificion-code')
+async def resendVerificationCode(request: codeResend, db: AsyncSession =Depends(get_db)):
+
+    body = await request.json()
+    email = body.get('email')
+
+    if not email:
+        raise HTTPException(status_code=403, details="Must have email")
+    
+    existing_email = await get_user_by_email(email, db)
+    if not existing_email:
+        raise HTTPException(status_code=404, details="Email not found")
+
+    new_otp = otp = generate_otp()
+
+    await resendVerificationCode(new_otp)
+
+    return {
+        "message": "Code resend successfull"
+    }
+    

@@ -18,3 +18,6 @@ class RegisterSubscribers(BaseModel):
 class LoginRequest(BaseModel):
     email: EmailStr
     password: constr(min_length=6)
+
+class codeResend(BaseModel):
+    email: EmailStr
