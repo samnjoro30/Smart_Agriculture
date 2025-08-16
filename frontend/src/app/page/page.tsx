@@ -23,7 +23,7 @@ export  default function Homepage() {
 
     const logos =[
         {src: '/logo.png',  alt: 'logo' },
-        {src: '/logo.png',  alt: 'logo' },
+        {src: '/log1.jpeg',  alt: 'logo' },
         {src: '/cow3.jpg',  alt: 'logo' },
         {src: '/logo.png',  alt: 'logo' },
         {src: '/logo.png',  alt: 'logo' },
@@ -167,9 +167,9 @@ export  default function Homepage() {
                                   <Image 
                                       src={logo.src}
                                       alt={logo.alt}
-                                      width={120}
+                                      width={90}
                                       height={80}
-                                      className="object-contain grayscale hover:grayscale-0 transition duration-300"
+                                      className="object-contain grayscale hover:grayscale-0 transition duration-300 rounded-4xl"
                                     />
                                </SwiperSlide>
                             ))}

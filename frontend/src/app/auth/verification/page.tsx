@@ -43,6 +43,16 @@ const Verification = () => {
             setLoading(false)
         }
     }
+
+    const handleResendCode = async() => {
+        try{
+            const res = await axiosInstance.post("/auth/verificaion");
+
+
+        }catch(err){
+
+        }
+    }
     return(
         <div className="min-h-screen flex items-center justify-center bg-green-50 p-6">
             <div className="w-full max-w-md bg-white shadow-lg rounded-xl p-8 space-y-6">
@@ -83,8 +93,9 @@ const Verification = () => {
                     >
                         {loading ? 'Verifying...' : 'Verify'}
                     </button>
+                  
                 </form>
-
+                <a href="#" className="text-green-600 hover:underline ml-5">resend verification code</a>
                 {message && <p className="text-center text-green-700 font-medium">{message}</p>}
                 {error && <p className="text-center text-red-600 font-medium">{error}</p>}
             </div>
