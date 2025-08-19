@@ -3,13 +3,17 @@ name: Deployment and production
 on: 
     workflow_run:
         workflows: ["Backend CI", "Frontend CI"]
-        branches: [ main ]
+        branches: 
+          - main 
+          - developer 
         types: 
             - completed
 jobs:
     deploy:
-        if: ${{ github.event.workflow_run.conclusion == 'success'}}
+        if: ${{ github.event.workflow_run.event == 'success' && github.event.workflow_run.conclusion =='pull_request' }}
         runs-on: ubuntu-latest
+        concurrency: production-deploy
+
 
         steps: 
             - uses: actions/checkout@v4
@@ -22,6 +26,24 @@ jobs:
             - name: Deploy Frontend
               env:
                 VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+                VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+                VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID}}
               run: |
                 echo "Deploying frontend to Vercel..."
-                npx vercel --token "$VERCEL_TOKEN" --prod
+                if ["GITHUB_REF_NAME" = "main"] then;
+                  echo "Deploying in production mode"
+                  npx vercel deploy \
+                    --prod \
+                    --token $VERCEL_TOKEN \
+                    --project $VERCEL_PROJECT_ID \
+                    --scope $VERCEL_ORG_ID \
+                    --confirm
+                else
+                  echo "Deploying to preview"
+                  npx vercel deploy \
+                    --prod \
+                    --token $VERCEL_TOKEN \
+                    --project $VERCEL_PROJECT_ID 
+                    --scope $VERCEL_ORG_ID \
+                    --confirm
+                fi

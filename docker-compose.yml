@@ -14,7 +14,7 @@ services:
     ports: 
       - "3000:3000"
     environment:
-      - BACKEND_URL
+      - NEXT_RENDER_URL
     depends_on:
       - backend
   

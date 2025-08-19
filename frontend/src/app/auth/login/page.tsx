@@ -59,7 +59,7 @@ export default function Login() {
           } else if (err.response?.status === 400) {
             setError("Invalid credentials. Please check your email or password.");
           } else {
-            setError("Something went wrong during login. Please try again.");
+            setError("Something went wrong during login, check credentials. Please try again.");
           }
         } else {
           setError("Unexpected error occurred. Try again later.");

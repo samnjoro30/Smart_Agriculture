@@ -28,9 +28,7 @@ export default function Sidebar() {
         <div className="mt-35 border-t border-green-300">
             <button className="text-green-400  px-3 py-2  rounded-md hover:bg-green-300 transition">Contact Support</button>
         </div>
-        <Wrapper>
-            {activeSection ==='overview' }
-        </Wrapper>
+        
       </div>
   );
 }
