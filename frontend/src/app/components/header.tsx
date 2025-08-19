@@ -3,7 +3,6 @@
 import { useState, useEffect} from 'react'
 import Image from 'next/image';
 import axiosInstance from '../API/axiosInstance';
-// import { SunIcon, MoonIcon } from '@heroicons/react/24/solid';
 
 export default function Header (){
     const [theme, setTheme] = useState<'light' | 'dark'>('light');
@@ -22,7 +21,6 @@ export default function Header (){
         localStorage.setItem('theme', newTheme);
         document.documentElement.classList.toggle('dark', newTheme === 'dark');
       };
-
       const handleLogout = async () => {
         try{
             await axiosInstance.post("auth/logout")
@@ -31,7 +29,6 @@ export default function Header (){
 
         }
       };
-
 
     return(
         <div className="bg-green-200 shadow-green-400 sticky mb-5 rounded-b-10">
