@@ -3,9 +3,7 @@ name: Deployment and production
 on: 
     workflow_run:
         workflows: ["Backend CI", "Frontend CI"]
-        branches: 
-          - main 
-          - developer 
+        branches: [ main ]
         types: 
             - completed
 jobs:
@@ -30,20 +28,12 @@ jobs:
                 VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID}}
               run: |
                 echo "Deploying frontend to Vercel..."
-                if ["GITHUB_REF_NAME" = "main"] then;
-                  echo "Deploying in production mode"
-                  npx vercel deploy \
-                    --prod \
-                    --token $VERCEL_TOKEN \
-                    --project $VERCEL_PROJECT_ID \
-                    --scope $VERCEL_ORG_ID \
-                    --confirm
-                else
-                  echo "Deploying to preview"
-                  npx vercel deploy \
-                    --prod \
-                    --token $VERCEL_TOKEN \
-                    --project $VERCEL_PROJECT_ID 
-                    --scope $VERCEL_ORG_ID \
-                    --confirm
-                fi
+                echo "Deploying in production mode"
+                npx vercel deploy \
+                  --prod \
+                  --token $VERCEL_TOKEN \
+                  --project $VERCEL_PROJECT_ID \
+                  --scope $VERCEL_ORG_ID \
+                  --confirm
+            
+            
