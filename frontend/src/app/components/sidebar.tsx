@@ -1,6 +1,6 @@
 "use client"
 import { useState } from "react";
-import Wrapper from "./wrapper";
+import { LayoutDashboard, Bell, Package, Brain, BarChart3, AlertCircle, User, Headphones } from "lucide-react";
 
 export default function Sidebar() {
     const [activeSection, setActiveSection] = useState('overview')
@@ -10,23 +10,34 @@ export default function Sidebar() {
         <div>
           <h2 className="text-green-700 font-semibold mb-2 border-b border-green-300">Dashboard</h2>
           <div className="flex flex-col space-y-2">
-            <button onClick={()=> setActiveSection('overview')} className="text-left px-3 py-2 text-green-400 rounded-md hover:bg-green-200">Overview</button>
-            <button className="text-left px-3 py-2 text-green-400 rounded-md hover:bg-green-200">Notifications</button>
+            <button 
+              onClick={()=> setActiveSection('overview')} 
+              className="flex items-center gap-2 text-left px-3 py-2 text-green-400 rounded-md hover:bg-green-200"
+            >
+              <LayoutDashboard size={18} />Overview
+            </button>
+
+            <button 
+              className="flex items-center gap-2 text-left px-3 py-2 text-green-400 rounded-md hover:bg-green-200"
+            >
+              < Bell size={18} />Notifications
+            </button>
+
           </div>
         </div>
 
         <div>
           <h2 className="text-green-700 font-semibold mb-2 border-b border-green-300">Product</h2>
           <div className="flex flex-col space-y-2">
-            <button className="text-left px-3 py-2 text-green-400 rounded-md hover:bg-green-200">Farm Inputs</button>
-            <button className="text-left px-3 py-2 text-green-400 rounded-md hover:bg-green-200">AI Insights</button>
-            <button className="text-left px-3 py-2 text-green-400 rounded-md hover:bg-green-200">Farm Analytics</button>
-            <button className="text-left px-3 py-2 text-green-400 rounded-md hover:bg-green-200">Alerts</button>
-            <button className="text-left px-3 py-2 text-green-400 rounded-md hover:bg-green-200">Farmer Profile</button>
+            <button className="flex items-center gap-2 text-left px-3 py-2 text-green-400 rounded-md hover:bg-green-200"><Package />Farm Inputs</button>
+            <button className="flex items-center gap-2 text-left px-3 py-2 text-green-400 rounded-md hover:bg-green-200">< Brain/> AI Insights</button>
+            <button className="flex items-center gap-2 text-left px-3 py-2 text-green-400 rounded-md hover:bg-green-200">< BarChart3/> Farm Analytics</button>
+            <button className="flex items-center gap-2 text-left px-3 py-2 text-green-400 rounded-md hover:bg-green-200">< AlertCircle /> Alerts</button>
+            <button className="flex items-center gap-2 text-left px-3 py-2 text-green-400 rounded-md hover:bg-green-200">< User/> Farmer Profile</button>
           </div>
         </div>
         <div className="mt-35 border-t border-green-300">
-            <button className="text-green-400  px-3 py-2  rounded-md hover:bg-green-300 transition">Contact Support</button>
+            <button className="flex items-center gap-2 text-green-400  px-3 py-2  rounded-md hover:bg-green-300 transition">< Headphones/>Contact Support</button>
         </div>
         
       </div>
