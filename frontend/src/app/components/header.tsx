@@ -31,9 +31,9 @@ export default function Header (){
       };
 
     return(
-        <div className="bg-green-200 shadow-green-400 sticky mb-5 rounded-b-10">
+        <div className="bg-green-200 shadow-green-400 sticky mb-1 rounded-b-10">
             <div className="max-w-7xl mx-auto px-1 py-4 flex items-center justify-between">
-                <Image src="/logo.png" width={70} height={50} alt="logo" className="rounded-full"/>
+                <Image src="/logo.png" width={60} height={40} alt="logo" className="rounded-full"/>
                 <h2 className="text-xl font-bold text-green-500">Smart Agriculture</h2>
                 <button
                   className='bg-green-600 text-white px-4 py-1.5 rounded-full hover:bg-green-700 transition-all duration-200'
