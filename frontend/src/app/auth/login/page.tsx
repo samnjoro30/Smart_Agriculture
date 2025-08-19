@@ -4,7 +4,8 @@ import React, { useState } from 'react';
 import axiosInstance from '../../API/axiosInstance';
 import Image from 'next/image';
 import {useRouter} from 'next/navigation';
-import Link from 'next/link'
+import Link from 'next/link';
+import axios from 'axios';
 import { EyeOff, Eye } from 'lucide-react';
 
 interface FormData {
@@ -41,16 +42,31 @@ export default function Login() {
       const res = await axiosInstance.post('/auth/login', formData,{
         withCredentials: true,
       });
+      
       setMessage(res.data.message || "login successful");
+
       setTimeout(() =>{
         setMessage('')
         router.push('/dashboard')
       }, 1000)
-      }catch(err){
-        const error = err instanceof Error ? err : new Error(String(err));
-        console.error("Error trying to login", error);
-        setError("Error loging try again")
+      }catch(err:any){
+        if(axios.isAxiosError(err)) {
+          if (err.response?.status === 403) {
+            setError("Your account is not verified. Redirecting to verification...");
+            setTimeout(() => {
+              router.push("/auth/verification");
+            }, 1500);
+          } else if (err.response?.status === 400) {
+            setError("Invalid credentials. Please check your email or password.");
+          } else {
+            setError("Something went wrong during login, check credentials. Please try again.");
+          }
+        } else {
+          setError("Unexpected error occurred. Try again later.");
+        }
         setTimeout(() => setError(''), 3000);
+      }finally{
+        setLoading(false);
       }
    }
    

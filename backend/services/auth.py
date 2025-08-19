@@ -99,7 +99,7 @@ async def reset_password_check_user(db):
     })
     user_reset = results.fetchone
     return user_reset
-async def reset_password_update(db):
+async def reset_password_update(db: AsyncSession):
     query = text("""
        UPDATE user 
        SET password = :password
@@ -111,4 +111,12 @@ async def reset_password_update(db):
         "email": email
     })
     await db.commit()
-    
+async def resendVerificationCode(email: str, db: AsyncSession):
+    query = text("""
+       UPDATE users
+       SET otp = :otp
+       WHERE email =:email
+    """)
+    await db.execute(query,{
+        "otp": otp
+    })

@@ -14,6 +14,7 @@ const Verification = () => {
     const [error, setError ] = useState<string>('')
     const [message, setMessage] = useState<string>('')
     const [loading, setLoading] = useState<boolean>(false);
+    const [resendLoading, setResendLoading] = useState<boolean>(false)
     const [formData, setFormData ] = useState<FormData>({
         email: '',
         otp: '',
@@ -45,12 +46,28 @@ const Verification = () => {
     }
 
     const handleResendCode = async() => {
+        if(!formData.email){
+            setError("Must have entered email for resend code");
+            setTimeout(() => setError(''), 3000);
+            return;
+        }
+        setResendLoading(true);
+        setError("");
+        setMessage("");
         try{
-            const res = await axiosInstance.post("/auth/verificaion");
 
+            const res = await axiosInstance.post("/auth/resend-verificion-code", {
+                email: formData.email,
+            });
+            setMessage( res.data.message || "Resend code successful");
 
         }catch(err){
-
+            const error = err instanceof Error ? err : new Error(String(err));
+            console.error("Error occurred while resending code", error);
+            setError("Failed to resend verification code. Please try again.");
+            setTimeout(() => setError(""), 3000);
+        }finally{
+            setResendLoading(false);
         }
     }
     return(
@@ -95,7 +112,17 @@ const Verification = () => {
                     </button>
                   
                 </form>
-                <a href="#" className="text-green-600 hover:underline ml-5">resend verification code</a>
+                <div className="text-centre mt-4">
+                <button
+                   onClick={handleResendCode}
+                   disabled={resendLoading}
+                   className="text-green-600 hover:underline text-sm disabled:opacity-50"
+                >
+                    {resendLoading ? 'Resending ...' : 'Resend verification code'}
+
+                </button>
+                </div>
+
                 {message && <p className="text-center text-green-700 font-medium">{message}</p>}
                 {error && <p className="text-center text-red-600 font-medium">{error}</p>}
             </div>

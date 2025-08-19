@@ -136,7 +136,7 @@ const Register = () => {
                           name="email"
                           value={formData.email}
                           onChange={handleChange}
-                          placeholder="sam@gmail.com"
+                          placeholder="email"
                           required
                           className={inputClass}
                         />
