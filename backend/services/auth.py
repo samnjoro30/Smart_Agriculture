@@ -111,10 +111,11 @@ async def reset_password_update(db: AsyncSession):
         "email": email
     })
     await db.commit()
+
 async def resendVerificationCode(email: str, db: AsyncSession):
     query = text("""
        UPDATE users
-       SET otp = :otp
+       SET otp = :new_otp
        WHERE email =:email
     """)
     await db.execute(query,{

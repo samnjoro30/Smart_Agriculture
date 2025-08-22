@@ -8,16 +8,16 @@ load_dotenv()
 
 Jwt_token = os.getenv("JWT")
 Algorithm = os.getenv("ALGORITHM")
-Time_Expire = int(os.getenv("EXPIRE_TIME", "30"))
+Time_Expire = os.getenv("EXPIRE_TIME", "30")
 
 
-oauth2_scheme = OAuth2PasswordBearer(tokenurl="token")
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 
 
 def decode_jwt_token(token:str = Depends(oauth2_scheme)):
     credentials_exception = HTTPException(
-        status.code = status.HTTP_401_UNAUTHORIZED,
-        details = "Invalid token, expired"
+        status_code = status.HTTP_401_UNAUTHORIZED,
+        details = "Invalid token, expired",
         headers = { "WWW-Authenticate": "Bearer"}
     )
     try:
