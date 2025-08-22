@@ -55,11 +55,11 @@ export default function Overview(){
             </div>
             <div>
                 <div>
-                    <p>Updates</p>
+                    <h3>Updates</h3>
 
                 </div>
                 <div>
-                    <p>Insights</p>
+                    <h3>Insights</h3>
 
                 </div>
             </div>
