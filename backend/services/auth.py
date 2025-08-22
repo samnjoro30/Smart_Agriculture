@@ -44,13 +44,13 @@ async def store_refresh_token(username: str, token: str, expires_at: datetime, d
     })
     await db.commit()
 
-async def revoke_refresh_token(db, token: str):
+async def revoke_refresh_token(db:AsyncSession, token: str):
     query = text("UPDATE refresh_token SET is_revoked = TRUE WHERE token = :token")
     await db.execute(query, {
         "token": token
     })
 
-async def is_token_revoked(db, token: str):
+async def is_token_revoked(db: AsyncSession, token: str):
     query= text("SELECT is_revoked FROM refresh_token WHERE token = :token ")
     results = await db.execute(query, {
         "token": token

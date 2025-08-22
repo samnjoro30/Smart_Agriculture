@@ -11,13 +11,13 @@ async def users(request: Request, db: AsyncSession=Depends(get_db)):
     auth = request.headers.get("Authorization")
 
     if not auth or auth.startwith("Bearer"):
-        raise HTTPException(status_code=401, details="Token not authorized to access user details logout and login again")
+        raise HTTPException(status_code=401, detail="Token not authorized to access user details logout and login again")
 
     token = auth.split[''][1]
     payload = decode_jwt_token(token)
 
     if not payload or "email" not in payload:
-        raise HTTPException(status_code=402, details="Token expired logout and login again")
+        raise HTTPException(status_code=402, detail="Token expired logout and login again")
     
     email = payload['email']
     results = await get_userProfile(db, email)

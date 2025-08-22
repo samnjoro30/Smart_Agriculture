@@ -23,10 +23,11 @@ export default function Header (){
       };
       const handleLogout = async () => {
         try{
-            await axiosInstance.post("auth/logout")
-            window.location.href = '/login';
+            await axiosInstance.post("/auth/logout")
+            window.location.href = '/auth/login';
         }catch(err){
-
+            const error = err instanceof Error ? err : new Error(String(err));
+            console.error("Error occurred during logout", error);
         }
       };
 

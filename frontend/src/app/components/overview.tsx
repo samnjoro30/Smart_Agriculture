@@ -17,7 +17,7 @@ export default function Overview(){
         const fetchUserDetails = async () =>{
 
             try{
-                const res = await axiosInstance.get("/user/userprofile")
+                const res = await axiosInstance.get("/users/userprofile")
                 setUser(res.data.message);
 
             }catch(err){

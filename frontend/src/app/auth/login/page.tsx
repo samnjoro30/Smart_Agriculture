@@ -64,7 +64,7 @@ export default function Login() {
         } else {
           setError("Unexpected error occurred. Try again later.");
         }
-        setTimeout(() => setError(''), 3000);
+        setTimeout(() => setError(''), 5000);
       }finally{
         setLoading(false);
       }

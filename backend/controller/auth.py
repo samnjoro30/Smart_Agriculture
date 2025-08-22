@@ -11,19 +11,28 @@ from sqlalchemy.orm import Session
 from datetime  import datetime, timedelta
 from utils.otp import generate_otp, otp_expiry
 from utils.sendOtpEmail import sendOTP
+from jose import jwt, JWTError
+from dotenv import load_dotenv
+import os
 # from slowapi import Limiter
 # from slowapi.decorator import limiter
+load_dotenv()
 
 router =  APIRouter()
 
 
 @router.post("/auth/refresh")
 async def page_refresh_token(request: Request):
+    SECRET_KEY = os.getenv("SECRET_KEY")
+    ALGORITHM = os.getenv("ALGORITHM")
     try:
         body = await request.json()
-        refresh_token_str = body.get("refresh_token")
+        refresh_token_str = request.cookies.get("refresh_token")
 
-        payload = jwt.decode(refresh_token_str, SECRET_KEY, algorithm=ALGORITHM)
+        if not refresh_token_str:
+            raise HTTPException(status_code=400, detail="Refresh token missing")
+
+        payload = jwt.decode(refresh_token_str, SECRET_KEY, algorithms=[ALGORITHM])
         username = payload.get("sub")
         if username is None:
             raise HTTPException(status_code=401, detail="Invalid token")
@@ -33,13 +42,13 @@ async def page_refresh_token(request: Request):
             "token_type": "bearer"
         }
     except JWTError:
-        raise HTTPException(status_code=500, details="Expired refresh token")
+        raise HTTPException(status_code=500, detail="Expired refresh token")
 
 @router.post("/auth/login", response_model=Token)
 async def login_farmer(payload: LoginRequest, response:Response, db: AsyncSession = Depends(get_db)):
     existing_user = await get_user_by_email(payload.email, db)
     if not existing_user or not verify_password(payload.password, existing_user["password"]):
-        raise HTTPException(status_code= 400, details = "Invalid credentials, Username not found")
+        raise HTTPException(status_code= 400, detail = "Invalid credentials, Username not found")
     hashed_password = None
     if not existing_user.get("is_verified"):
         raise HTTPException(status_code=403, detail="Account not verified")
@@ -58,10 +67,15 @@ async def login_farmer(payload: LoginRequest, response:Response, db: AsyncSessio
         secure=True, 
         samesite="Lax"
     )
+    response.set_cookie(
+        key="refresh_token",
+        value=new_refresh_token,
+        httponly=True,
+        secure=True,   
+        samesite="Lax"
+    )
+
     return {
-        "access_token": access_token,
-        "refresh_token": new_refresh_token,
-        "token_type": "bearer",
         "message": "successful login"
     }
 
@@ -114,7 +128,7 @@ async def Verify_farmer(request: Request, db: AsyncSession = Depends(get_db)):
             raise HTTPException(status_code=400, detail="User already verified")
 
         if user.otp != otp:
-            raise HTTPException(status_code=401, details="Invalid otp")
+            raise HTTPException(status_code=401, detail="Invalid otp")
         if user.otp_expires_at and datetime.utcnow() > otp_expires_at:
             raise HTTPException(status_code=401, detail="Otp has expired, try resend new otp")
 
@@ -134,13 +148,13 @@ async def reset_password(request: Request, db: AsyncSession = Depends(get_db)):
     confirmPassword = body.get("confirmPassword")
 
     if not email:
-        raise HTTPException(status_code=400, details="Email doesn't exist")
+        raise HTTPException(status_code=400, detail="Email doesn't exist")
     if newPassword != confirmPassword:
-        raise HTTPException(status_code=400, details="New password and confirm password do not correspond")
+        raise HTTPException(status_code=400, detail="New password and confirm password do not correspond")
 
     user = await reset_password_check_user(db, email)
     if not user:
-        raise HTTPException(status_code=400, details="user credentials not found")
+        raise HTTPException(status_code=400, detail="user credentials not found")
 
     hash_new_password = hash_password(newPassword)
     await reset_password_update(db, email, hash_new_password)
@@ -150,14 +164,16 @@ async def reset_password(request: Request, db: AsyncSession = Depends(get_db)):
     }
     
 @router.post("/auth/logout")
-async def logout(request: Request, db: AsyncSession = Depends(get_db)):
-    body = await request.json()
-    token = body.get("refresh_token")
+async def logout(request: Request, response: Response, db: AsyncSession = Depends(get_db)):
+    token = request.cookies.get("refresh_token")
     if not token:
-        raise HTTPException(status_code= 401, details = "Missing token")
+        raise HTTPException(status_code= 401, detail = "Missing token")
     
     await revoke_refresh_token(db, token)
     await db.commit()
+
+    response.delete_cookie("access_token")
+    response.delete_cookie("refresh_token")
 
     return {
         "message": "Logged out Successfully"
@@ -183,14 +199,14 @@ async def resendVerificationCode(request: codeResend, db: AsyncSession =Depends(
     email = body.get('email')
 
     if not email:
-        raise HTTPException(status_code=403, details="Must have email")
+        raise HTTPException(status_code=403, detail="Must have email")
     
     user = await get_user_by_email(email, db)
     if not user or is_verified is true:
-        raise HTTPException(status_code=404, details="Email not found")
+        raise HTTPException(status_code=404, detail="Email not found")
 
     if user.is_verified:
-        raise HTTPException(status_code=403, details="user already verified")
+        raise HTTPException(status_code=403, detail="user already verified")
 
 
     new_otp = generate_otp()
