@@ -1,8 +1,21 @@
 "use client"
 import { useState } from "react";
 import { LayoutDashboard, Bell, Package, Brain, BarChart3, AlertCircle, User, Headphones } from "lucide-react";
+import Overview from "./overview";
 
 export default function Sidebar() {
+  const [active, setActive] = useState('Overview')
+
+  const render = () => {
+    switch (active){
+      case 'overview':
+        return <Overview />
+      
+      default:
+        return "choose options in the side bar"
+    }
+
+  }
 
   return (
       // <div className="fixed md:static top-0 left-0 h-screen md:h-auto w-70 bg-green-100 shadow-md p-4 space-y-6 mx-5 transform transition-transform duration-300 ">
@@ -11,8 +24,10 @@ export default function Sidebar() {
           <h2 className="text-green-700 font-semibold mb-2 border-b border-green-300">Dashboard</h2>
           <div className="flex flex-col space-y-2">
             <button 
-              
-              className="flex items-center gap-2 text-left px-3 py-2 text-green-600 rounded-md hover:bg-green-300"
+              onClick ={() => setActive("overview") }
+              className={`flex items-center gap-2 text-left px-3 py-2 rounded-md hover:bg-green-300 ${
+                active === "overview" ? "bg-green-300 text-green-800 font-semibold" : "text-green-600"
+              }`}
             >
               <LayoutDashboard size={18} />
               <span className="hidden md:inline">Overview</span>
@@ -41,6 +56,8 @@ export default function Sidebar() {
         <div className="mt-35 border-t border-green-300">
             <button className="flex items-center gap-2 text-green-400  px-3 py-2  rounded-md hover:bg-green-300 transition">< Headphones/><span className="hidden md:inline">Contact Support</span></button>
         </div>
+
+        <div className="flex-1 p-4">{render()}</div>
         
       </div>
   );

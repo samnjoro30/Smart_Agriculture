@@ -185,11 +185,15 @@ async def resendVerificationCode(request: codeResend, db: AsyncSession =Depends(
     if not email:
         raise HTTPException(status_code=403, details="Must have email")
     
-    existing_email = await get_user_by_email(email, db)
-    if not existing_email:
+    user = await get_user_by_email(email, db)
+    if not user or is_verified is true:
         raise HTTPException(status_code=404, details="Email not found")
 
-    new_otp = otp = generate_otp()
+    if user.is_verified:
+        raise HTTPException(status_code=403, details="user already verified")
+
+
+    new_otp = generate_otp()
 
     await resendVerificationCode(new_otp)
 

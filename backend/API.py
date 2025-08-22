@@ -2,6 +2,7 @@ from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from db.postgre_db import Base, engine, get_db
 from controller.auth import router as auth_router
+from controller.users import app as user_router
 from model.auth import RegisterRequest
 from db.postgre_db import Base, engine
 from slowapi import Limiter, _rate_limit_exceeded_handler
@@ -32,6 +33,8 @@ app.add_middleware(
 
 
 app.include_router(auth_router)
+app.include_router(user_router)
+
 
 
 @app.on_event("startup")
