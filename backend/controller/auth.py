@@ -23,10 +23,9 @@ router =  APIRouter()
 
 @router.post("/auth/refresh")
 async def page_refresh_token(request: Request):
-    SECRET_KEY = os.getenv("SECRET_KEY")
+    SECRET_KEY = os.getenv("JWT")
     ALGORITHM = os.getenv("ALGORITHM")
     try:
-        body = await request.json()
         refresh_token_str = request.cookies.get("refresh_token")
 
         if not refresh_token_str:
@@ -49,7 +48,6 @@ async def login_farmer(payload: LoginRequest, response:Response, db: AsyncSessio
     existing_user = await get_user_by_email(payload.email, db)
     if not existing_user or not verify_password(payload.password, existing_user["password"]):
         raise HTTPException(status_code= 400, detail = "Invalid credentials, Username not found")
-    hashed_password = None
     if not existing_user.get("is_verified"):
         raise HTTPException(status_code=403, detail="Account not verified")
 
@@ -76,6 +74,9 @@ async def login_farmer(payload: LoginRequest, response:Response, db: AsyncSessio
     )
 
     return {
+        "access_token": access_token,
+        "refresh_token": new_refresh_token,
+        "token_type": "bearer",
         "message": "successful login"
     }
 
