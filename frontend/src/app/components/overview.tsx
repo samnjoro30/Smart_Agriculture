@@ -7,7 +7,7 @@ interface User {
     farmname: string,
     username: string,
     email: string,
-    Phonenumber: string
+    phonenumber: string
 }
 
 export default function Overview(){
@@ -17,23 +17,29 @@ export default function Overview(){
         const fetchUserDetails = async () =>{
 
             try{
-                const res = await axiosInstance.get("/users/userprofile")
+                const res = await axiosInstance.get("/users/userprofile", {
+                    withCredentials: true,
+                })
                 setUser(res.data.message);
 
             }catch(err){
-                const error = err instanceof Error ? err : new Error(String(err));
+                const error
+                 = err instanceof Error ? err : new Error(String(err));
                 console.error("Error occurred fetching details", error)
             }
         }
         fetchUserDetails();
     }, []);
     return(
-        <div>
-            <div>
+        <div className="bg-white py-12 px-4 rounded-xl">
+
+            <div  className="flex flex-col md:flex-row md:space-x-4 space-y-4 md:space-y-0">
+            <div className="bg-green-100 py-6 px-4 rounded-xl flex-1">
+                <h3 className="text-green-400">welcome</h3>
                 {user ? (
-                    <ul>
-                        <li><strong>Name:</strong> {user.username}</li>
-                        <li><strong>Email:</strong> {user.email}</li>
+                    <ul className="border-t border-green-500">
+                        <li className="text-black"><strong>Name:</strong> {user.username}</li>
+                        <li className="text-black"><strong>Email:</strong> {user.email}</li>
                     </ul>
 
                 ) : (
@@ -41,20 +47,21 @@ export default function Overview(){
                 )}
 
             </div>
-            <div>
+            <div className="bg-green-100 py-6 px-4 rounded-xl flex-1">
                 {user ? (
                     <ul>
-                        <li><strong>Farm:</strong> {user.farmname}</li>
-                        <li><strong>Phone:</strong> {user.Phonenumber}</li>
+                        <li className="text-black"><strong>Farm:</strong> {user.farmname}</li>
+                        <li className="text-black"><strong>Phone:</strong> {user.phonenumber}</li>
                     </ul>
 
                 ): (
                     <p></p>
                 )}
             </div>
-            <div>
-                <div>
-                    <h3>Updates</h3>
+            </div>
+            <div className="bg-white rounded-xl">
+                <div className="bg-gray-100 py-12 px-4 ">
+                    <h3 className="text-green-600">Updates</h3>
 
                 </div>
                 <div>
