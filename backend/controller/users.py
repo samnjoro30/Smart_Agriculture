@@ -8,24 +8,22 @@ app = APIRouter()
 
 @app.get("/users/userprofile")
 async def users(request: Request, db: AsyncSession=Depends(get_db)):
-    auth = request.headers.get("Authorization")
+    token = request.cookies.get("access_token")
+    if not token:
+        raise HTTPException(status_code=401, detail="No access token found in cookies")
 
-    if not auth or auth.startwith("Bearer"):
-        raise HTTPException(status_code=401, detail="Token not authorized to access user details logout and login again")
-
-    token = auth.split[''][1]
     payload = decode_jwt_token(token)
+    email = payload.get("sub")
 
-    if not payload or "email" not in payload:
-        raise HTTPException(status_code=402, detail="Token expired logout and login again")
+    if not email:
+        raise HTTPException(status_code=401, detail="Token expired logout and login again")
     
-    email = payload['email']
     results = await get_userProfile(db, email)
 
     if not results:
         raise HTTPException(status_code=404, detail="User not found")
 
-    return {"user": dict(results)}
+    return {"message": dict(results)}
 
 
 

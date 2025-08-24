@@ -4,7 +4,7 @@ from dotenv import load_dotenv
 from datetime import datetime, timedelta
 
 load_dotenv()
-SECRET_KEY = os.getenv("JWT_SECRET")
+SECRET_KEY = os.getenv("JWT")
 ALGORITHM = "HS256"
 
 def create_access_token(data: dict, expires_delta: timedelta = timedelta(minutes=30)):
