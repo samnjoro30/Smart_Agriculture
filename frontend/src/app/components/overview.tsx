@@ -4,10 +4,10 @@ import {useState, useEffect } from 'react';
 import axiosInstance from '../API/axiosInstance';
 
 interface User {
-    farm: string,
-    name: string,
+    farmname: string,
+    username: string,
     email: string,
-    PhoneNumber: string
+    Phonenumber: string
 }
 
 export default function Overview(){
@@ -24,7 +24,6 @@ export default function Overview(){
                 const error = err instanceof Error ? err : new Error(String(err));
                 console.error("Error occurred fetching details", error)
             }
-
         }
         fetchUserDetails();
     }, []);
@@ -33,7 +32,7 @@ export default function Overview(){
             <div>
                 {user ? (
                     <ul>
-                        <li><strong>Name:</strong> {user.name}</li>
+                        <li><strong>Name:</strong> {user.username}</li>
                         <li><strong>Email:</strong> {user.email}</li>
                     </ul>
 
@@ -45,8 +44,8 @@ export default function Overview(){
             <div>
                 {user ? (
                     <ul>
-                        <li><strong>Farm:</strong> {user.farm}</li>
-                        <li><strong>Phone:</strong> {user.PhoneNumber}</li>
+                        <li><strong>Farm:</strong> {user.farmname}</li>
+                        <li><strong>Phone:</strong> {user.Phonenumber}</li>
                     </ul>
 
                 ): (
