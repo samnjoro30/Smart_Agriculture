@@ -33,67 +33,44 @@ export  default function Homepage() {
        
     ]
     const farmersImages = [
-        {
-            id: 1,
-            name: "crop framing",
-            image: '/agri2.jpg'
-        },
-        {
-            id: 2,
-            name: "",
-            image: '/cow3.jpg'
-        },
-        {
-            id: 3,
-            name: "",
-            image: '/Agri1.jpg'
-        },
-        {
-            id: 4,
-            name: "",
-            image: '/Agri5.png'
-        },
-        {
-            id: 4,
-            name: "",
-            image: '/Agri5.png'
-        },
-        {
-            id: 4,
-            name: "",
-            image: '/Agri5.png'
-        }
+        { id: 1, name: "crop framing", image: '/agri2.jpg' },
+        { id: 2, name: "", image: '/cow3.jpg' },
+        { id: 3, name: "", image: '/Agri1.jpg' },
+        { id: 4, name: "", image: '/Agri5.png' },
+        { id: 6, name: "", image: '/Agri5.png' },
+        { id: 5, name: "", image: '/Agri5.png'}
     ]
     function Autoplay(slider:any){
         let timeout: NodeJS.Timeout
-    let mouseOver = false
+        let mouseOver = false;
 
-    function clearNextTimeout() {
-      clearTimeout(timeout)
-    }
 
-    function nextTimeout() {
-      clearTimeout(timeout)
-      if (mouseOver) return
-      timeout = setTimeout(() => {
-        slider.next()
-      }, 3000) 
-    }
+        function clearNextTimeout() {
+            clearTimeout(timeout)
+        }
 
-    slider.on("created", () => {
-      slider.container.addEventListener("mouseover", () => {
-        mouseOver = true
-        clearNextTimeout()
-      })
-      slider.container.addEventListener("mouseout", () => {
-        mouseOver = false
+        function nextTimeout() {
+            clearTimeout(timeout)
+            if (mouseOver) return
+            timeout = setTimeout(() => {
+                slider.next()
+            }, 3000) 
+        }
+
+        slider.on("created", () => {
+            slider.container.addEventListener("mouseover", () => {
+                mouseOver = true
+                clearNextTimeout()
+            })
+        slider.container.addEventListener("mouseout", () => {
+            mouseOver = false
+            nextTimeout()
+        })
         nextTimeout()
-      })
-      nextTimeout()
-    })
-    slider.on("dragStarted", clearNextTimeout)
-    slider.on("animationEnded", nextTimeout)
-    slider.on("updated", nextTimeout)
+        })
+        slider.on("dragStarted", clearNextTimeout)
+        slider.on("animationEnded", nextTimeout)
+        slider.on("updated", nextTimeout)
     }
 
     const [slider] = useKeenSlider<HTMLDivElement>({
@@ -138,7 +115,7 @@ export  default function Homepage() {
                     </div>
                 </section>
                 <section className="bg-green-50 py-12 px-4">
-                    <h3 className="text-centre text-2xl text-green-700 font-bold mb-6">Farmers gallery</h3>
+                    <h3 className="text-center text-2xl text-green-700 font-bold mb-6">Farmers gallery</h3>
                     <div ref={slider} className="keen-slider">
                         {farmersImages.map((images) => (
                             <div
