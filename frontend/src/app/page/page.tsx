@@ -33,12 +33,12 @@ export  default function Homepage() {
        
     ]
     const farmersImages = [
-        { id: 1, name: "crop framing", image: '/agri2.jpg' },
-        { id: 2, name: "", image: '/cow3.jpg' },
-        { id: 3, name: "", image: '/Agri1.jpg' },
-        { id: 4, name: "", image: '/Agri5.png' },
-        { id: 6, name: "", image: '/Agri5.png' },
-        { id: 5, name: "", image: '/Agri5.png'}
+        { id: 1, name: "crop framing", image: '/farmer6.jpg' },
+        { id: 2, name: "soil", image: '/farmer2.jpg' },
+        { id: 3, name: "crop farming", image: '/farmer3.jpg' },
+        { id: 4, name: "spinach farming", image: '/farmer4.jpg' },
+        { id: 6, name: "Irrigation", image: '/farmer5.jpg' },
+        { id: 5, name: "Watering", image: '/farmer1.jpg'}
     ]
     function Autoplay(slider:any){
         let timeout: NodeJS.Timeout
