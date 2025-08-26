@@ -1,11 +1,14 @@
 "use client"
 
 import Image from 'next/image';
+import { useRef } from 'react';
 import FooterHome from '../components/footerHome';
 import HeaderHome from '../components/headerHomepage';
 import { Swiper, SwiperSlide } from 'swiper/react';
+import { useKeenSlider } from 'keen-slider/react'
 import 'swiper/css';
 import 'swiper/css/autoplay';
+import "keen-slider/keen-slider.min.css"
 import { Autoplay } from 'swiper/modules';
 
 export  default function Homepage() {
@@ -29,6 +32,59 @@ export  default function Homepage() {
         {src: '/logo.png',  alt: 'logo' },
        
     ]
+    const farmersImages = [
+        { id: 1, name: "crop framing", image: '/farmer6.jpg' },
+        { id: 2, name: "soil", image: '/farmer2.jpg' },
+        { id: 3, name: "crop farming", image: '/farmer3.jpg' },
+        { id: 4, name: "spinach farming", image: '/farmer4.jpg' },
+        { id: 6, name: "Irrigation", image: '/farmer5.jpg' },
+        { id: 5, name: "Watering", image: '/farmer1.jpg'}
+    ]
+    function Autoplay(slider:any){
+        let timeout: NodeJS.Timeout
+        let mouseOver = false;
+
+
+        function clearNextTimeout() {
+            clearTimeout(timeout)
+        }
+
+        function nextTimeout() {
+            clearTimeout(timeout)
+            if (mouseOver) return
+            timeout = setTimeout(() => {
+                slider.next()
+            }, 3000) 
+        }
+
+        slider.on("created", () => {
+            slider.container.addEventListener("mouseover", () => {
+                mouseOver = true
+                clearNextTimeout()
+            })
+        slider.container.addEventListener("mouseout", () => {
+            mouseOver = false
+            nextTimeout()
+        })
+        nextTimeout()
+        })
+        slider.on("dragStarted", clearNextTimeout)
+        slider.on("animationEnded", nextTimeout)
+        slider.on("updated", nextTimeout)
+    }
+
+    const [slider] = useKeenSlider<HTMLDivElement>({
+        loop: true,
+        mode: "free-snap",
+        slides:{
+            perView: 1.2,
+            spacing: 15,
+        },
+        breakpoints: {
+            "(min-width: 768px)": { slides: { perView: 2.5, spacing: 20 },},
+            "(min-width: 1024px)": { slides: {perView: 3.5, spacing: 25}, },
+        }
+    }, [Autoplay])
 
     return(
         <div className="min-h-screen flex flex-col">
@@ -37,7 +93,7 @@ export  default function Homepage() {
                 
             </header>
             <main>
-                <section className="relative h-[50vh] w-full overflow-hidden">
+                <section className="relative h-[50vh] w-full mt-1 overflow-hidden">
                     <video 
                         autoPlay 
                         muted 
@@ -56,6 +112,26 @@ export  default function Homepage() {
                         <p className="text-green-200 font-semibold text-lg md:text-xl animate-pulse">
                             🌱 Make Chaguo Smart for your Farm — Register with us!
                         </p>
+                    </div>
+                </section>
+                <section className="bg-green-50 py-12 px-4">
+                    <h3 className="text-center text-2xl text-green-700 font-bold mb-6">Farmers gallery</h3>
+                    <div ref={slider} className="keen-slider">
+                        {farmersImages.map((images) => (
+                            <div
+                                key={images.id}
+                                className="keen-slider__slide bg-white rounded-xl shadow-md overflow-hidden"
+                            >
+                                <Image 
+                                  src= {images.image} 
+                                  alt= {images.name}
+                                  width ={400}
+                                  height ={250}
+                                  className="w-full h-48 object-cover"
+                                />
+                                
+                            </div>
+                        ))}
                     </div>
                 </section>
 

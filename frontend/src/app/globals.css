@@ -1,5 +1,6 @@
 @import "tailwindcss";
 @plugin "daisyui"; 
+@import "keen-slider/keen-slider.min.css";
 
 :root {
   --background: #ffffff;
