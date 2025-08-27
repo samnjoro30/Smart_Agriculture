@@ -56,6 +56,8 @@ async def login_farmer(payload: LoginRequest, response:Response, db: AsyncSessio
     new_refresh_token = refresh_token({"sub": email})
     expires_at = datetime.utcnow() + timedelta(hours=24)
 
+    IS_PROD = os.getenv("ENV") == "prod"
+
     await store_refresh_token(email, new_refresh_token, expires_at, db)
 
     response.set_cookie(
@@ -63,14 +65,18 @@ async def login_farmer(payload: LoginRequest, response:Response, db: AsyncSessio
         value=access_token,
         httponly=True,
         secure=True, 
-        samesite="Lax"
+        samesite="None",
+        domain="smart-agriculture-pied.vercel.app" if IS_PROD else "None",
+        max_age=60 * 15
     )
     response.set_cookie(
         key="refresh_token",
         value=new_refresh_token,
         httponly=True,
         secure=True,   
-        samesite="Lax"
+        samesite="None",
+        domain="smart-agriculture-pied.vercel.app" if IS_PROD else "None",
+        max_age=60 * 60 * 24 * 7
     )
 
     return {
