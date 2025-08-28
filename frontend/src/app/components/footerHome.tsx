@@ -25,6 +25,9 @@ export default function FooterHome (){
         try{
             const res = await axiosInstance.post("/newsletter/subscribe", formData);
             setMessage(res.data.message || 'Successfully subscribed to news letter')
+            if (res.data.message == 'successful'){
+                alert("subscribtion successful");
+            }
         }catch(err){
             const error = err instanceof Error ? err : new Error(String(err));
             console.log("Error subscribing to newsletter", error);

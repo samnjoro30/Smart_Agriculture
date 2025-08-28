@@ -125,8 +125,8 @@ export  default function Homepage() {
                                 <Image 
                                   src= {images.image} 
                                   alt= {images.name}
-                                  width ={400}
-                                  height ={250}
+                                  width ={300}
+                                  height ={300}
                                   className="w-full h-48 object-cover"
                                 />
                                 
