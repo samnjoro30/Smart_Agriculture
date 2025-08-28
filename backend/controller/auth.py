@@ -66,18 +66,18 @@ async def login_farmer(payload: LoginRequest, response:Response, db: AsyncSessio
         value=access_token,
         httponly=True,
         secure=True, 
-        samesite="None",
-        domain=domain,
-        max_age=60 * 15
+        samesite="none",
+        # domain=domain,
+        # max_age=60 * 15
     )
     response.set_cookie(
         key="refresh_token",
         value=new_refresh_token,
         httponly=True,
         secure=True,   
-        samesite="None",
-        domain=domain,
-        max_age=60 * 60 * 24 * 7
+        samesite="none",
+        # domain=domain,
+        # max_age=60 * 60 * 24 * 7
     )
 
     return {
@@ -189,11 +189,9 @@ async def logout(request: Request, response: Response, db: AsyncSession = Depend
 
 @router.post("/newsletter/subscribe")
 async def RegisterForNewsLetter(request: RegisterSubscribers, db: AsyncSession = Depends(get_db)):
-
     user_news ={
         "email": request.email,
     }
-
     await create_user_newsLetter(user_news, db)
 
     return {
