@@ -2,6 +2,7 @@
 import { useState } from "react";
 import { LayoutDashboard, Bell, Package, Brain, BarChart3, AlertCircle, User, Headphones } from "lucide-react";
 import Overview from "./overview";
+import Notification from "./notification";
 
 export default function Sidebar() {
   const [active, setActive] = useState('overview')
@@ -11,7 +12,7 @@ export default function Sidebar() {
       case 'overview':
         return <Overview />
       case 'notifications':
-        return 'Comming soon'
+        return <Notification />
       default:
         return "choose options in the side bar"
     }
