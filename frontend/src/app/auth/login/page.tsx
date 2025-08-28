@@ -48,7 +48,7 @@ export default function Login() {
       setTimeout(() =>{
         setMessage('')
         router.push('/dashboard')
-      }, 1000)
+      }, 3000)
       }catch(err:any){
         if(axios.isAxiosError(err)) {
           if (err.response?.status === 403) {
