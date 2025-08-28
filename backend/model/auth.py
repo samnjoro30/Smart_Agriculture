@@ -24,4 +24,4 @@ class codeResend(BaseModel):
 
 class ResetPassword(BaseModel):
     email: EmailStr
-    newPassword: constr(min_lenth=6)
+    newPassword: constr(min_length=6)
