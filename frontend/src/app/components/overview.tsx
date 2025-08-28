@@ -35,7 +35,7 @@ export default function Overview(){
 
             <div  className="flex flex-col md:flex-row md:space-x-4 space-y-4 md:space-y-0">
             <div className="bg-green-100 py-6 px-4 rounded-xl flex-1">
-                <h3 className="text-green-400">welcome</h3>
+                <h3 className="text-green-400">welcome {user?.username}!</h3>
                 {user ? (
                     <ul className="border-t border-green-500">
                         <li className="text-black"><strong>Name:</strong> {user.username}</li>
@@ -43,13 +43,14 @@ export default function Overview(){
                     </ul>
 
                 ) : (
-                    <p></p>
+                   
+                    <p className="animate-spin rounded-full h-10 w-9 border-green-200"></p>
                 )}
 
             </div>
             <div className="bg-green-100 py-6 px-4 rounded-xl flex-1">
                 {user ? (
-                    <ul>
+                    <ul className="border-t border-green-500 py-5 px-4">
                         <li className="text-black"><strong>Farm:</strong> {user.farmname}</li>
                         <li className="text-black"><strong>Phone:</strong> {user.phonenumber}</li>
                     </ul>
@@ -59,15 +60,18 @@ export default function Overview(){
                 )}
             </div>
             </div>
-            <div className="bg-white rounded-xl">
-                <div className="bg-gray-100 py-12 px-4 ">
-                    <h3 className="text-green-600">Updates</h3>
-                    <p></p>
+            <div className="flex flex-col py-4 bg-white-300 rounded-full">
+                <div className="bg-green-100 rounded-xl py-5 px-4 flex-1">
+                    <h3 className="text-green-600 font-bold text-center">Updates</h3>
+                    <p className="text-gray-800 italic mb-4">find latest trends in farming</p>
+                    <p className="text-gray-800 italic mb-4">Emerging trends and topic in terms of agriculture</p>
 
                 </div>
-                <div>
-                    <h3>Insights</h3>
-
+                <div className="mt-2 py-3 px-4 rounded-xl bg-green-100 flex-1">
+                    <h3 className="text-green-500 font-bold text-center">Insights</h3>
+                    <p className="text-gray-800 italic mb-4">High productivity of cows</p>
+                    <p className="text-gray-800 italic mb-4">Explore diaspore market for my Agriculture products</p>
+                    <p className="text-gray-800 italic mb-4">how much is to make profit from my Agricultural products</p>
                 </div>
             </div>
         </div>
