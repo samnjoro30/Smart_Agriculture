@@ -21,3 +21,7 @@ class LoginRequest(BaseModel):
 
 class codeResend(BaseModel):
     email: EmailStr
+
+class ResetPassword(BaseModel):
+    email: EmailStr
+    newPassword: constr(min_length=6)

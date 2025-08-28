@@ -1,5 +1,5 @@
 from fastapi import APIRouter, HTTPException, Depends, Response, Request
-from model.auth import  RegisterRequest, Token, RegisterSubscribers, LoginRequest, codeResend
+from model.auth import  RegisterRequest, Token, RegisterSubscribers, LoginRequest, codeResend, ResetPassword
 from db.postgre_db import get_db
 from services.auth import create_user, get_user_by_email, store_refresh_token,  revoke_refresh_token, is_token_revoked, otp_verification, verified_upate, reset_password_check_user, reset_password_update, resendVerificationCode 
 from utils.jwt import create_access_token, refresh_token
@@ -66,18 +66,18 @@ async def login_farmer(payload: LoginRequest, response:Response, db: AsyncSessio
         value=access_token,
         httponly=True,
         secure=True, 
-        samesite="None",
-        domain=domain,
-        max_age=60 * 15
+        samesite="none",
+        # domain=domain,
+        # max_age=60 * 15
     )
     response.set_cookie(
         key="refresh_token",
         value=new_refresh_token,
         httponly=True,
         secure=True,   
-        samesite="None",
-        domain=domain,
-        max_age=60 * 60 * 24 * 7
+        samesite="none",
+        # domain=domain,
+        # max_age=60 * 60 * 24 * 7
     )
 
     return {
@@ -149,7 +149,7 @@ async def Verify_farmer(request: Request, db: AsyncSession = Depends(get_db)):
         raise HTTPException(status_code=500, detail= f"Serve error verifying{str(e)}")
 
 @router.post("/auth/reset-password")
-async def reset_password(request: Request, db: AsyncSession = Depends(get_db)):
+async def reset_password(request: ResetPassword, db: AsyncSession = Depends(get_db)):
     body = await request.json()
     email = body.get("email")
     newPassword = body.get("newPassword")
@@ -189,11 +189,9 @@ async def logout(request: Request, response: Response, db: AsyncSession = Depend
 
 @router.post("/newsletter/subscribe")
 async def RegisterForNewsLetter(request: RegisterSubscribers, db: AsyncSession = Depends(get_db)):
-
     user_news ={
         "email": request.email,
     }
-
     await create_user_newsLetter(user_news, db)
 
     return {

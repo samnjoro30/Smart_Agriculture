@@ -62,6 +62,7 @@ export default function Overview(){
             <div className="bg-white rounded-xl">
                 <div className="bg-gray-100 py-12 px-4 ">
                     <h3 className="text-green-600">Updates</h3>
+                    <p></p>
 
                 </div>
                 <div>
