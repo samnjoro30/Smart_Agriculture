@@ -68,7 +68,7 @@ export default function Sidebar() {
         </div>
       </div>
 
-      <div className="flex-1 p-5 md:h-full ml-2 mr-2 bg-green-200">{render()}</div>
+      <div className="flex-1 p-2 md:h-full ml-2 mr-2 bg-green-200">{render()}</div>
     </div> 
   );
 }
