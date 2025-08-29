@@ -13,6 +13,8 @@ export default function Sidebar() {
         return <Overview />
       case 'notifications':
         return <Notification />
+      case 'packages':
+        return 'development in place'
       default:
         return "choose options in the side bar"
     }
@@ -48,7 +50,13 @@ export default function Sidebar() {
         <div>
           <h2 className="text-green-700 font-semibold mb-2 border-b border-green-300">Product</h2>
           <div className="flex flex-col space-y-2">
-            <button className="flex items-center gap-2 text-left px-3 py-2 text-green-600 font-bold rounded-md hover:bg-green-300"><Package /><span className="hidden md:inline">Farm Inputs</span></button>
+            <button 
+              className="flex items-center gap-2 text-left px-3 py-2 text-green-600 font-bold rounded-md hover:bg-green-300"
+              onClick={()=> setActive('packages')}
+            >
+              <Package />
+              <span className="hidden md:inline">Farm Inputs</span>
+            </button>
             <button className="flex items-center gap-2 text-left px-3 py-2 text-green-600 font-bold rounded-md hover:bg-green-300">< Brain/> <span className="hidden md:inline">AI Insights</span></button>
             <button className="flex items-center gap-2 text-left px-3 py-2 text-green-600 font-bold rounded-md hover:bg-green-300">< BarChart3/> <span className="hidden md:inline">Farm Analytics</span></button>
             <button className="flex items-center gap-2 text-left px-3 py-2 text-green-600 font-bold rounded-md hover:bg-green-300">< AlertCircle /> <span className="hidden md:inline">Alerts</span></button>
@@ -60,7 +68,7 @@ export default function Sidebar() {
         </div>
       </div>
 
-      <div className="flex-1 p-5 md:h-full ml-2 mr-2 bg-green-200">{render()}</div>
+      <div className="flex-1 p-2 md:h-full ml-2 mr-2 bg-green-200">{render()}</div>
     </div> 
   );
 }
