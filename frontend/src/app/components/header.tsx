@@ -20,13 +20,15 @@ export default function Header (){
     useEffect(() => {
         const Username =  async() =>{
             try{
-                const res = await axiosInstance.get("/users/username");
+                const res = await axiosInstance.get("/users/userprofile");
                 const name = res.data.message || 'user';
 
-                if (name >= 2){
-                    setUserLetters(name.substring(0,2).toUpperCase());
+                const nameLetter = name.username;
+
+                if (nameLetter >= 2){
+                    setUserLetters(name.substring(0).toUpperCase());
                 }else {
-                    setUserLetters(name[0]?.toUpperCase() || 'U');
+                    setUserLetters(nameLetter[0]?.toUpperCase() || 'U');
 
                 }
             }catch(err){
