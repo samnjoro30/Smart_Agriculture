@@ -27,7 +27,7 @@ export default function ProfileSetting() {
         const res = await axiosInstance.get("/users/userprofile", {
           withCredentials: true,
         })
-        const details = res.data.message
+        let details = res.data.message
         setProfile(details)
         setFormData({
           email: details.email,
@@ -73,9 +73,11 @@ export default function ProfileSetting() {
       </h2>
 
       <div className="space-y-6">
-        {/* Email */}
+        <div>
+           
+        </div>
         <div className="flex flex-col">
-          <label className="text-sm text-gray-600 mb-1">Email</label>
+          <label className="text-sm text-gray-700 mb-1 font-bold">Email:</label>
           {editingField === "email" ? (
             <div className="flex gap-2">
               <input
@@ -83,7 +85,7 @@ export default function ProfileSetting() {
                 name="email"
                 value={formData.email}
                 onChange={handleChange}
-                className="flex-1 border rounded-lg px-3 py-2"
+                className="flex-1 border rounded-lg px-3 py-2 text-gray-400"
               />
               <button
                 onClick={() => handleSave("email")}
@@ -93,7 +95,7 @@ export default function ProfileSetting() {
               </button>
               <button
                 onClick={() => setEditingField(null)}
-                className="bg-gray-300 px-3 py-2 rounded-lg"
+                className="bg-red-600 px-3 py-2 rounded-lg"
               >
                 Cancel
               </button>
@@ -113,7 +115,7 @@ export default function ProfileSetting() {
 
         {/* Farm Name */}
         <div className="flex flex-col">
-          <label className="text-sm text-gray-600 mb-1">Farm Name</label>
+          <label className="text-sm text-gray-600 mb-1 font-bold">Farm Name:</label>
           {editingField === "farmname" ? (
             <div className="flex gap-2">
               <input
@@ -121,7 +123,7 @@ export default function ProfileSetting() {
                 name="farmname"
                 value={formData.farmname}
                 onChange={handleChange}
-                className="flex-1 border rounded-lg px-3 py-2"
+                className="flex-1 border rounded-lg px-3 py-2 text-gray-500"
               />
               <button
                 onClick={() => handleSave("farmname")}
@@ -131,7 +133,7 @@ export default function ProfileSetting() {
               </button>
               <button
                 onClick={() => setEditingField(null)}
-                className="bg-gray-300 px-3 py-2 rounded-lg"
+                className="bg-red-500 px-3 py-2 rounded-lg"
               >
                 Cancel
               </button>
@@ -151,7 +153,7 @@ export default function ProfileSetting() {
 
         {/* Phone */}
         <div className="flex flex-col">
-          <label className="text-sm text-gray-600 mb-1">Phone</label>
+          <label className="text-sm text-gray-600 mb-1 font-bold">Phone:</label>
           {editingField === "phonenumber" ? (
             <div className="flex gap-2">
               <input
@@ -159,7 +161,7 @@ export default function ProfileSetting() {
                 name="phonenumber"
                 value={formData.phonenumber}
                 onChange={handleChange}
-                className="flex-1 border rounded-lg px-3 py-2"
+                className="flex-1 border rounded-lg px-3 py-2 text-gray-500"
               />
               <button
                 onClick={() => handleSave("phonenumber")}
@@ -169,7 +171,7 @@ export default function ProfileSetting() {
               </button>
               <button
                 onClick={() => setEditingField(null)}
-                className="bg-gray-300 px-3 py-2 rounded-lg"
+                className="bg-red-500 px-3 py-2 rounded-lg"
               >
                 Cancel
               </button>
@@ -189,7 +191,7 @@ export default function ProfileSetting() {
 
         {/* Password */}
         <div className="flex flex-col">
-          <label className="text-sm text-gray-600 mb-1">Password</label>
+          <label className="text-sm text-gray-600 mb-1 font-bold">Password</label>
           {editingField === "password" ? (
             <div className="flex gap-2">
               <input
@@ -197,7 +199,7 @@ export default function ProfileSetting() {
                 name="password"
                 value={formData.password}
                 onChange={handleChange}
-                className="flex-1 border rounded-lg px-3 py-2"
+                className="flex-1 border rounded-lg px-3 py-2 text-gray-500"
               />
               <button
                 onClick={() => handleSave("password")}
@@ -207,7 +209,7 @@ export default function ProfileSetting() {
               </button>
               <button
                 onClick={() => setEditingField(null)}
-                className="bg-gray-300 px-3 py-2 rounded-lg"
+                className="bg-red-500 px-3 py-2 rounded-lg "
               >
                 Cancel
               </button>
