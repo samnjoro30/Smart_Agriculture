@@ -3,8 +3,9 @@ import { useState, useEffect } from "react"
 import axiosInstance from "../API/axiosInstance"
 
 interface Profile {
-  email: string
-  farmname: string
+  email: string,
+  username: string,
+  farmname: string,
   phonenumber: string
 }
 
@@ -67,15 +68,30 @@ export default function ProfileSetting() {
   if (loading) return <p className="text-center">Loading profile...</p>
 
   return (
-    <div className="max-w-3xl mx-auto bg-white p-6 rounded-xl shadow-md mt-8">
-      <h2 className="text-2xl font-bold text-green-700 mb-6">
+    <div className="max-w-6xl mx-auto bg-white p-2 rounded-xl shadow-md mt-2">
+      <h2 className="text-2xl font-bold text-green-700 mb-6 text-center">
         Profile Settings
       </h2>
 
-      <div className="space-y-6">
-        <div>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 h-auto">
+        <div className="bg-green-100 p-4 rounded-lg shadow-sm">
+          <h3 className="text-green-500 font-bold text-center">Details</h3>
+          {profile ? (
+            <ul className="space-y-1 text-gray-700">
+              <li><strong>FarmName: </strong> {profile.farmname}</li>
+              <li><strong>Username: </strong> {profile.username}</li>
+              <li><strong className="text-green-300">Email: </strong> {profile.email}</li>
+              <li><strong>PhoneNumber: </strong> {profile.phonenumber}</li>
+            </ul>
+          ) :(
+            <p>loading ...</p>
+          )
+          }
+
            
         </div>
+        <div className="bg-green-100 p-4 rounded-lg shadow-sm space-y-4">
+          <h3 className="text-green-500 text-center font-bold">Setting</h3>
         <div className="flex flex-col">
           <label className="text-sm text-gray-700 mb-1 font-bold">Email:</label>
           {editingField === "email" ? (
@@ -85,7 +101,7 @@ export default function ProfileSetting() {
                 name="email"
                 value={formData.email}
                 onChange={handleChange}
-                className="flex-1 border rounded-lg px-3 py-2 text-gray-400"
+                className="flex-1 border rounded-lg px-3 py-2 text-gray-700"
               />
               <button
                 onClick={() => handleSave("email")}
@@ -225,6 +241,7 @@ export default function ProfileSetting() {
               </button>
             </div>
           )}
+        </div>
         </div>
       </div>
     </div>

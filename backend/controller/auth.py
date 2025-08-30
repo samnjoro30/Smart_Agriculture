@@ -56,9 +56,6 @@ async def login_farmer(payload: LoginRequest, response:Response, db: AsyncSessio
     new_refresh_token = refresh_token({"sub": email})
     expires_at = datetime.utcnow() + timedelta(hours=24)
 
-    IS_PROD = os.getenv("ENV") == "prod"
-    domain = "smart-agriculture-pied.vercel.app" if IS_PROD else None
-
     await store_refresh_token(email, new_refresh_token, expires_at, db)
 
     response.set_cookie(
