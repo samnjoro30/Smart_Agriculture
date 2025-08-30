@@ -23,8 +23,7 @@ export default function Overview(){
                 setUser(res.data.message);
 
             }catch(err){
-                const error
-                 = err instanceof Error ? err : new Error(String(err));
+                const error = err instanceof Error ? err : new Error(String(err));
                 console.error("Error occurred fetching details", error)
             }
         }
