@@ -20,7 +20,9 @@ export default function Header (){
     useEffect(() => {
         const Username =  async() =>{
             try{
-                const res = await axiosInstance.get("/users/userprofile");
+                const res = await axiosInstance.get("/users/userprofile",{
+                    withCredentials: true,
+                });
                 const name = res.data.message || 'user';
 
                 const nameLetter = name.username;
