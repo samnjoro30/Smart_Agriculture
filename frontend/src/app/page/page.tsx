@@ -7,8 +7,14 @@ import dynamic from 'next/dynamic';
 const Gallery = dynamic(() => import('../components/FarmerGallery'),{
     ssr: false,
     loading: () => (
-        <div className="flex items-center justify-center py-10">
-          <div className="w-12 h-12 border-4 border-green-500 border-t-transparent rounded-full animate-spin"></div>
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 p-4">
+            {[...Array(4)].map((_, i) => (
+                <div
+                    key={i}
+                    className="w-full h-40 bg-gray-200 rounded-lg animate-pulse"
+                >
+                </div>
+            ))}
         </div>
     ),
 })
@@ -24,8 +30,14 @@ const Service = dynamic(() => import('../components/service'),{
 const PoweredTrusted = dynamic(() => import("../components/homepagepowered"), {
     ssr: false,
     loading: () => (
-        <div className="flex items-center justify-center py-10">
-          <div className="w-12 h-12 border-4 border-green-500 border-t-transparent rounded-full animate-spin"></div>
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 p-4">
+            {[...Array(4)].map((_, i) => (
+                <div
+                    key={i}
+                    className="w-full h-40 bg-gray-200 rounded-lg animate-pulse"
+                >
+                </div>
+            ))}
         </div>
     ),
 })
