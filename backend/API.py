@@ -11,6 +11,7 @@ from slowapi.errors import RateLimitExceeded
 from alembic import command
 from alembic.config import Config
 import os
+import time
 
 app = FastAPI()
 
@@ -35,7 +36,13 @@ app.add_middleware(
 app.include_router(auth_router)
 app.include_router(user_router)
 
-
+@app.middleware("http")
+async def add_process_time_header(request: Request, call_next):
+    start_time = time.time()
+    response = await call_next(request)
+    process_time = time.time() - start_time
+    response.headers["X-Process-Time"] = str(process_time)
+    return response
 
 @app.on_event("startup")
 async def startup():
