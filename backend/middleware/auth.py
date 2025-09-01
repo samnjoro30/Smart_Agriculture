@@ -18,7 +18,7 @@ def decode_jwt_token(token:str):
         headers = { "WWW-Authenticate": "Bearer"}
     )
     try:
-        return jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+        return jwt.decode(token, JWT_TOKEN, algorithms=[ALGORITHM])
     except ExpiredSignatureError:
         raise HTTPException(status_code=401, detail="Token expired")
     except JWTError:
