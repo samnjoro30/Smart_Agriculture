@@ -32,6 +32,7 @@ export default function Farm() {
     const [farmingType, setFarmingType] = useState< "dairy" | "goats" | "chickens" | "mixed" | "">("")
     const [numCow, setNumCow] = useState(0)
     const [animals, setAnimals] = useState<Animal[]>([]);
+    const [step, setStep] = useState(0);
 
     const handleSubmit = async () => {
         try{
@@ -63,7 +64,8 @@ export default function Farm() {
                 Calf: 0,
                 type: "cow" as const,
             }))
-        )
+        );
+        setStep(0);
     };
     const handleCowChange = (
         id: number,
@@ -78,17 +80,17 @@ export default function Farm() {
     };
 
     return(
-        <div className="px-2 py-2 bg-green-50 shadow-sm rounded-xl">
-            <div>
-                <div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 rounded-lg p-3 bg-gray-50 h-auto">
+            <div className="space-y-6">
+                <div className="bg-green-50 shadow-md rounded-2xl p-6">
                     <h3 className="text-green-600 text-center font-bold">Farm Data Collection</h3>
-                    <p className="text-gray-600">Set up your farm details step by step</p>
+                    <p className="text-gray-600 text-sm mb-4 text-center">Set up your farm details step by step</p>
                     <div className="mb-2">
-                        <label className="block text-gray-500 font-medium mb-1">Which kind of Farming are you:</label>
+                        <label className="block text-gray-500 font-medium mb-1">Farm Setup:</label>
                         <select
                           value={farmingType}
                           onChange={handleFarmingType}
-                          className="border rounded-lg px-3 py-2 border-gray-700"
+                          className="border rounded-lg px-3 py-2 border-gray-700 w-full"
                         >
                             <option value="">-- Select Farming Type --</option>
                             <option value="dairy">Dairy Farming</option>
@@ -111,55 +113,96 @@ export default function Farm() {
                                        className="border rounded-lg w-20 border-gray-700 "
                                     />
                                 </div>
-                                {animals.map((cow) =>(
-                                    <div key={cow.id}>
+                            </div>
+                        )}
+                    </div>
+                        {farmingType ==="dairy" && animals.length >0 &&(
+                            <div className="bg-green-50 shadow-sm rounded-2xl p-2">
+                                <h3 className="text-green-600 text-lg font-bold mb-4 text-center">
+                                    Cow Details (Cow {step + 1} of {animals.length})
+                                </h3>
+                                {animals[step] && (
+                                    <div className="grid grid-cols-2">
+                                        <div className="">
                                         <div>
-                                            <label className="font-medium text-gray-500">Name of cow #{cow.id}: </label>
+                                            <label className="block font-medium text-gray-500">Name of cow: </label>
                                             <input
                                                type="text"
-                                               value={cow.name}
-                                               onChange={(e) => handleCowChange(cow.id, "name",  e.target.value)}
+                                               value={animals[step].name}
+                                               onChange={(e) => handleCowChange(animals[step].id, "name",  e.target.value)}
                                                className="border border-green-300 rounded-lg "
                                             />
                                         </div>
                                         <div>
-                                            <label>Age of The cow:</label>
+                                            <label className="block font-medium text-gray-500">Age of The cow:</label>
                                             <input
                                               type="number"
-                                              value={cow.age}
-                                              onChange={(e) => handleCowChange(cow.id, "age", parseInt(e.target.value) || 0)}
+                                              value={animals[step].age}
+                                              onChange={(e) => handleCowChange(animals[step].id, "age", parseInt(e.target.value) || 0)}
+                                              className="border border-green-300 rounded-lg "
                                             />
                                         </div>
                                         <div>
-                                            <label>LastBirth of the cow #{cow.id}:</label>
+                                            <label className="block font-medium text-gray-500">LastBirth of the cow:</label>
                                             <input
                                               type="text"
-                                              value={cow.lastBirth}
-                                              onChange={(e) => handleCowChange(cow.id, "lastBirth", e.target.value)}
+                                              value={animals[step].lastBirth}
+                                              onChange={(e) => handleCowChange(animals[step].id, "lastBirth", e.target.value)}
+                                              className="border border-green-300 rounded-lg "
                                             />
                                         </div>
-                                        <div>
-                                            <label>Last Mate Docter|| Bull #{cow.id}:</label>
+                                        </div>
+                                        <div className="">
+                                        <div >
+                                            <label className="block font-medium text-gray-500">Last Mate Docter|| Bull :</label>
                                             <input
                                               type="text"
-                                              value={cow.lastMate}
-                                              onChange={(e) => handleCowChange(cow.id, "lastMate", e.target.value )}
+                                              value={animals[step].lastMate}
+                                              onChange={(e) => handleCowChange(animals[step].id, "lastMate", e.target.value )}
+                                              className="border border-green-300 rounded-lg "
                                             />
                                         </div>
                                         <div>
-                                            <label>Number of Calf(young ones) It has:</label>
+                                            <label className="block font-medium text-gray-500">Number of Calf(young ones) It has:</label>
                                             <input
                                               type="number"
-                                              value={cow.Calf}
-                                              onChange={(e) => handleCowChange(cow.id, "Calf", parseInt(e.target.value) || 0)}
+                                              value={animals[step].Calf}
+                                              onChange={(e) => handleCowChange(animals[step].id, "Calf", parseInt(e.target.value) || 0)}
+                                              className="border border-green-300 rounded-lg "
                                             />
+                                        </div>
                                         </div>
                                     </div>
-                                ) )}
+                                )}
+                                <div className="flex justify-between mt-6">
+                                   <button
+                                      onClick={() => setStep((prev) => Math.max(prev - 1, 0))}
+                                      disabled={step === 0}
+                                      className={`px-4 py-2 rounded-lg ${
+                                          step === 0
+                                          ? "bg-gray-300 text-gray-600 cursor-not-allowed"
+                                          : "bg-green-500 text-white hover:bg-green-600"
+                                        }`}
+                                    >
+                                        Previous
+                                    </button>
+                                    <button
+                                       onClick={() =>
+                                          setStep((prev) => Math.min(prev + 1, animals.length - 1))
+                                        }
+                                       disabled={step === animals.length - 1}
+                                       className={`px-4 py-2 rounded-lg ${
+                                           step === animals.length - 1
+                                           ? "bg-gray-300 text-gray-600 cursor-not-allowed"
+                                           : "bg-green-500 text-white hover:bg-green-600"
+                                        }`}
+                                    >
+                                        Next
+                                    </button>
+                                </div>
                             </div>
                         )}
+                    </div>
                 </div>
-            </div>
-        </div>
     )
 }
