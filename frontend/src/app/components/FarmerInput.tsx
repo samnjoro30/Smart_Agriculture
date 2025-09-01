@@ -86,7 +86,7 @@ export default function Farm() {
                     <h3 className="text-green-600 text-center font-bold">Farm Data Collection</h3>
                     <p className="text-gray-600 text-sm mb-4 text-center">Set up your farm details step by step</p>
                     <div className="mb-2">
-                        <label className="block text-gray-500 font-medium mb-1">Farm Setup:</label>
+                        <label className="block text-gray-800 font-medium mb-1">Farm Setup:</label>
                         <select
                           value={farmingType}
                           onChange={handleFarmingType}
@@ -110,27 +110,37 @@ export default function Farm() {
                                        type="number"
                                        value={numCow}
                                        onChange={handleCowNumber}
-                                       className="border rounded-lg w-20 border-gray-700 "
+                                       className="border rounded-lg w-20 border-gray-700 text-gray-800"
                                     />
                                 </div>
                             </div>
                         )}
                     </div>
                         {farmingType ==="dairy" && animals.length >0 &&(
-                            <div className="bg-green-50 shadow-sm rounded-2xl p-2">
+                            <div className="bg-green-50 shadow-sm rounded-2xl p-2 border border-gray-200">
+                                <div className="flex items-center justify-center mb-6 space-x-2">
+                                    {animals.map((_, i) => (
+                                        <div
+                                           key={i}
+                                           className={`h-3 w-3 rounded-full transition-all duration-300 ${
+                                               i === step ? "bg-green-600 w-6" : "bg-gray-300"
+                                           }`}
+                                        />
+                                    ))}
+                                </div>
                                 <h3 className="text-green-600 text-lg font-bold mb-4 text-center">
-                                    Cow Details (Cow {step + 1} of {animals.length})
+                                    Cow Details <span className="text-gray-500">(Cow {step + 1} of {animals.length})</span>
                                 </h3>
                                 {animals[step] && (
-                                    <div className="grid grid-cols-2">
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                        <div className="space-y-4">
                                         <div className="">
-                                        <div>
-                                            <label className="block font-medium text-gray-500">Name of cow: </label>
+                                            <label className="block font-medium text-gray-500 mb-1">Name of cow: </label>
                                             <input
                                                type="text"
                                                value={animals[step].name}
                                                onChange={(e) => handleCowChange(animals[step].id, "name",  e.target.value)}
-                                               className="border border-green-300 rounded-lg "
+                                               className="border px-1 py-1 border-green-300 rounded-lg "
                                             />
                                         </div>
                                         <div>
@@ -139,7 +149,7 @@ export default function Farm() {
                                               type="number"
                                               value={animals[step].age}
                                               onChange={(e) => handleCowChange(animals[step].id, "age", parseInt(e.target.value) || 0)}
-                                              className="border border-green-300 rounded-lg "
+                                              className="border border-green-300 px-1 py-1 rounded-lg "
                                             />
                                         </div>
                                         <div>
@@ -148,18 +158,18 @@ export default function Farm() {
                                               type="text"
                                               value={animals[step].lastBirth}
                                               onChange={(e) => handleCowChange(animals[step].id, "lastBirth", e.target.value)}
-                                              className="border border-green-300 rounded-lg "
+                                              className="border border-green-300 px-1 py-1 rounded-lg "
                                             />
                                         </div>
                                         </div>
-                                        <div className="">
+                                        <div className="space-y-4">
                                         <div >
                                             <label className="block font-medium text-gray-500">Last Mate Docter|| Bull :</label>
                                             <input
                                               type="text"
                                               value={animals[step].lastMate}
                                               onChange={(e) => handleCowChange(animals[step].id, "lastMate", e.target.value )}
-                                              className="border border-green-300 rounded-lg "
+                                              className="border border-green-300 px-1 py-1 rounded-lg "
                                             />
                                         </div>
                                         <div>
@@ -168,7 +178,7 @@ export default function Farm() {
                                               type="number"
                                               value={animals[step].Calf}
                                               onChange={(e) => handleCowChange(animals[step].id, "Calf", parseInt(e.target.value) || 0)}
-                                              className="border border-green-300 rounded-lg "
+                                              className="border border-green-300 px-1 py-1 rounded-lg "
                                             />
                                         </div>
                                         </div>
