@@ -168,8 +168,8 @@ export default function Login() {
           {message && (
             <p style={{ color: 'green'}}>{message}</p>
           )}
-          <Link href="/" className="text-green-600 hover:underline ml-5"> ← Back to Home</Link>
-          <Link href="/auth/register" className="text-green-600 hover:underline mr-10">Or Register </Link>
+          <Link href="/" className="text-green-600 hover:underline pr-5"> ← Back to Home</Link>
+          <Link href="/auth/register" className="text-green-600 hover:underline pl-3 mr-10">Or Register </Link>
         </div>
       </div>
     );

@@ -18,7 +18,6 @@ export default function GalleryFarmer(){
         let timeout: NodeJS.Timeout
         let mouseOver = false;
 
-
         function clearNextTimeout() {
             clearTimeout(timeout)
         }

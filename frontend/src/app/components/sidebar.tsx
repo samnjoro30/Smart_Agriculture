@@ -3,11 +3,18 @@ import { useState } from "react";
 import { LayoutDashboard, Bell, Package, Brain, BarChart3, AlertCircle, User, Headphones } from "lucide-react";
 import dynamic from 'next/dynamic';
 import Overview from "./overview";
-import Notification from "./notification";
+// import Notification from "./notification";
 
 const Profile = dynamic(() => import('./profile'), {
   loading: () => <p> Loading ...</p>
 } )
+const NotificationComponent = dynamic(() => import("./notification"), {
+  loading: () => <p>loading ...</p>
+})
+
+const FarmerInput = dynamic(() => import("./FarmerInput"), {
+  loading: () => <p>Loading ...</p>
+})
 
 
 export default function Sidebar() {
@@ -18,13 +25,17 @@ export default function Sidebar() {
       case 'overview':
         return <Overview />
       case 'notifications':
-        return <Notification />
+        return <NotificationComponent /> 
       case 'packages':
         return 'development in place'
       case 'profile':
         return <Profile />;
+      case 'Contact':
+        return 'working on it';
+      case 'farmer':
+        return <FarmerInput />;
       default:
-        return "choose options in the side bar"
+        return "choose options in the side bar";
     }
 
   }
@@ -60,7 +71,7 @@ export default function Sidebar() {
           <div className="flex flex-col space-y-2">
             <button 
               className="flex items-center gap-2 text-left px-3 py-2 text-green-600 font-bold rounded-md hover:bg-green-300"
-              onClick={()=> setActive('packages')}
+              onClick={()=> setActive('farmer')}
             >
               <Package />
               <span className="hidden md:inline">Farm Inputs</span>
@@ -68,11 +79,23 @@ export default function Sidebar() {
             <button className="flex items-center gap-2 text-left px-3 py-2 text-green-600 font-bold rounded-md hover:bg-green-300">< Brain/> <span className="hidden md:inline">AI Insights</span></button>
             <button className="flex items-center gap-2 text-left px-3 py-2 text-green-600 font-bold rounded-md hover:bg-green-300">< BarChart3/> <span className="hidden md:inline">Farm Analytics</span></button>
             <button className="flex items-center gap-2 text-left px-3 py-2 text-green-600 font-bold rounded-md hover:bg-green-300">< AlertCircle /> <span className="hidden md:inline">Alerts</span></button>
-            <button onClick={() =>setActive('profile')} className="flex items-center gap-2 text-left px-3 py-2 text-green-600 font-bold rounded-md hover:bg-green-300">< User/> <span className="hidden md:inline">Farmer Profile</span></button>
+            <button 
+              onClick={() =>setActive('profile')} 
+              className="flex items-center gap-2 text-left px-3 py-2 text-green-600 font-bold rounded-md hover:bg-green-300"
+            >
+              < User/> 
+              <span className="hidden md:inline">Farmer Profile</span>
+            </button>
           </div>
         </div>
         <div className="mt-35 border-t border-green-300">
-          <button className="flex items-center gap-2 text-green-400  px-3 py-2  rounded-md hover:bg-green-300 transition">< Headphones/><span className="hidden md:inline">Contact Support</span></button>
+          <button 
+            onClick={() => setActive('Contact')}
+            className="flex items-center gap-2 text-green-400  px-3 py-2  rounded-md hover:bg-green-300 transition"
+          >
+            < Headphones/>
+            <span className="hidden md:inline">Contact Support</span>
+          </button>
         </div>
       </div>
 
