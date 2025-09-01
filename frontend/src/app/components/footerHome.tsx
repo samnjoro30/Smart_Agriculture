@@ -33,7 +33,6 @@ export default function FooterHome (){
             console.log("Error subscribing to newsletter", error);
         }
     }
-
     return(
         <footer className="bg-green-900 text-white py-10">
             <div className="max-w-6xl mx-auto px-4 grid grid-cols-1 md:grid-cols-4 gap-8">

@@ -30,7 +30,7 @@ export default function Overview(){
         fetchUserDetails();
     }, []);
     return(
-        <div className="bg-white py-1 px-1 pb-27 rounded-xl">
+        <div className="bg-white py-1 px-1 pb-1 rounded-xl">
 
             <div  className="flex flex-col md:flex-row md:space-x-4 space-y-4 md:space-y-0">
             <div className="bg-green-100 py-6 px-4 rounded-xl flex-1">

@@ -69,19 +69,19 @@ export default function ProfileSetting() {
 
   return (
     <div className="max-w-6xl mx-auto bg-white p-2 rounded-xl shadow-md mt-2">
-      <h2 className="text-2xl font-bold text-green-700 mb-6 text-center">
+      <h2 className="text-2xl font-bold text-green-700 mb-3 text-center">
         Profile Settings
       </h2>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 h-auto">
         <div className="bg-green-100 p-4 rounded-lg shadow-sm">
-          <h3 className="text-green-500 font-bold text-center">Details</h3>
+          <h3 className="text-green-500 font-bold text-center border-b border-green-500 mb-6">Details</h3>
           {profile ? (
             <ul className="space-y-1 text-gray-700">
-              <li><strong>FarmName: </strong> {profile.farmname}</li>
-              <li><strong>Username: </strong> {profile.username}</li>
-              <li><strong className="text-green-300">Email: </strong> {profile.email}</li>
-              <li><strong>PhoneNumber: </strong> {profile.phonenumber}</li>
+              <li><strong className="text-gray-800 font-bold py-2">FarmName: </strong> {profile.farmname}</li>
+              <li><strong className="text-gray-800 font-bold py-2">Username: </strong> {profile.username}</li>
+              <li><strong className="text-gray-800 font-bold py-2">Email: </strong> {profile.email}</li>
+              <li><strong className="text-gray-800 font-bold py-2">PhoneNumber: </strong> {profile.phonenumber}</li>
             </ul>
           ) :(
             <p>loading ...</p>
