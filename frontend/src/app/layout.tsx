@@ -15,6 +15,7 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "Smart Agriculture | AI Smart Farm",
   description: "Enhancing agriculture production by use of technology",
+  manifest: "/manifest.json",
 };
 
 export default function RootLayout({

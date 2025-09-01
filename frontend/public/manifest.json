@@ -1,0 +1,27 @@
+{
+    "name": "Smart Agri Tech",
+    "short_name": "SmartAgri",
+    "description": "Smart Agriculture Platform using AI to boost farm productivity.",
+    "start_url": "/auth/login",
+    "scope": "/",
+    "display": "standalone",
+    "orientation": "portrait",
+    "background_color": "#f8f9fa",
+    "theme_color": "#2e7d32",
+    "categories": ["productivity", "utilities", "education"],
+    "icons": [
+      {
+        "src": "/logo-192x192.png",
+        "sizes": "192x192",
+        "type": "image/png",
+        "purpose": "any maskable"
+      },
+      {
+        "src": "/logo-512x512.png",
+        "sizes": "512x512",
+        "type": "image/png",
+        "purpose": "any maskable"
+      }
+    ]
+  }
+  
