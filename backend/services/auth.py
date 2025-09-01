@@ -1,5 +1,5 @@
 #from db.postgre_db import AsyncSession
-from sqlalchemy import text
+from sqlalchemy import text, select
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import Session
 from datetime import datetime, timedelta
