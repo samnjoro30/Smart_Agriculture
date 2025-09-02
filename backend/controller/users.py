@@ -40,7 +40,7 @@ async def users(request: Request, db: AsyncSession=Depends(get_db)):
     return {"message": dict(results)}
 
 
-@router.put("/users/update-email")
+@app.put("/users/update-email")
 async def update_email(request: ChangeEmail, db: AsyncSession = Depends(get_db), req: Request = None):
     email = get_current_user(req)
     user = await get_user_by_email(email, db)
@@ -52,7 +52,7 @@ async def update_email(request: ChangeEmail, db: AsyncSession = Depends(get_db),
     return {"message": "Email updated successfully"}
 
 
-@router.put("/users/update-phonenumber")
+@app.put("/users/update-phonenumber")
 async def update_phone(request: ChangePhonenumber, db: AsyncSession = Depends(get_db), req: Request = None):
     email = get_current_user(req)
     user = await get_user_by_email(email, db)
@@ -61,7 +61,7 @@ async def update_phone(request: ChangePhonenumber, db: AsyncSession = Depends(ge
     return {"message": "Phone number updated successfully"}
 
 
-@router.put("/users/update-farmname")
+@app.put("/users/update-farmname")
 async def update_farm(request: ChangeFarmname, db: AsyncSession = Depends(get_db), req: Request = None):
     email = get_current_user(req)
     user = await get_user_by_email(email, db)
@@ -70,7 +70,7 @@ async def update_farm(request: ChangeFarmname, db: AsyncSession = Depends(get_db
     return {"message": "Farm name updated successfully"}
 
 
-@router.put("/users/update-password")
+@app.put("/users/update-password")
 async def update_password(request: ChangePassword, db: AsyncSession = Depends(get_db), req: Request = None):
     email = get_current_user(req)
     user = await get_user_by_email(email, db)
