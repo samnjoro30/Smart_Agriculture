@@ -10,4 +10,5 @@ class ChangePhonenumber(BaseModel):
     phonenumber: constr(min_length=10, max_length=15)
     
 class ChangePassword(BaseModel):
-    password: constr(min_length=6)
+    old_password: constr(min_length=6)
+    new_password: constr(min_length=6) 
