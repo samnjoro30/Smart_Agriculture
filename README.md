@@ -22,6 +22,7 @@ It is built using a full-stack, cloud-native approach with technologies like Fas
  - **python 3.9 and above**
  - **FastAPI** - High-performance API
  - **Uvicorn** - ASGI server
+ - **Gunicorn**
  - **Node.js** - backend components
  - **Alembic** - handling db migrations
 
@@ -40,6 +41,7 @@ It is built using a full-stack, cloud-native approach with technologies like Fas
 - **Neon** - Postgre db
 - **vercel** - frontend hosting
 - **Firebase** - frontend hosting
+- **service worker** - for WPA
 
 ---
 
