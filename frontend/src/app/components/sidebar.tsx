@@ -16,6 +16,9 @@ const FarmerInput = dynamic(() => import("./FarmerInput"), {
   loading: () => <p>Loading ...</p>
 })
 
+const Contact = dynamic(() => import('./contact'), {
+    loading: () => <p>Loading ...</p>
+})
 
 export default function Sidebar() {
   const [active, setActive] = useState('overview')
@@ -31,7 +34,7 @@ export default function Sidebar() {
       case 'profile':
         return <Profile />;
       case 'Contact':
-        return 'working on it';
+        return <Contact />;
       case 'farmer':
         return <FarmerInput />;
       default:
@@ -69,6 +72,7 @@ export default function Sidebar() {
         <div>
           <h2 className="text-green-700 font-semibold mb-2 border-b border-green-300">Product</h2>
           <div className="flex flex-col space-y-2">
+
             <button 
               className="flex items-center gap-2 text-left px-3 py-2 text-green-600 font-bold rounded-md hover:bg-green-300"
               onClick={()=> setActive('farmer')}
@@ -76,9 +80,28 @@ export default function Sidebar() {
               <Package />
               <span className="hidden md:inline">Farm Inputs</span>
             </button>
-            <button className="flex items-center gap-2 text-left px-3 py-2 text-green-600 font-bold rounded-md hover:bg-green-300">< Brain/> <span className="hidden md:inline">AI Insights</span></button>
-            <button className="flex items-center gap-2 text-left px-3 py-2 text-green-600 font-bold rounded-md hover:bg-green-300">< BarChart3/> <span className="hidden md:inline">Farm Analytics</span></button>
-            <button className="flex items-center gap-2 text-left px-3 py-2 text-green-600 font-bold rounded-md hover:bg-green-300">< AlertCircle /> <span className="hidden md:inline">Alerts</span></button>
+
+            <button 
+              className="flex items-center gap-2 text-left px-3 py-2 text-green-600 font-bold rounded-md hover:bg-green-300"
+            >
+              < Brain/> 
+              <span className="hidden md:inline">AI Insights</span>
+            </button>
+
+            <button 
+              className="flex items-center gap-2 text-left px-3 py-2 text-green-600 font-bold rounded-md hover:bg-green-300"
+            >
+              < BarChart3/> 
+              <span className="hidden md:inline">Farm Analytics</span>
+            </button>
+
+            <button 
+              className="flex items-center gap-2 text-left px-3 py-2 text-green-600 font-bold rounded-md hover:bg-green-300"
+            >
+              < AlertCircle /> 
+              <span className="hidden md:inline">Alerts</span>
+            </button>
+
             <button 
               onClick={() =>setActive('profile')} 
               className="flex items-center gap-2 text-left px-3 py-2 text-green-600 font-bold rounded-md hover:bg-green-300"
@@ -86,6 +109,7 @@ export default function Sidebar() {
               < User/> 
               <span className="hidden md:inline">Farmer Profile</span>
             </button>
+            
           </div>
         </div>
         <div className="mt-35 border-t border-green-300">

@@ -8,7 +8,7 @@
     "orientation": "portrait",
     "background_color": "#f8f9fa",
     "theme_color": "#2e7d32",
-    "categories": ["productivity", "utilities", "education"],
+    "categories": ["productivity", "Smart Farming", "smart Agriculture", "AgriTech"],
     "icons": [
       {
         "src": "/logo.png",

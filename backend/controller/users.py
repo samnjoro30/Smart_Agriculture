@@ -18,8 +18,7 @@ def get_current_user(request: Request):
         raise HTTPException(status_code=401, detail="Token expired")
     return payload["sub"]
 
-
-
+# farmer profile setting
 @app.get("/users/userprofile")
 async def users(request: Request, db: AsyncSession=Depends(get_db)):
     token = request.cookies.get("access_token")
@@ -81,3 +80,10 @@ async def update_password(request: ChangePassword, db: AsyncSession = Depends(ge
     new_hashed_pw = hash_password(request.new_password)
     await UpdatePassword(user.id, new_hashed_pw, db)
     return {"message": "Password updated successfully"}
+
+# getting farmer weekly notification incoming updates
+@app.get("/users/notification")
+async def farmer_week_notification(request: Request, db: AsyncSession = Depends(get_db)):
+    email = get_current_user(request)
+
+
