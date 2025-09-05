@@ -15,4 +15,6 @@ EXPOSE 8000
 
 #run the application
 
-CMD ["uvicorn", "API:app", "--host", "0.0.0.0", "--port", "8000"]
+#CMD ["uvicorn", "API:app", "--host", "0.0.0.0", "--port", "8000"]
+
+CMD [ "gunicorn", "API:app", "-w", "4", "-k", "uvicorn.workers.UvicornWorker", "-b", "0.0.0.0", "--port", "8000"]
