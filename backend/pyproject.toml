@@ -1,0 +1,40 @@
+
+[project]
+name = "Smart Agri Backend"
+version = "0.1.0"
+description = "Smart Agriculture backend for handling AI, ML and client request"
+readme = "README.md"
+authors = [
+    { name = "samuel Njoroge", email ="samnjorokibandi@gmail.com" }
+]
+maintainers = [
+    { name = "Samuel Njoroge", email = "samnjorokibandi@gmail.com" }
+]
+
+classifiers = [
+    "Programming Language :: python :: 3",
+    "Operating System :: OS Independent",
+]
+
+keywords = [
+    "fastapi",
+    "farming"
+]
+requires-python = ">=3.11"
+
+dependencies = [
+    "fastapi>=0.115.10",
+    "uvicorn[standard]>=0.34.0",
+]
+
+[project.urls]
+Homepage = "https://smart-agriculture-pied.vercel.app/"
+Repository = "https://github.com/samnjoro30/Smart_Agriculture.git"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
