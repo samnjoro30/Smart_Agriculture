@@ -1,5 +1,6 @@
 "use client"
 
+
 import FooterHome from '../components/footerHome';
 import HeaderHome from '../components/headerHomepage';
 import dynamic from 'next/dynamic';
