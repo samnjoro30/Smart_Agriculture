@@ -94,9 +94,9 @@ export default function Farm() {
                         >
                             <option value="">-- Select Farming Type --</option>
                             <option value="dairy">Dairy Farming</option>
-                            <option>Goats</option>
-                            <option>Crop Farming</option>
-                            <option>Mixed Farming</option>
+                            <option value="goats">Goats</option>
+                            <option value="">Crop Farming</option>
+                            <option value="mixed">Mixed Farming</option>
                         </select>
                     </div>
                     
