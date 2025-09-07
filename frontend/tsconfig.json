@@ -13,7 +13,7 @@
     "isolatedModules": true,
     "jsx": "preserve",
     "incremental": true,
-    "types": ["./next-pwa.d.ts"],
+    "types": ["./next-pwa.d.ts", "vitest/globals", "@testing-library/jest-dom"],
     "plugins": [
       {
         "name": "next"

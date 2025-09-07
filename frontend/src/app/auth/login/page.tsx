@@ -14,7 +14,7 @@ interface FormData {
 }
 
 
-export default function Login() {
+export default function Login({ onSuccess }: { onSuccess?: () => void }) {
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string>('');
   const [showPassword, setShowPassword] = useState<boolean>(false);
