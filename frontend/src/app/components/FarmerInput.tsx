@@ -100,37 +100,38 @@ export default function Farm() {
                         </select>
                     </div>
                     
-                        {farmingType === "dairy" && (
-                            <div className="space-y-4">
-                                <div>
-                                    <label className="font-medium text-gray-500 block">Number of cows:</label>
-                                    <input
-                                       min="0"
-                                       max="15"
-                                       type="number"
-                                       value={numCow}
-                                       onChange={handleCowNumber}
-                                       className="border rounded-lg w-20 border-gray-700 text-gray-800"
-                                    />
-                                </div>
+                    {farmingType === "dairy" && (
+                        <div className="space-y-4">
+                            <div>
+                                <label className="font-medium text-gray-500 block">Number of cows:</label>
+                                <input
+                                  min="0"
+                                  max="15"
+                                  type="number"
+                                  value={numCow}
+                                  onChange={handleCowNumber}
+                                  className="border rounded-lg w-20 border-gray-700 text-gray-800"
+                                />
                             </div>
-                        )}
-                        {farmingType === 'goats' && (
-                            <div className="space-y-4">
-                                <div>
-                                    <label className="font-medium text-gray-500 block">Number of Goats:</label>
-                                    <input
-                                       min="0"
-                                       max="10"
-                                       type="number"
-                                       value={numCow}
-                                       onChange={handleCowNumber}
-                                       className="border rounded-lg w-20 border-gray-700 text-gray-800"
-                                    />
-                                </div>
+                        </div>
+                    )}
+
+                    {farmingType === 'goats' && (
+                        <div className="space-y-4">
+                            <div>
+                                <label className="font-medium text-gray-500 block">Number of Goats:</label>
+                                <input
+                                  min="0"
+                                  max="10"
+                                  type="number"
+                                  value={numCow}
+                                  onChange={handleCowNumber}
+                                  className="border rounded-lg w-20 border-gray-700 text-gray-800"
+                                />
                             </div>
-                        )}
-                    </div>
+                        </div>
+                    )}
+                </div>
                      
                      {/*Cow management*/}
                         {farmingType ==="dairy" && animals.length >0 &&(
@@ -149,6 +150,7 @@ export default function Farm() {
                                     Cow Details <span className="text-gray-500">(Cow {step + 1} of {animals.length})</span>
                                 </h3>
                                 {animals[step] && (
+                                    <form>
                                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                         <div className="space-y-4">
                                             <div className="">
@@ -200,6 +202,7 @@ export default function Farm() {
                                             </div>
                                         </div>
                                     </div>
+                                    </form>
                                 )}
                                 <div className="flex justify-between mt-6">
                                    <button
@@ -328,7 +331,35 @@ export default function Farm() {
                                 </div>
                             </div>
                         )}
+            </div>
+
+                {/* RIGHT COLUMN */}
+                <div className="space-y-6">
+                    {/* Container 3: Preview */}
+                    <div className="bg-white shadow-md rounded-2xl p-6">
+                        <h3 className="text-green-600 text-lg font-bold mb-4">Preview</h3>
+                        {animals.length === 0 ? (
+                            <p className="text-gray-500">No animals added yet.</p>
+                        ) : (
+                            <ul className="space-y-2">
+                                {animals.map((cow) => (
+                                    <li
+                                      key={cow.id}
+                                      className="p-3 border rounded-lg bg-gray-50 flex justify-between"
+                                    >
+                                        <span>
+                                            <strong>{cow.name || `Cow #${cow.id}`}</strong> (Age:{" "}
+                                            {cow.age})
+                                        </span>
+                                        <span className="text-sm text-gray-600">
+                                            Calves: {cow.Calf}
+                                        </span>
+                                    </li>
+                                ))}
+                            </ul>
+                        )}
                     </div>
                 </div>
+        </div>
     )
 }
