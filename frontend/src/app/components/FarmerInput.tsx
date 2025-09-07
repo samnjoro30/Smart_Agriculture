@@ -115,7 +115,24 @@ export default function Farm() {
                                 </div>
                             </div>
                         )}
+                        {farmingType === 'goats' && (
+                            <div className="space-y-4">
+                                <div>
+                                    <label className="font-medium text-gray-500 block">Number of Goats:</label>
+                                    <input
+                                       min="0"
+                                       max="10"
+                                       type="number"
+                                       value={numCow}
+                                       onChange={handleCowNumber}
+                                       className="border rounded-lg w-20 border-gray-700 text-gray-800"
+                                    />
+                                </div>
+                            </div>
+                        )}
                     </div>
+                     
+                     {/*Cow management*/}
                         {farmingType ==="dairy" && animals.length >0 &&(
                             <div className="bg-green-50 shadow-sm rounded-2xl p-2 border border-gray-200">
                                 <div className="flex items-center justify-center mb-6 space-x-2">
@@ -134,53 +151,152 @@ export default function Farm() {
                                 {animals[step] && (
                                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                         <div className="space-y-4">
-                                        <div className="">
-                                            <label className="block font-medium text-gray-500 mb-1">Name of cow: </label>
-                                            <input
-                                               type="text"
-                                               value={animals[step].name}
-                                               onChange={(e) => handleCowChange(animals[step].id, "name",  e.target.value)}
-                                               className="border px-1 py-1 border-green-300 rounded-lg "
-                                            />
-                                        </div>
-                                        <div>
-                                            <label className="block font-medium text-gray-500">Age of The cow:</label>
-                                            <input
-                                              type="number"
-                                              value={animals[step].age}
-                                              onChange={(e) => handleCowChange(animals[step].id, "age", parseInt(e.target.value) || 0)}
-                                              className="border border-green-300 px-1 py-1 rounded-lg "
-                                            />
-                                        </div>
-                                        <div>
-                                            <label className="block font-medium text-gray-500">LastBirth of the cow:</label>
-                                            <input
-                                              type="text"
-                                              value={animals[step].lastBirth}
-                                              onChange={(e) => handleCowChange(animals[step].id, "lastBirth", e.target.value)}
-                                              className="border border-green-300 px-1 py-1 rounded-lg "
-                                            />
-                                        </div>
+                                            <div className="">
+                                                <label className="block font-medium text-gray-500 mb-1">Name of cow: </label>
+                                                <input
+                                                  type="text"
+                                                  value={animals[step].name}
+                                                  onChange={(e) => handleCowChange(animals[step].id, "name",  e.target.value)}
+                                                  className="border px-1 py-1 border-green-300 rounded-lg "
+                                                />
+                                            </div>
+                                            <div>
+                                                <label className="block font-medium text-gray-500">Age of The cow:</label>
+                                                <input
+                                                  type="number"
+                                                  value={animals[step].age}
+                                                  onChange={(e) => handleCowChange(animals[step].id, "age", parseInt(e.target.value) || 0)}
+                                                  className="border border-green-300 px-1 py-1 rounded-lg "
+                                                />
+                                            </div>
+                                            <div>
+                                                <label className="block font-medium text-gray-500">LastBirth of the cow:</label>
+                                                <input
+                                                  type="text"
+                                                  value={animals[step].lastBirth}
+                                                  onChange={(e) => handleCowChange(animals[step].id, "lastBirth", e.target.value)}
+                                                  className="border border-green-300 px-1 py-1 rounded-lg "
+                                                />
+                                            </div>
                                         </div>
                                         <div className="space-y-4">
-                                        <div >
-                                            <label className="block font-medium text-gray-500">Last Mate Docter|| Bull :</label>
-                                            <input
-                                              type="text"
-                                              value={animals[step].lastMate}
-                                              onChange={(e) => handleCowChange(animals[step].id, "lastMate", e.target.value )}
-                                              className="border border-green-300 px-1 py-1 rounded-lg "
-                                            />
+                                            <div >
+                                                <label className="block font-medium text-gray-500">Last Mate Docter|| Bull :</label>
+                                                <input
+                                                  type="text"
+                                                  value={animals[step].lastMate}
+                                                  onChange={(e) => handleCowChange(animals[step].id, "lastMate", e.target.value )}
+                                                  className="border border-green-300 px-1 py-1 rounded-lg "
+                                                />
+                                            </div>
+                                            <div>
+                                                <label className="block font-medium text-gray-500">Number of Calf(young ones) It has:</label>
+                                                <input
+                                                  type="number"
+                                                  value={animals[step].Calf}
+                                                  onChange={(e) => handleCowChange(animals[step].id, "Calf", parseInt(e.target.value) || 0)}
+                                                  className="border border-green-300 px-1 py-1 rounded-lg "
+                                                />
+                                            </div>
                                         </div>
-                                        <div>
-                                            <label className="block font-medium text-gray-500">Number of Calf(young ones) It has:</label>
-                                            <input
-                                              type="number"
-                                              value={animals[step].Calf}
-                                              onChange={(e) => handleCowChange(animals[step].id, "Calf", parseInt(e.target.value) || 0)}
-                                              className="border border-green-300 px-1 py-1 rounded-lg "
-                                            />
+                                    </div>
+                                )}
+                                <div className="flex justify-between mt-6">
+                                   <button
+                                      onClick={() => setStep((prev) => Math.max(prev - 1, 0))}
+                                      disabled={step === 0}
+                                      className={`px-4 py-2 rounded-lg ${
+                                          step === 0
+                                          ? "bg-gray-300 text-gray-600 cursor-not-allowed"
+                                          : "bg-green-500 text-white hover:bg-green-600"
+                                        }`}
+                                    >
+                                        Previous
+                                    </button>
+                                    <button
+                                       onClick={() =>
+                                          setStep((prev) => Math.min(prev + 1, animals.length - 1))
+                                        }
+                                       disabled={step === animals.length - 1}
+                                       className={`px-4 py-2 rounded-lg ${
+                                           step === animals.length - 1
+                                           ? "bg-gray-300 text-gray-600 cursor-not-allowed"
+                                           : "bg-green-500 text-white hover:bg-green-600"
+                                        }`}
+                                    >
+                                        Next
+                                    </button>
+                                </div>
+                            </div>
+                        )}
+
+                        {/*Goat management data entry*/}
+
+                        {farmingType === 'goats' && animals.length > 0 &&(
+                            <div className="bg-green-50 shadow-sm rounded-2xl p-2 border border-gray-200">
+                                <div className="flex items-center justify-center mb-6 space-x-2">
+                                    {animals.map((_, i) => (
+                                        <div
+                                           key={i}
+                                           className={`h-3 w-3 rounded-full transition-all duration-300 ${
+                                               i === step ? "bg-green-600 w-6" : "bg-gray-300"
+                                           }`}
+                                        />
+                                    ))}
+                                </div>
+                                <h3 className="text-green-600 text-lg font-bold mb-4 text-center">
+                                    Goats Details <span className="text-gray-500">(Goat {step + 1} of {animals.length})</span>
+                                </h3>
+                                {animals[step] && (
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                        <div className="space-y-4">
+                                            <div className="">
+                                                <label className="block font-medium text-gray-500 mb-1">Name of Goat: </label>
+                                                <input
+                                                  type="text"
+                                                  value={animals[step].name}
+                                                  onChange={(e) => handleCowChange(animals[step].id, "name",  e.target.value)}
+                                                  className="border px-1 py-1 border-green-300 rounded-lg "
+                                                />
+                                            </div>
+                                            <div>
+                                                <label className="block font-medium text-gray-500">Age of The Goat:</label>
+                                                <input
+                                                  type="number"
+                                                  value={animals[step].age}
+                                                  onChange={(e) => handleCowChange(animals[step].id, "age", parseInt(e.target.value) || 0)}
+                                                  className="border border-green-300 px-1 py-1 rounded-lg "
+                                                />
+                                            </div>
+                                            <div>
+                                                <label className="block font-medium text-gray-500">LastBirth of the Goat:</label>
+                                                <input
+                                                  type="text"
+                                                  value={animals[step].lastBirth}
+                                                  onChange={(e) => handleCowChange(animals[step].id, "lastBirth", e.target.value)}
+                                                  className="border border-green-300 px-1 py-1 rounded-lg "
+                                                />
+                                            </div>
                                         </div>
+                                        <div className="space-y-4">
+                                            <div >
+                                                <label className="block font-medium text-gray-500">Last Mate Docter|| Bull :</label>
+                                                <input
+                                                  type="text"
+                                                  value={animals[step].lastMate}
+                                                  onChange={(e) => handleCowChange(animals[step].id, "lastMate", e.target.value )}
+                                                  className="border border-green-300 px-1 py-1 rounded-lg "
+                                                />
+                                            </div>
+                                            <div>
+                                                <label className="block font-medium text-gray-500">Number of Calf(young ones):</label>
+                                                <input
+                                                  type="number"
+                                                  value={animals[step].Calf}
+                                                  onChange={(e) => handleCowChange(animals[step].id, "Calf", parseInt(e.target.value) || 0)}
+                                                  className="border border-green-300 px-1 py-1 rounded-lg "
+                                                />
+                                            </div>
                                         </div>
                                     </div>
                                 )}
