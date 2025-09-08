@@ -9,7 +9,8 @@ import axiosInstance from '../API/axiosInstance';
 vi.mock("../API/axiosInstance", () => ({
     default: { post: vi.fn() },   // provide a mock `post`
   }));
-
+  
+const pushMock = vi.fn();
 vi.mock("next/navigation", () => {
     return {
       useRouter: () => ({
@@ -29,20 +30,23 @@ describe("LoginForm", () => {
 
     await userEvent.type(screen.getByPlaceholderText("Email"), "user@test.com");
     await userEvent.type(screen.getByPlaceholderText("Password"), "password123");
-    fireEvent.click(screen.getByText("Login"));
+    fireEvent.click(screen.getByRole("button", { name: /sign in/i }));
 
-    await waitFor(() => expect(onSuccess).toHaveBeenCalled());
-  });
+    await waitFor(() =>
+    expect(screen.getByText(/success/i)).toBeInTheDocument()
+  );
+  expect(pushMock).toHaveBeenCalledWith("/dashboard");
+});
 
   it("shows error on invalid login", async () => {
-    (axiosInstance.post as any).mockRejectedValue(new Error("Invalid"));
+    (axiosInstance.post as any).mockRejectedValue({ response: { status: 400 } });
 
     render(<Login />);
 
     await userEvent.type(screen.getByPlaceholderText("Email"), "bad@test.com");
-    await userEvent.type(screen.getByPlaceholderText("......"), "wrongpass");
-    fireEvent.click(screen.getByText("Login"));
+    await userEvent.type(screen.getByPlaceholderText("Enter Password"), "wrongpass");
+    fireEvent.click(screen.getByRole("button", { name: /sign in/i}));
 
-    expect(await screen.findByRole("alert")).toHaveTextContent("Invalid credentials");
+    expect(await screen.findByText(/invalid credentials/i)).toBeInTheDocument();
   });
 });

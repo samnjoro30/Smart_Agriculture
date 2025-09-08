@@ -34,7 +34,7 @@ export default function Farm() {
     const [animals, setAnimals] = useState<Animal[]>([]);
     const [step, setStep] = useState(0);
 
-    const handleSubmit = async () => {
+    const handleCowSubmit = async () => {
         try{
             const res = await axiosInstance.post("/farmingData/input", {
 
@@ -136,6 +136,7 @@ export default function Farm() {
                      {/*Cow management*/}
                         {farmingType ==="dairy" && animals.length >0 &&(
                             <div className="bg-green-50 shadow-sm rounded-2xl p-2 border border-gray-200">
+                                <form onSubmit={handleCowSubmit}>
                                 <div className="flex items-center justify-center mb-6 space-x-2">
                                     {animals.map((_, i) => (
                                         <div
@@ -150,7 +151,7 @@ export default function Farm() {
                                     Cow Details <span className="text-gray-500">(Cow {step + 1} of {animals.length})</span>
                                 </h3>
                                 {animals[step] && (
-                                    <form>
+                                    
                                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                         <div className="space-y-4">
                                             <div className="">
@@ -202,7 +203,7 @@ export default function Farm() {
                                             </div>
                                         </div>
                                     </div>
-                                    </form>
+                                
                                 )}
                                 <div className="flex justify-between mt-6">
                                    <button
@@ -230,6 +231,13 @@ export default function Farm() {
                                         Next
                                     </button>
                                 </div>
+                                <button
+                                  type="submit"
+                                  className=""
+                                >
+                                    save cows
+                                </button>
+                                </form>
                             </div>
                         )}
 

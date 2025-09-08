@@ -105,7 +105,7 @@ export default function Login({ onSuccess }: { onSuccess?: () => void }) {
                   type={showPassword ? "text" : "password"}
                   required
                   className={InputStyle}
-                  placeholder="......"
+                  placeholder="Enter Password"
                   value={formData.password}
                   onChange={handleChange}
                 />
