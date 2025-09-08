@@ -2,12 +2,23 @@
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import Login from "../auth/login/page";
+import { vi } from "vitest";
 // import Register from "../auth/register/page";
 import axiosInstance from '../API/axiosInstance';
 
 vi.mock("../API/axiosInstance", () => ({
     default: { post: vi.fn() },   // provide a mock `post`
   }));
+
+vi.mock("next/navigation", () => {
+    return {
+      useRouter: () => ({
+        push: vi.fn(),   
+        replace: vi.fn(),
+        prefetch: vi.fn(),
+      }),
+    };
+  });
 
 describe("LoginForm", () => {
   it("logs in successfully", async () => {

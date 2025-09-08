@@ -87,6 +87,7 @@ export default function Login({ onSuccess }: { onSuccess?: () => void }) {
                   id="username"
                   name="email"
                   type="text"
+                  placeholder="Email"
                   className={InputStyle}
                   value={formData.email}
                   onChange={handleChange}
@@ -104,7 +105,7 @@ export default function Login({ onSuccess }: { onSuccess?: () => void }) {
                   type={showPassword ? "text" : "password"}
                   required
                   className={InputStyle}
-                  placeholder="Enter your password"
+                  placeholder="......"
                   value={formData.password}
                   onChange={handleChange}
                 />
