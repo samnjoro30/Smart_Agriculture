@@ -20,6 +20,8 @@ jobs:
               run: | 
                 echo "deploying to render ..."
                 curl -X POST "${{ secrets.RENDER_DEPLOY_HOOK }}"
+            - name: Deploy to AWS
+              run: |
 
             - name: Deploy Frontend
               env:

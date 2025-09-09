@@ -244,7 +244,7 @@ export default function Farm() {
                         {/*Goat management data entry*/}
 
                         {farmingType === 'goats' && animals.length > 0 &&(
-                            <div className="bg-green-50 shadow-sm rounded-2xl p-2 border border-gray-200">
+                            <div className="bg-green-100 shadow-sm rounded-2xl p-2 border border-gray-200">
                                 <div className="flex items-center justify-center mb-6 space-x-2">
                                     {animals.map((_, i) => (
                                         <div
