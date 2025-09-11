@@ -3,6 +3,7 @@
 
 import FooterHome from '../components/footerHome';
 import HeaderHome from '../components/headerHomepage';
+import Link from 'next/link';
 import dynamic from 'next/dynamic';
 
 const Gallery = dynamic(() => import('../components/FarmerGallery'),{
@@ -79,8 +80,9 @@ export  default function Homepage() {
                         </h1>
                         <p className="max-w-3xl text-base md:text-lg font-medium leading-relaxed text-green-100 mb-2 drop-shadow">{Description}</p>
                         <p className="text-green-200 font-semibold text-lg md:text-xl animate-pulse">
-                            🌱 Make Chaguo Smart for your Farm — Register with us!
+                            🌱 Make Chaguo Smart for your Farm — <Link href="/auth/register">Register with us!</Link>
                         </p>
+                       
                     </div>
                 </section>
                 <Gallery />
