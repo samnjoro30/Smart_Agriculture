@@ -5,19 +5,23 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from starlette.status import HTTP_201_CREATED
 from sqlalchemy.orm import Session
 from datetime  import datetime, timedelta
+from services.farmInput import create_cow
 
 router =  APIRouter()
 
 
 @router.post("/farming/dairycows")
 async def register_cow(payload: Register_cow, db: AsyncSession = Depends(get_db)):
-    body = payload()
-
     farm_cow ={
-        "name": payload.cowname,
+        "cowname": payload.cowname,
+        "cowage": payload.age,
+        "cowlastBirth": payload.lastBirth,
+        "lastMate": payload.lastMate,
+        "calf": payload.calf,
     }
 
+    await create_cow(farm_cow, db)
 
-@router.post("farming/goats")
-async def register_goats():
-    body = 
+    return {
+        "message" : "Cows registered successfully"
+    }

@@ -30,18 +30,26 @@ interface FarmData {
 
 export default function Farm() {
     const [farmingType, setFarmingType] = useState< "dairy" | "goats" | "chickens" | "mixed" | "">("")
-    const [numCow, setNumCow] = useState(0)
+    const [loading, setLoading] = useState<boolean>(false);
+    const [message, setMessage] = useState<string>('')
+    const [numCow, setNumCow] = useState(0);
     const [animals, setAnimals] = useState<Animal[]>([]);
     const [step, setStep] = useState(0);
 
     const handleCowSubmit = async () => {
+        setLoading(true);
         try{
-            const res = await axiosInstance.post("/farmingData/input", {
+            const res = await axiosInstance.post("/farmingData/input/cow", {
 
             });
+            const Data = res.data.message;
+            setMessage(Data || "Registration successful");
+            setTimeout(() => setMessage(''), 2000);
         }catch(err){
 
+
         }finally{
+            setLoading(false);
 
         }
 
@@ -233,9 +241,9 @@ export default function Farm() {
                                 </div>
                                 <button
                                   type="submit"
-                                  className=""
+                                  className="bg-green-800"
                                 >
-                                    save cows
+                                    {loading ? 'saving ...' : 'save cows'}
                                 </button>
                                 </form>
                             </div>
