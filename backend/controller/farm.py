@@ -12,8 +12,6 @@ router =  APIRouter()
 
 @router.post("/farming/dairycows")
 async def register_cow(payload: Register_cow, db: AsyncSession = Depends(get_db)):
-    body = payload()
-
     farm_cow ={
         "cowname": payload.cowname,
         "cowage": payload.age,
@@ -27,7 +25,3 @@ async def register_cow(payload: Register_cow, db: AsyncSession = Depends(get_db)
     return {
         "message" : "Cows registered successfully"
     }
-
-@router.post("farming/goats")
-async def register_goats():
-    body = 
