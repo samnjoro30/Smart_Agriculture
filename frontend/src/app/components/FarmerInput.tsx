@@ -40,6 +40,7 @@ export default function Farm() {
         setLoading(true);
         try{
             const res = await axiosInstance.post("/farmingData/input/cow", {
+                
 
             });
             const Data = res.data.message;
