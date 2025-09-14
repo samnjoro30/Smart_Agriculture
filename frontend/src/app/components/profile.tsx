@@ -87,163 +87,163 @@ export default function ProfileSetting() {
             <p>loading ...</p>
           )
           }
-
-           
         </div>
+
         <div className="bg-green-100 p-4 rounded-lg shadow-sm space-y-4">
           <h3 className="text-green-500 text-center font-bold">Setting</h3>
-        <div className="flex flex-col">
-          <label className="text-sm text-gray-700 mb-1 font-bold">Email:</label>
-          {editingField === "email" ? (
-            <div className="flex gap-2">
-              <input
-                type="email"
-                name="email"
-                value={formData.email}
-                onChange={handleChange}
-                className="flex-1 border rounded-lg px-3 py-2 text-gray-700"
-              />
-              <button
-                onClick={() => handleSave("email")}
-                className="bg-green-600 text-white px-3 py-2 rounded-lg"
-              >
-                Save
-              </button>
-              <button
-                onClick={() => setEditingField(null)}
-                className="bg-red-600 px-3 py-2 rounded-lg"
-              >
-                Cancel
-              </button>
-            </div>
-          ) : (
-            <div className="flex justify-between items-center">
-              <span>{profile?.email}</span>
-              <button
-                onClick={() => setEditingField("email")}
-                className="text-green-600 font-medium"
-              >
-                Change
-              </button>
-            </div>
-          )}
-        </div>
+          <div className="flex flex-col">
+            <label className="text-sm text-gray-700 mb-1 font-bold">Email:</label>
+            {editingField === "email" ? (
+              <div className="flex gap-2">
+                <input
+                  type="email"
+                  name="email"
+                  value={formData.email}
+                  onChange={handleChange}
+                  className="flex-1 border rounded-lg px-3 py-2 text-gray-700"
+                />
+                <button
+                  onClick={() => handleSave("email")}
+                  className="bg-green-600 text-white px-3 py-2 rounded-lg"
+                >
+                  Save
+                </button>
+                <button
+                  onClick={() => setEditingField(null)}
+                  className="bg-red-600 px-3 py-2 rounded-lg"
+                >
+                  Cancel
+                </button>
+              </div>
+              ) : (
 
-        {/* Farm Name */}
-        <div className="flex flex-col">
-          <label className="text-sm text-gray-600 mb-1 font-bold">Farm Name:</label>
-          {editingField === "farmname" ? (
-            <div className="flex gap-2">
-              <input
-                type="text"
-                name="farmname"
-                value={formData.farmname}
-                onChange={handleChange}
-                className="flex-1 border rounded-lg px-3 py-2 text-gray-500"
-              />
-              <button
-                onClick={() => handleSave("farmname")}
-                className="bg-green-600 text-white px-3 py-2 rounded-lg"
-              >
-                Save
-              </button>
-              <button
-                onClick={() => setEditingField(null)}
-                className="bg-red-500 px-3 py-2 rounded-lg"
-              >
-                Cancel
-              </button>
+                <div className="flex justify-between items-center">
+                  <span>{profile?.email}</span>
+                  <button
+                    onClick={() => setEditingField("email")}
+                    className="text-green-600 font-medium"
+                  >
+                    Change
+                  </button>
+                </div>
+              )}
             </div>
-          ) : (
-            <div className="flex justify-between items-center">
-              <span>{profile?.farmname}</span>
-              <button
-                onClick={() => setEditingField("farmname")}
-                className="text-green-600 font-medium"
-              >
-                Change
-              </button>
-            </div>
-          )}
-        </div>
 
-        {/* Phone */}
-        <div className="flex flex-col">
-          <label className="text-sm text-gray-600 mb-1 font-bold">Phone:</label>
-          {editingField === "phonenumber" ? (
-            <div className="flex gap-2">
-              <input
-                type="text"
-                name="phonenumber"
-                value={formData.phonenumber}
-                onChange={handleChange}
-                className="flex-1 border rounded-lg px-3 py-2 text-gray-500"
-              />
-              <button
-                onClick={() => handleSave("phonenumber")}
-                className="bg-green-600 text-white px-3 py-2 rounded-lg"
-              >
-                Save
-              </button>
-              <button
-                onClick={() => setEditingField(null)}
-                className="bg-red-500 px-3 py-2 rounded-lg"
-              >
-                Cancel
-              </button>
-            </div>
-          ) : (
-            <div className="flex justify-between items-center">
-              <span>{profile?.phonenumber}</span>
-              <button
-                onClick={() => setEditingField("phonenumber")}
-                className="text-green-600 font-medium"
-              >
-                Change
-              </button>
-            </div>
-          )}
-        </div>
+            {/* Farm Name */}
+            <div className="flex flex-col">
+              <label className="text-sm text-gray-600 mb-1 font-bold">Farm Name:</label>
+              {editingField === "farmname" ? (
+                <div className="flex gap-2">
+                  <input
+                    type="text"
+                    name="farmname"
+                    value={formData.farmname}
+                    onChange={handleChange}
+                    className="flex-1 border rounded-lg px-3 py-2 text-gray-500"
+                  />
+                  <button
+                    onClick={() => handleSave("farmname")}
+                    className="bg-green-600 text-white px-3 py-2 rounded-lg"
+                  >
+                    Save
+                  </button>
+                  <button
+                    onClick={() => setEditingField(null)}
+                    className="bg-red-500 px-3 py-2 rounded-lg"
+                  >
+                    Cancel
+                  </button>
+                </div>
+                ) : (
+                  <div className="flex justify-between items-center">
+                    <span>{profile?.farmname}</span>
+                    <button
+                      onClick={() => setEditingField("farmname")}
+                      className="text-green-600 font-medium"
+                    >
+                      Change
+                    </button>
+                  </div>
+                )}
+              </div>
 
-        {/* Password */}
-        <div className="flex flex-col">
-          <label className="text-sm text-gray-600 mb-1 font-bold">Password</label>
-          {editingField === "password" ? (
-            <div className="flex gap-2">
-              <input
-                type="password"
-                name="password"
-                value={formData.password}
-                onChange={handleChange}
-                className="flex-1 border rounded-lg px-3 py-2 text-gray-500"
-              />
-              <button
-                onClick={() => handleSave("password")}
-                className="bg-green-600 text-white px-3 py-2 rounded-lg"
-              >
-                Save
-              </button>
-              <button
-                onClick={() => setEditingField(null)}
-                className="bg-red-500 px-3 py-2 rounded-lg "
-              >
-                Cancel
-              </button>
+              {/* Phone */}
+              <div className="flex flex-col">
+                <label className="text-sm text-gray-600 mb-1 font-bold">Phone:</label>
+                  {editingField === "phonenumber" ? (
+                    <div className="flex gap-2">
+                      <input
+                        type="text"
+                        name="phonenumber"
+                        value={formData.phonenumber}
+                        onChange={handleChange}
+                        className="flex-1 border rounded-lg px-3 py-2 text-gray-500"
+                      />
+                      <button
+                        onClick={() => handleSave("phonenumber")}
+                        className="bg-green-600 text-white px-3 py-2 rounded-lg"
+                      >
+                        Save
+                      </button>
+                      <button
+                        onClick={() => setEditingField(null)}
+                        className="bg-red-500 px-3 py-2 rounded-lg"
+                      >
+                        Cancel
+                      </button>
+                    </div>
+                    ) : (
+                      <div className="flex justify-between items-center">
+                        <span>{profile?.phonenumber}</span>
+                        <button
+                          onClick={() => setEditingField("phonenumber")}
+                          className="text-green-600 font-medium"
+                        >
+                          Change
+                        </button>
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Password */}
+                  <div className="flex flex-col">
+                    <label className="text-sm text-gray-600 mb-1 font-bold">Password</label>
+                    {editingField === "password" ? (
+                      <div className="flex gap-2">
+                        <input
+                          type="password"
+                          name="password"
+                          value={formData.password}
+                          onChange={handleChange}
+                          className="flex-1 border rounded-lg px-3 py-2 text-gray-500"
+                        />
+                        <button
+                          onClick={() => handleSave("password")}
+                          className="bg-green-600 text-white px-3 py-2 rounded-lg"
+                        >
+                          Save
+                        </button>
+                      <button
+                        onClick={() => setEditingField(null)}
+                        className="bg-red-500 px-3 py-2 rounded-lg "
+                      >
+                        Cancel
+                      </button>
+                    </div>
+                    ) : (
+                      <div className="flex justify-between items-center">
+                        <span className="text-gray-500">••••••••</span>
+                        <button
+                          onClick={() => setEditingField("password")}
+                          className="text-green-600 font-medium"
+                        >
+                          Change
+                        </button>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </div>
             </div>
-          ) : (
-            <div className="flex justify-between items-center">
-              <span className="text-gray-500">••••••••</span>
-              <button
-                onClick={() => setEditingField("password")}
-                className="text-green-600 font-medium"
-              >
-                Change
-              </button>
-            </div>
-          )}
-        </div>
-        </div>
-      </div>
-    </div>
   )
 }
