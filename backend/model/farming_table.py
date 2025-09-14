@@ -21,3 +21,8 @@ class GoatFarming(Base):
     GoatlastBirth = Column(DateTime, nullable=True)
     lastMate = Column(DateTime, nullable=True)
     calf = Column(Integer)
+
+class DataForAnalytic(Base):
+    __tablename__ = "analyticFarmData"
+
+    cowlastBirth = Column(DateTime, foreign_key=true)

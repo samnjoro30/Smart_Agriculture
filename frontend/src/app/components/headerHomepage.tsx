@@ -32,9 +32,9 @@ export default function HeaderHome() {
                 <li><Link href="/" className="hover:text-green-600 transition-colors duration-200"> Home </Link></li>
                 <li><Link href="#services" className="hover:text-green-600 transition-colors duration-200">Services </Link> </li>
                 <li><Link href="#impact" className="hover:text-green-600 transition-colors duration-200">Impact </Link></li>
-                <li><Link href="/auth/login" prefetch={true} className="bg-green-600 text-white px-4 py-1.5 rounded-full hover:bg-green-700 transition-all duration-200">Login</Link></li>
+                <li> <Link href="/auth/login" prefetch={true} className="bg-green-600 text-white px-4 py-1.5 rounded-full hover:bg-green-700 transition-all duration-200">Login</Link></li>
                 <li> <Link href="/auth/register" prefetch={true} className="bg-green-600 text-white px-4 py-1.5 rounded-full hover:bg-green-700 transition-all duration-200" > Register </Link> </li>
-                <li><Link href="#contact" className="hover:text-green-600 transition-colors duration-200">Contact</Link></li>
+                <li> <Link href="#contact" className="hover:text-green-600 transition-colors duration-200">Contact</Link></li>
             </ul>
         </nav>
         {menuOpen && (

@@ -6,7 +6,7 @@ import axiosInstance from '../API/axiosInstance';
 interface Data {
     date: string;
     produce: string;
-    ExpectedMate: string;
+    ExpectedMateData: string;
 }
 
 export default function FarmAnalytic(){
@@ -26,9 +26,16 @@ export default function FarmAnalytic(){
         };
         farmVisualization();
     }, []);
+    
 
     return(
         <div>
+            <div>
+                <p>development modeå</p>
+            </div>
+            <div></div>
+            <div></div>
+            <div></div>
 
         </div>
     )
