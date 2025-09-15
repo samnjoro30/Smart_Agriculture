@@ -1,10 +1,14 @@
 {
   "hosting": {
-    "public": "out",
+    "site": "smart-farming-agriculture",
+    "source": ".",
     "ignore": [
       "firebase.json",
       "**/.*",
       "**/node_modules/**"
-    ]
+    ],
+    "frameworksBackend": {
+      "region": "us-west1"
+    }
   }
 }

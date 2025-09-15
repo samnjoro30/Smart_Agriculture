@@ -26,7 +26,6 @@ export default function FarmAnalytic(){
         };
         farmVisualization();
     }, []);
-    
 
     return(
         <div>
