@@ -1,5 +1,15 @@
 {
   "projects": {
     "default": "e-banking-tech"
-  }
+  },
+  "targets": {
+    "e-banking-tech": {
+      "hosting": {
+        "smart-farming-agriculture": [
+          "e-banking-tech"
+        ]
+      }
+    }
+  },
+  "etags": {}
 }
