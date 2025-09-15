@@ -6,6 +6,10 @@ on:
         branches: [ main ]
         types: 
             - completed
+permissions:
+  checks: write
+  contents: read
+  pull-requests: write
 jobs:
     deploy:
         if: ${{ github.event.workflow_run.conclusion == 'success' }}
@@ -23,7 +27,7 @@ jobs:
             - name: Deploy to AWS
               run: |
 
-            - name: Deploy Frontend
+            - name: Deploy Frontend to vercel
               env:
                 VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
                 VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
@@ -37,5 +41,17 @@ jobs:
                   --project $VERCEL_PROJECT_ID \
                   --scope $VERCEL_ORG_ID \
                   --confirm
+              
+            - name: Deploy to firebase
+              uses: FirebaseExtended/action-hosting-deploy@v0
+              with:
+                repoToken: ${{ secrets.ACCESS_TOKEN }}
+                firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_E_BANKING_TECH }}
+                channelId: live
+                projectId: e-banking-tech
+                entryPoint: frontend
+              env:
+                FIREBASE_CLI_EXPERIMENTS: webframeworks
+        
             
             
