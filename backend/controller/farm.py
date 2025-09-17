@@ -20,7 +20,7 @@ async def register_cow(payload: Register_cow, db: AsyncSession = Depends(get_db)
         "calf": payload.calf,
     }
 
-    await create_cow(farm_cow, db)
+    await create_cow(create_cow, db)
 
     return {
         "message" : "Cows registered successfully"

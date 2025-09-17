@@ -35,8 +35,8 @@ export default function ContactCentre(){
                     <p>Email: samnjorokibandi@gmail.com</p>
                 </div>
             </div>
-            <div className="space-y-6">
-                <form onSubmit={handleSubmit}>
+            <div className="space-y-6 bg-green-100 py-2 px-2 rounded-lg">
+                <form onSubmit={handleSubmit} className="">
                     <div>
                         <label>Email: </label>
                         <input
