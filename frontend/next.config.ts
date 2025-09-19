@@ -7,6 +7,9 @@ const withPWA = require("next-pwa")({
 });
 
 const nextConfig: NextConfig = {
+  images: {
+    unoptimized: true,
+  },
   reactStrictMode: true,
   eslint: { ignoreDuringBuilds: true },
   // swcMinify: true,

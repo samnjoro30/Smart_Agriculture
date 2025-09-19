@@ -6,9 +6,7 @@ from middleware.auth import decode_jwt_token
 
 router = APIRouter()
 
-def FarmDataCollection():
-
-
+# def FarmDataCollection():
 
 
 
