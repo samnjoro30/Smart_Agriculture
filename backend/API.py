@@ -4,6 +4,7 @@ from db.postgre_db import Base, engine, get_db
 from controller.auth import router as auth_router
 from controller.users import app as user_router
 from controller.farm import router as farm_router
+from controller.farmAnalytic import router as farm_analytic_router
 from model.auth import RegisterRequest
 from db.postgre_db import Base, engine
 from slowapi import Limiter, _rate_limit_exceeded_handler
@@ -26,7 +27,9 @@ app.add_middleware(
     allow_origins=[
         "http://localhost:3000", 
         "https://smart-agriculture-git-main-samnjoro30s-projects.vercel.app",
-        "https://smart-agriculture-pied.vercel.app"
+        "https://smart-agriculture-pied.vercel.app",
+        "https://smart-farming-agriculture.web.app",
+        "https://smart-farming-agriculture.firebaseapp.com"
         ], 
     allow_credentials=True,
     allow_methods=["*"],
@@ -37,6 +40,7 @@ app.add_middleware(
 app.include_router(auth_router)
 app.include_router(user_router)
 app.include_router(farm_router)
+app.include_router(farm_analytic_router)
 
 @app.middleware("http")
 async def add_process_time_header(request: Request, call_next):
