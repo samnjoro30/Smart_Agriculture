@@ -16,6 +16,7 @@
     "autoprefixer": "^10.4.21",
     "axios": "^1.10.0",
     "daisyui": "^5.1.13",
+    "firebase": "^12.3.0",
     "fs": "^0.0.1-security",
     "jose": "^6.0.12",
     "js-cookie": "^3.0.5",
