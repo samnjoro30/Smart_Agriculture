@@ -29,6 +29,10 @@ jobs:
 
       - name: Build and deploy
         run: npm run build
+      # - name: Deploying to preview in firebase
+      #   uses: FirebaseExtended/action-hosting-deploy@v0
+      #   with:
+      #     -
          
                 
     
