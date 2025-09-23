@@ -1,5 +1,5 @@
 {
-  "hosting": [
+  "hosting": 
   {
     "site": "smart-farming-agriculture",
     "source": ".",
@@ -11,15 +11,5 @@
     "frameworksBackend": {
       "region": "us-west1"
     }
-  },
-  {
-    "site": "smart-farming-agriculture",
-    "public": "public",
-    "ignore": [
-        "firebase.json",
-        "**/.*",
-        "**/node_modules/**"
-      ]
   }
-  ]
 }
