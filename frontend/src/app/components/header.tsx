@@ -3,19 +3,24 @@
 import { useState, useEffect} from 'react'
 import Image from 'next/image';
 import { Sun, Moon, User, LogOut } from 'lucide-react';
+import { useTheme } from "next-themes";
 import axiosInstance from '../API/axiosInstance';
 
 export default function Header (){
     const [theme, setTheme] = useState<'light' | 'dark'>('light');
+    const [mounted, setMounted] = useState<boolean>(false);
     const [userLetters, setUserLetters] = useState<string>('')
 
-    useEffect(() => {
-        const savedTheme = localStorage.getItem('theme') as "light" | "dark" | null;
-        if(savedTheme){
-            setTheme(savedTheme);
-            document.documentElement.classList.toggle('dark', savedTheme === 'dark' );
-        }
-    }, []);
+    useEffect(() => setMounted(true), []);
+
+
+    // useEffect(() => {
+    //     const savedTheme = localStorage.getItem('theme') as "light" | "dark" | null;
+    //     if(savedTheme){
+    //         setTheme(savedTheme);
+    //         document.documentElement.classList.toggle('dark', savedTheme === 'dark' );
+    //     }
+    // }, []);
 
     useEffect(() => {
         const Username =  async() =>{
@@ -41,12 +46,12 @@ export default function Header (){
         Username();
     }, [])
 
-    const toggleTheme = () => {
-        const newTheme = theme === 'light' ? 'dark' : 'light';
-        setTheme(newTheme);
-        localStorage.setItem('theme', newTheme);
-        document.documentElement.classList.toggle('dark', newTheme === 'dark');
-      };
+    // const toggleTheme = () => {
+    //     const newTheme = theme === 'light' ? 'dark' : 'light';
+    //     setTheme(newTheme);
+    //     localStorage.setItem('theme', newTheme);
+    //     document.documentElement.classList.toggle('dark', newTheme === 'dark');
+    //   };
       const handleLogout = async () => {
         try{
             await axiosInstance.post("/auth/logout")
@@ -56,6 +61,8 @@ export default function Header (){
             console.error("Error occurred during logout", error);
         }
       };
+
+      if (!mounted) return null;
 
     return(
         <div className="bg-green-200 shadow-green-400 sticky mb-1 rounded-b-xl">
@@ -71,7 +78,7 @@ export default function Header (){
 
                 <button
                   className='bg-green-600 text-white px-3 py-1 rounded-full hover:bg-green-700 transition-all duration-200'
-                  onClick={toggleTheme}
+                  onClick={() => setTheme(theme === "light" ? "dark" : "light")}
                 >
                     {theme === 'light' ?  < Moon/>: < Sun/>}
                 </button>
