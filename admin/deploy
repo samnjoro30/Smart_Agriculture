@@ -1,0 +1,8 @@
+#!/bin/bash
+echo "Pushing code to Gitlab..."
+git push gitlab developer
+git push gitlab  main
+
+echo "pushing code to Github..."
+
+git push origin developer

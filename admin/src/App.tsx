@@ -1,6 +1,4 @@
 import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
 import './App.css'
 
 function App() {
@@ -10,8 +8,7 @@ function App() {
     <>
       <div>
         <h1>Hello welcome admin panel</h1>
-        <p>In development mode!!</p>
-        
+        <p className="text-green-800 font-bold">In development mode!!</p>
       </div>
       
     </>
