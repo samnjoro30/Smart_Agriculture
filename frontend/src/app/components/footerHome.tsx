@@ -11,6 +11,7 @@ interface FormData{
 
 export default function FooterHome (){
     const [message, setMessage] = useState<string>('');
+    const [error, setError] = useState<string>('')
     const [loading, setLoading] = useState<boolean>(false)
     const [formData, setFormData] = useState<FormData>({
         email: '',
@@ -22,15 +23,18 @@ export default function FooterHome (){
 
     const handleSubmit = async() =>{
         setLoading(true);
+        setMessage('');
+        setError('');
         try{
             const res = await axiosInstance.post("/newsletter/subscribe", formData);
             setMessage(res.data.message || 'Successfully subscribed to news letter')
-            if (res.data.message == 'successful'){
+            if (res.data.message == 'Subscribed Successfully'){
                 alert("subscribtion successful");
             }
         }catch(err){
             const error = err instanceof Error ? err : new Error(String(err));
             console.log("Error subscribing to newsletter", error);
+            setError("Error subscribing to newsletter, Try again later!")
         }
     }
     return(
@@ -66,19 +70,20 @@ export default function FooterHome (){
                     <h3 className="text-lg font-semibold mb-3">Newsletter</h3>
                     <p className="text-sm mb-2">Stay updated with our latest features and insights.</p>
                     <form onSubmit={handleSubmit}>
-                    <input
-                      type="email"
-                      name="email"
-                      value={formData.email}
-                      onChange={handleChange}
-                      placeholder="Enter your email"
-                      className="w-full px-3 py-2 rounded-md text-white-900 border-2 focus:outline-none"
-                    />
-                    <button className="mt-2 w-full bg-white text-green-900 font-semibold py-2 px-4 rounded-md hover:bg-gray-200 transition">
-                        {loading ? 'subscribe ...' : 'subscribe'}
-                    </button>
+                        <input
+                          type="email"
+                          name="email"
+                          value={formData.email}
+                          onChange={handleChange}
+                          placeholder="Enter your email"
+                          className="w-full px-3 py-2 rounded-md text-white-900 border-2 focus:outline-none"
+                       />
+                        <button className="mt-2 w-full bg-white text-green-900 font-semibold py-2 px-4 rounded-md hover:bg-gray-200 transition">
+                            {loading ? 'subscribe ...' : 'subscribe'}
+                        </button>
                     </form>
                     {message && <p style={{ color: 'green'}}>{message}</p>}
+                    {error && <p style={{ color: 'red'}}>{error}</p>}
                 </div>
             </div>
         </footer>
