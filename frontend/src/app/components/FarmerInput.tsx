@@ -34,9 +34,10 @@ export default function Farm() {
     const [message, setMessage] = useState<string>('')
     const [numCow, setNumCow] = useState(0);
     const [animals, setAnimals] = useState<Animal[]>([]);
-    const [step, setStep] = useState(0);
+    const [step, setStep] = useState<number>(0);
 
-    const handleCowSubmit = async () => {
+    const handleCowSubmit = async (e: { preventDefault: () => void; }) => {
+        e.preventDefault();
         setLoading(true);
         try{
             const res = await axiosInstance.post("/farmingData/input/cow", {
@@ -104,8 +105,8 @@ export default function Farm() {
                             <option value="">-- Select Farming Type --</option>
                             <option value="dairy">Dairy Farming</option>
                             <option value="goats">Goats</option>
-                            <option value="">Crop Farming</option>
-                            <option value="mixed">Mixed Farming</option>
+                            {/* <option value="">Crop Farming</option>
+                            <option value="mixed">Mixed Farming</option> */}
                         </select>
                     </div>
                     
@@ -145,7 +146,13 @@ export default function Farm() {
                      {/*Cow management*/}
                         {farmingType ==="dairy" && animals.length >0 &&(
                             <div className="bg-green-50 shadow-sm rounded-2xl p-2 border border-gray-200">
-                                <form onSubmit={handleCowSubmit}>
+                                <form onSubmit={handleCowSubmit}
+                                  onKeyDown={(e) =>{
+                                    if (e.key === "Enter") {
+                                      e.preventDefault(); 
+                                    }
+                                  }}
+                                >
                                 <div className="flex items-center justify-center mb-6 space-x-2">
                                     {animals.map((_, i) => (
                                         <div
@@ -216,6 +223,7 @@ export default function Farm() {
                                 )}
                                 <div className="flex justify-between mt-6">
                                    <button
+                                      type="button"
                                       onClick={() => setStep((prev) => Math.max(prev - 1, 0))}
                                       disabled={step === 0}
                                       className={`px-4 py-2 rounded-lg ${
@@ -226,26 +234,31 @@ export default function Farm() {
                                     >
                                         Previous
                                     </button>
-                                    <button
-                                       onClick={() =>
-                                          setStep((prev) => Math.min(prev + 1, animals.length - 1))
-                                        }
-                                       disabled={step === animals.length - 1}
-                                       className={`px-4 py-2 rounded-lg ${
-                                           step === animals.length - 1
-                                           ? "bg-gray-300 text-gray-600 cursor-not-allowed"
-                                           : "bg-green-500 text-white hover:bg-green-600"
-                                        }`}
-                                    >
-                                        Next
-                                    </button>
+                                    { step === animals.length -1 ? (
+                                        <button  
+                                          type="submit"
+                                          disabled={loading}
+                                          className={`px-4 py-2 rounded-lg ${
+                                            loading
+                                              ? "bg-gray-400 text-gray-700 cursor-not-allowed"
+                                              : "bg-green-500 text-white hover:bg-green-600"
+                                          }`}
+                                        >
+                                            { loading ? "saving ..." : "save cow"}
+                                        </button>
+                                    ) : (
+                                        <button
+                                          type="button"
+                                          onClick={() =>
+                                            setStep((prev) => Math.min(prev + 1, animals.length - 1))
+                                           }
+                                           className="px-4 py-2 rounded-lg bg-green-800 text-white hover:bg-green-900"
+                                        >
+                                            Next
+                                        </button>
+                                    )}
+                                    
                                 </div>
-                                <button
-                                  type="submit"
-                                  className="bg-green-800"
-                                >
-                                    {loading ? 'saving ...' : 'save cows'}
-                                </button>
                                 </form>
                             </div>
                         )}
