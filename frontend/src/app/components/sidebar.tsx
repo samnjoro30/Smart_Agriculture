@@ -23,6 +23,9 @@ const Contact = dynamic(() => import('./contact'), {
 const FarmAnalytics = dynamic(() => import('./FarmAnalytics'), {
   loading: () => <p>Loading ...</p>
 })
+const Alerts = dynamic(() => import('./alerts'),{
+  loading: () => <p>wait a second as page loads ...</p>
+})
 
 export default function Sidebar() {
   const [active, setActive] = useState('overview')
@@ -43,6 +46,8 @@ export default function Sidebar() {
         return <FarmerInput />;
       case 'Analytics':
         return <FarmAnalytics />;
+      case 'alerts':
+        <Alerts />;
       default:
         return "choose options in the side bar";
     }
@@ -103,6 +108,7 @@ export default function Sidebar() {
             </button>
 
             <button 
+              onClick={() => setActive('alerts')}
               className="flex items-center gap-2 text-left px-3 py-2 text-green-600 font-bold rounded-md hover:bg-green-300"
             >
               < AlertCircle /> 

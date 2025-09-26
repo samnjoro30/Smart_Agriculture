@@ -39,6 +39,7 @@ export default function Farm() {
     const handleCowSubmit = async (e: { preventDefault: () => void; }) => {
         e.preventDefault();
         setLoading(true);
+        setMessage('');
         try{
             const res = await axiosInstance.post("/farmingData/input/cow", {
                 
@@ -238,17 +239,14 @@ export default function Farm() {
                                         <button  
                                           type="submit"
                                           disabled={loading}
-                                          className={`px-4 py-2 rounded-lg ${
-                                            loading
-                                              ? "bg-gray-400 text-gray-700 cursor-not-allowed"
-                                              : "bg-green-500 text-white hover:bg-green-600"
-                                          }`}
+                                          className="px-4 py-2 rounded-lg bg-green-800 text-white hover:bg-green-900"
                                         >
                                             { loading ? "saving ..." : "save cow"}
                                         </button>
                                     ) : (
                                         <button
                                           type="button"
+                                          disabled={loading}
                                           onClick={() =>
                                             setStep((prev) => Math.min(prev + 1, animals.length - 1))
                                            }
@@ -361,7 +359,7 @@ export default function Farm() {
                                 </div>
                             </div>
                         )}
-            </div>
+                    </div>
 
                 {/* RIGHT COLUMN */}
                 <div className="space-y-6">
