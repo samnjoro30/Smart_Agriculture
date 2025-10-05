@@ -3,6 +3,9 @@ echo "Pushing code to Gitlab..."
 git push gitlab developer
 git push gitlab  main
 
+echo "changing git branch to admin-developer..."
+git checkout admin-developer
+
 echo "pushing code to Github..."
 
-git push origin developer
+git push origin admin-developer
