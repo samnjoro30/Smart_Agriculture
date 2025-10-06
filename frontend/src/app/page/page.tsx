@@ -1,6 +1,5 @@
 "use client"
 
-
 import FooterHome from '../components/footerHome';
 import HeaderHome from '../components/headerHomepage';
 import Link from 'next/link';
