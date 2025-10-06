@@ -6,3 +6,5 @@ export default function Home() {
     </div>
   );
 }
+
+//FIREBASE_CLI_EXPERIMENTS=webframeworks firebase deploy

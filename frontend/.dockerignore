@@ -1,3 +1,6 @@
 
 Dockerfile
 node_modules
+.firebase
+.vercel
+.next
