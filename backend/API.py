@@ -12,6 +12,7 @@ from slowapi.util import get_remote_address
 from slowapi.errors import RateLimitExceeded
 from alembic import command
 from alembic.config import Config
+import threading, requests
 import os
 import time
 
@@ -42,6 +43,10 @@ app.include_router(user_router)
 app.include_router(farm_router)
 app.include_router(farm_analytic_router)
 
+@app.get("/ping")
+async def ping():
+    return {"status": "ok"}
+
 @app.middleware("http")
 async def add_process_time_header(request: Request, call_next):
     start_time = time.time()
@@ -56,3 +61,13 @@ async def startup():
         alembic_cfg = Config("alembic.ini")
         command.upgrade(alembic_cfg, "head")
 
+    def keep_alive():
+        while True:
+            try:
+                requests.get("https://smart-agriculture-21dt.onrender.com/ping", timeout=5)
+                print("Self-ping successful")
+            except Exception as e:
+                print("Self-ping failed:", e)
+            time.sleep(600)  # every 10 minutes
+
+    threading.Thread(target=keep_alive, daemon=True).start()
