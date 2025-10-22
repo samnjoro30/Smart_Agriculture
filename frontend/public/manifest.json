@@ -1,9 +1,9 @@
 {
-    "name": "Smart Agri Tech",
-    "short_name": "SmartAgri",
+    "name": "Smart Farm Tech",
+    "short_name": "Smart Farm",
     "description": "Smart Agriculture Platform using AI to boost farm productivity.",
     "start_url": "/",
-    "scope": "/",
+    "scope": "/auth/login",
     "display": "standalone",
     "orientation": "portrait",
     "background_color": "#008000",
