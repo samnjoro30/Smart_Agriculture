@@ -48,12 +48,13 @@ export default function Dashboard({ data }: { data: any }){
         <div className="bg-green-50 flex flex-col min-h-screen">
             <Header />
             {!isInstalled && deferredPrompt && (
-                <div className="p-4">
+                <div className="fixed top-0 left-1/2 transform -translate-x-1/2 bg-green-400 text-white px-6 py-3 rounded-xl shadow-lg z-50 flex items-center gap-4 animate-slideDown">
+                    <span className="font-medium">📱 Install this app for quicker access!</span>
                     <button
-                      onClick={handleInstall}
-                      className="bg-green-600 text-white px-4 py-2 rounded-lg shadow-md hover:bg-green-700 transition"
+                       onClick={handleInstall}
+                       className="bg-white text-green-700 font-semibold px-3 py-1 rounded-lg hover:bg-green-100 transition"
                     >
-                        Install App
+                       Install
                     </button>
                 </div>
             )}
