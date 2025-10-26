@@ -56,7 +56,7 @@ export default function Sidebar() {
 
   return (
       <div className="flex min-h-full">
-        <div className="sticky top-0 left-1 md:h-full overflow-y-auto shrink-0 w-16 md:w-64 bg-green-200 shadow-md p-2 md:p-4 space-y-6 transition-all duration-300 ">
+        <div className="sticky top-0 left-1 md:h-full overflow-y-auto shrink-0 w-16 md:w-64 bg-green-200 shadow-md p-1 md:p-4 space-y-6 transition-all duration-300 ">
         
           <h2 className="text-green-700 font-semibold mb-2 border-b border-green-300">Dashboard</h2>
           <div className="flex flex-col space-y-2">
