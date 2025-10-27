@@ -11,7 +11,7 @@ USER_PASSWORD = os.getenv("USER_PASSWORD")
 HOST = os.getenv("SMTP_HOST")
 PORT = os.getenv("SMTP_PORT")
 
-async def sendOTP(email: str, otp: str, username: str):
+async def sendOTP(email: str, otp: retrieve_otp, username: str):
     message = EmailMessage()
     message["from"] = USER_EMAIL
     message["To"] = email
