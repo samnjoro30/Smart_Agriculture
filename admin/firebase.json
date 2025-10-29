@@ -1,0 +1,14 @@
+{
+  "hosting": {
+    "site": "admin-smart-farm-agriculture",
+    "source": ".",
+    "ignore": [
+      "firebase.json",
+      "**/.*",
+      "**/node_modules/**"
+    ],
+    "frameworksBackend": {
+      "region": "us-west1"
+    }
+  }
+}
