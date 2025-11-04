@@ -101,10 +101,10 @@ export default function Farm() {
                         <select
                           value={farmingType}
                           onChange={handleFarmingType}
-                          className="border rounded-lg px-3 py-2 border-gray-700 w-full"
+                          className="border rounded-lg px-3 py-2 border-gray-100 w-full"
                         >
                             <option value="">-- Select Farming Type --</option>
-                            <option value="dairy">Dairy Farming</option>
+                            <option value="dairy" >Dairy Farming</option>
                             <option value="goats">Goats</option>
                             {/* <option value="">Crop Farming</option>
                             <option value="mixed">Mixed Farming</option> */}
@@ -143,6 +143,7 @@ export default function Farm() {
                         </div>
                     )}
                 </div>
+
                      
                      {/*Cow management*/}
                         {farmingType ==="dairy" && animals.length >0 &&(
@@ -178,6 +179,7 @@ export default function Farm() {
                                                   value={animals[step].name}
                                                   onChange={(e) => handleCowChange(animals[step].id, "name",  e.target.value)}
                                                   className="border px-1 py-1 border-green-300 rounded-lg "
+                                                  required
                                                 />
                                             </div>
                                             <div>
@@ -187,6 +189,7 @@ export default function Farm() {
                                                   value={animals[step].age}
                                                   onChange={(e) => handleCowChange(animals[step].id, "age", parseInt(e.target.value) || 0)}
                                                   className="border border-green-300 px-1 py-1 rounded-lg "
+                                                  required
                                                 />
                                             </div>
                                             <div>
@@ -196,6 +199,7 @@ export default function Farm() {
                                                   value={animals[step].lastBirth}
                                                   onChange={(e) => handleCowChange(animals[step].id, "lastBirth", e.target.value)}
                                                   className="border border-green-300 px-1 py-1 rounded-lg "
+                                                  required
                                                 />
                                             </div>
                                         </div>
@@ -207,6 +211,7 @@ export default function Farm() {
                                                   value={animals[step].lastMate}
                                                   onChange={(e) => handleCowChange(animals[step].id, "lastMate", e.target.value )}
                                                   className="border border-green-300 px-1 py-1 rounded-lg "
+                                                  required
                                                 />
                                             </div>
                                             <div>
@@ -216,6 +221,7 @@ export default function Farm() {
                                                   value={animals[step].Calf}
                                                   onChange={(e) => handleCowChange(animals[step].id, "Calf", parseInt(e.target.value) || 0)}
                                                   className="border border-green-300 px-1 py-1 rounded-lg "
+                                                  required
                                                 />
                                             </div>
                                         </div>
@@ -366,26 +372,6 @@ export default function Farm() {
                     {/* Container 3: Preview */}
                     <div className="bg-white shadow-md rounded-2xl p-6">
                         <h3 className="text-green-600 text-lg font-bold mb-4">Preview</h3>
-                        {animals.length === 0 ? (
-                            <p className="text-gray-500">No animals added yet.</p>
-                        ) : (
-                            <ul className="space-y-2">
-                                {animals.map((cow) => (
-                                    <li
-                                      key={cow.id}
-                                      className="p-3 border rounded-lg bg-gray-50 flex justify-between"
-                                    >
-                                        <span>
-                                            <strong>{cow.name || `Cow #${cow.id}`}</strong> (Age:{" "}
-                                            {cow.age})
-                                        </span>
-                                        <span className="text-sm text-gray-600">
-                                            Calves: {cow.Calf}
-                                        </span>
-                                    </li>
-                                ))}
-                            </ul>
-                        )}
                     </div>
                 </div>
         </div>

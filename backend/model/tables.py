@@ -13,6 +13,7 @@ class Users(Base):
     otp = Column(String(8))
     phonenumber = Column(String(200), unique=True)
     password = Column(String(200))
+    createdAt = Column(DateTime, nullable=False)
 
 class RefreshToken(Base):
 
