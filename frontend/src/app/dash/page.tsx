@@ -60,7 +60,7 @@ export default function Dashboard({ data }: { data: any }){
             )}
             <main className="flex-grow">
                 <Sidebar />
-                <pre>{JSON.stringify(data, null, 2)}</pre>
+                {/* <pre>{JSON.stringify(data, null, 2)}</pre> */}
             </main>
             <Footer />
         </div>
