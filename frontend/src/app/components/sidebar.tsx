@@ -55,14 +55,14 @@ export default function Sidebar() {
   }
 
   return (
-      <div className="flex min-h-full">
+      <div className="flex h-auto">
         <div className="sticky top-0 left-1 md:h-full overflow-y-auto shrink-0 w-16 md:w-64 bg-green-200 shadow-md p-1 md:p-4 space-y-6 transition-all duration-300 ">
         
           <h2 className="text-green-700 font-semibold mb-2 border-b border-green-300">Dashboard</h2>
           <div className="flex flex-col space-y-2">
             <button 
               onClick ={() => setActive("overview") }
-              className={`flex items-center gap-2 text-left px-3 py-2 rounded-md hover:bg-green-300 ${
+              className={`flex items-center gap-2 h-full text-left px-3 py-2 rounded-md hover:bg-green-300 ${
                 active === "overview" ? "bg-green-300 text-green-800 font-semibold" : "text-green-600"
               }`}
             >
@@ -125,7 +125,7 @@ export default function Sidebar() {
             
           </div>
         </div>
-        <div className="mt-35 border-t border-green-300">
+        <div className="mt-42 border-t border-green-300">
           <button 
             onClick={() => setActive('Contact')}
             className="flex items-center gap-2 text-green-400  px-3 py-2  rounded-md hover:bg-green-300 transition"
