@@ -1,16 +1,17 @@
 import './App.css'
+import Login from './auth/login'
+import Header from './components/header';
+import { BrowserRouter as Router, Routes, Route} from 'react-router-dom'
 
 function App() {
-
   return (
-    <>
-      <div>
-        <h1>Hello welcome admin panel</h1>
-        <p className="text-green-800 font-bold">In development mode!!</p>
-      </div>
-      
-    </>
+   <Router>
+    <Routes>
+      {/* <Route path="/" element={<Header />} /> */}
+      <Route path="/" element={<Login />} />
+    </Routes>
+   </Router>
   )
-}
+  }
 
 export default App
