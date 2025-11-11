@@ -46,35 +46,40 @@ const  Login = () => {
         }
     }
     return(
-        <div className="bg-green-100">
-            <h1>Smart Farm</h1>
+        <div className="bg-green-50 w-full max-w-md shadow-lg rounded-xl p-8 space-y-6">
+            <div className="flex justify-centre">
+            <h1 className="font-bold">Smart Farm</h1>
             <img src={logo} alt="Smart Farm Logo" width={80} height={40} className="mx-auto mb-2 rounded-full" />
-            <form onSubmit={handleSubmit}>
+            </div>
+            <form className="space-y-8" onSubmit={handleSubmit}>
                 <div>
-                    <label htmlFor="userId">ADMIN ID:</label>
+                    <label className="block text-green-700 font-bold mb-1" htmlFor="userId">ADMIN ID:</label>
                     <input
                        type="text"
                        id="userId"
                        name="userId"
                        value={adminData.userId}
                        onChange={handleChange}
+                       className="w-full px-4 py-2 border border-green-300 bg-green-50 text-green-900 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
                        required
                     />
                 </div>
                 <div>
-                    <label htmlFor="password">PASSWORD:</label>
+                    <label className="block text-green-700 font-bold mb-1" htmlFor="password">PASSWORD:</label>
                     <input
                        type="password"
                        id="password"
                        name="password"
                        value={adminData.password}
                        onChange={handleChange}
+                       className="w-full px-4 py-2 border border-green-300 bg-green-50 text-green-900 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
                        required
                     />
                 </div>
                 <button 
-                   type="submit" 
-                   className=""
+                   type="submit"
+                   disabled={loading} 
+                   className="w-full flex justify-center items-center py-2 px-4 bg-green-600 hover:bg-green-700 text-white font-semibold rounded-md"
                 >
                     LOGIN
                 </button>
