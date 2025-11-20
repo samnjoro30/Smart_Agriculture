@@ -25,3 +25,13 @@ class codeResend(BaseModel):
 class ResetPassword(BaseModel):
     email: EmailStr
     newPassword: constr(min_length=6)
+
+class adminRegisterRequest(BaseModel):
+    username: constr(min_length=3)
+    email: EmailStr
+    password: constr(min_length=6)
+    role: constr(min_length=3)
+    
+class adminLoginRequest(BaseModel):
+    email: EmailStr
+    password: constr(min_length=6)
