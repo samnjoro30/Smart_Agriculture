@@ -5,6 +5,7 @@ from controller.auth import router as auth_router
 from controller.users import app as user_router
 from controller.farm import router as farm_router
 from controller.farmAnalytic import router as farm_analytic_router
+from controller.admin_auth import router as admin_auth_router
 from model.auth import RegisterRequest
 from db.postgre_db import Base, engine
 from slowapi import Limiter, _rate_limit_exceeded_handler
@@ -42,6 +43,7 @@ app.include_router(auth_router)
 app.include_router(user_router)
 app.include_router(farm_router)
 app.include_router(farm_analytic_router)
+app.include_router(admin_auth_router)
 
 @app.get("/ping")
 async def ping():
