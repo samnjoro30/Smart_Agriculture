@@ -47,9 +47,10 @@ const  Login = () => {
     }
     return(
         <div className="bg-green-50 w-full max-w-md shadow-lg rounded-xl p-8 space-y-6">
-            <div className="flex justify-centre">
-            <h1 className="font-bold">Smart Farm</h1>
-            <img src={logo} alt="Smart Farm Logo" width={80} height={40} className="mx-auto mb-2 rounded-full" />
+            <div className="flex flex-col items-center">
+            <img src={logo} alt="Smart Farm Logo" width={80} height={40} className="rounded-full mb-3 border border-green-300 shadow-sm" />
+            <h1 className="text-2xl text-green-700">Smart Farm</h1>
+            <p className="text-gray-500 text-sm">Secure Access Panel</p>
             </div>
             <form className="space-y-8" onSubmit={handleSubmit}>
                 <div>
@@ -79,9 +80,11 @@ const  Login = () => {
                 <button 
                    type="submit"
                    disabled={loading} 
-                   className="w-full flex justify-center items-center py-2 px-4 bg-green-600 hover:bg-green-700 text-white font-semibold rounded-md"
+                   className={`w-full py-2 px-4 text-white font-semibold rounded-md shadow 
+                   transition-colors duration-200
+                   ${loading ? "bg-gray-400 cursor-not-allowed" : "bg-green-600 hover:bg-green-700"}`}
                 >
-                    LOGIN
+                    {loading ? "Logging in..." : "LOGIN"}
                 </button>
             </form>
         </div>
