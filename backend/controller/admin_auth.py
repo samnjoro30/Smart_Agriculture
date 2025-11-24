@@ -25,7 +25,7 @@ async def admin_register(payload: adminRegisterRequest, db: AsyncSession = Depen
     return {"message": "Admin registration endpoint"}
 
 @router.post("/admin/login")
-async def admin_login(request: Request):
+async def admin_login(payload: adminLoginRequest, response: Response, db: AsyncSession = Depends(get_db)):
     admin = await get_admin_by_email(payload.email, db)
 
     if not admin or not verify_password(payload.password, admin["password"]):
@@ -49,4 +49,14 @@ async def admin_login(request: Request):
         "message": "Login successful",
         "token": token,
         "role": admin["role"]
+    }
+
+@router.post("/admin/logout")
+async def admin_logout(response: Response, request: Request):
+    token = request.cookies.get("admin_access_token")
+    if not token:
+        raise HTTPException(status_code=401, detail="No admin token found")
+    response.delete_cookie(key="admin_access_token")
+    return {
+        "message": "Logout successful"
     }
