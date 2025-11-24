@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 import logo from '../assets/logo.png';
 
 interface adminLoginProps {
-    userId: string;
+    email: string;
     password: string;
 }
 
@@ -15,7 +15,7 @@ const  Login = () => {
     const [error, setError] = useState<string>("");
     const [loading, setLoading] = useState<boolean>(false);
     const [adminData, setAdminData] = useState<adminLoginProps>({
-        userId: "",
+        email: "",
         password: "",
     });
 
@@ -32,7 +32,7 @@ const  Login = () => {
         setLoading(true);
         try {
             const  response = await axiosInstance.post("/auth/login", {
-                userId: adminData.userId,
+                email: adminData.email,
                 password: adminData.password,
             })
             setMessage(response.data.message || "Login successful");
@@ -59,7 +59,7 @@ const  Login = () => {
                        type="text"
                        id="userId"
                        name="userId"
-                       value={adminData.userId}
+                       value={adminData.email}
                        onChange={handleChange}
                        className="w-full px-4 py-2 border border-green-300 bg-green-50 text-green-900 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
                        required
@@ -86,6 +86,8 @@ const  Login = () => {
                 >
                     {loading ? "Logging in..." : "LOGIN"}
                 </button>
+                {message && <p className="text-green-600 text-center mt-4">{message}</p>}   
+                {error && <p className="text-red-600 text-center mt-4">{error}</p>}
             </form>
         </div>
     )
