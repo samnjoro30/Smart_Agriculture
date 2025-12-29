@@ -23,7 +23,7 @@ router =  APIRouter()
 
 @router.post("/auth/refresh")
 async def page_refresh_token(request: Request):
-    SECRET_KEY = os.getenv("JWT")
+    SECRET_KEY = os.getenv("JWT_REFRESH")
     ALGORITHM = os.getenv("ALGORITHM")
     try:
         refresh_token_str = request.cookies.get("refresh_token")

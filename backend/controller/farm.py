@@ -25,3 +25,13 @@ async def register_cow(payload: Register_cow, db: AsyncSession = Depends(get_db)
     return {
         "message" : "Cows registered successfully"
     }
+
+
+def create_notification(db: Session, user_id: int, message: str):
+
+    # Placeholder function to create a notification in the database
+    pass
+
+@router.get("/farm/notification")
+async def get_notifications(request: Request, db: AsyncSession = Depends(get_db)):
+    
