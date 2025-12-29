@@ -22,9 +22,12 @@ It is built using a full-stack, cloud-native approach with technologies like Fas
  - **python 3.9 and above**
  - **FastAPI** - High-performance API
  - **Uvicorn** - ASGI server
- - **Gunicorn**
  - **Node.js** - backend components
  - **Alembic** - handling db migrations
+ - **Gunicorn** - WSGI HTTP server for production
+ - **SQLAlchemy** - ORM for database operations
+ - **Pydantic** - Data validation and settings management
+- **Redis** - Caching and real-time data handling
 
  ### 🌐 Frontend
 - **Next.js 14**
@@ -43,6 +46,16 @@ It is built using a full-stack, cloud-native approach with technologies like Fas
 - **Firebase** - frontend hosting
 - **service worker** - for WPA
 
+
+### 🛡️ Development Tools & Quality
+- **Black** - Code formatting
+- **isort** - Import statement organization
+- **Ruff** - Extremely fast Python linter
+- **mypy** - Static type checking
+- **Bandit** - Security linter for Python
+- **pre-commit hooks** - Automated code quality checks
+- **pytest** - Testing framework
+- **Coverage.py** - Code coverage analysis
 ---
 
 
@@ -65,6 +78,17 @@ cd Smart_Agriculture
 # Start services
 docker-compose up --build
 ```
+
+# Backend Infrastructure
+
+## Backend Architecture
+
+### DevOps ecosystem(backend)
+
+
+
+## Scurity features for backend
+Bandit - for security linting
 
 # Future Features
 
