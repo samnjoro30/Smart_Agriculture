@@ -24,6 +24,7 @@ class PyAsn1Error(Exception):
         Opaque keyword parameters
 
     """
+
     def __init__(self, *args, **kwargs):
         self._args = args
         self._kwargs = kwargs
@@ -41,7 +42,7 @@ class PyAsn1Error(Exception):
         : :py:class:`dict`
             Dict holding context specific data
         """
-        return self._kwargs.get('context', {})
+        return self._kwargs.get("context", {})
 
 
 class ValueConstraintError(PyAsn1Error):
@@ -84,6 +85,7 @@ class PyAsn1UnicodeError(PyAsn1Error, UnicodeError):
     Apart from inheriting from :class:`PyAsn1Error`, it also inherits from
     :class:`UnicodeError` to help the caller catching unicode-related errors.
     """
+
     def __init__(self, message, unicode_error=None):
         if isinstance(unicode_error, UnicodeError):
             UnicodeError.__init__(self, *unicode_error.args)
@@ -112,5 +114,3 @@ class PyAsn1UnicodeEncodeError(PyAsn1UnicodeError, UnicodeEncodeError):
     from :class:`UnicodeEncodeError` to help the caller catching
     unicode-related errors.
     """
-
-

@@ -57,7 +57,7 @@ def mgf1(seed: bytes, length: int, hasher: str = "SHA-1") -> bytes:
         ) from ex
 
     # If l > 2^32(hLen), output "mask too long" and stop.
-    if length > (2 ** 32 * hash_length):
+    if length > (2**32 * hash_length):
         raise OverflowError(
             "Desired length should be at most 2**32 times the hasher's output "
             "length ({hash_length} for {hasher} function)".format(

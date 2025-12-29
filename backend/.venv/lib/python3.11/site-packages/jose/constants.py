@@ -57,7 +57,14 @@ class Algorithms:
     EC_KW = {ECDH_ES, ECDH_ES_A128KW, ECDH_ES_A192KW, ECDH_ES_A256KW}
     EC = EC_DS.union(EC_KW)
     AES_PSEUDO = {A128CBC, A192CBC, A256CBC, A128GCM, A192GCM, A256GCM}
-    AES_JWE_ENC = {A128CBC_HS256, A192CBC_HS384, A256CBC_HS512, A128GCM, A192GCM, A256GCM}
+    AES_JWE_ENC = {
+        A128CBC_HS256,
+        A192CBC_HS384,
+        A256CBC_HS512,
+        A128GCM,
+        A192GCM,
+        A256GCM,
+    }
     AES_ENC = AES_JWE_ENC.union(AES_PSEUDO)
     AES_KW = {A128KW, A192KW, A256KW}
     AEC_GCM_KW = {A128GCMKW, A192GCMKW, A256GCMKW}
@@ -67,7 +74,14 @@ class Algorithms:
     HMAC_AUTH_TAG = {A128CBC_HS256, A192CBC_HS384, A256CBC_HS512}
     GCM = {A128GCM, A192GCM, A256GCM}
 
-    SUPPORTED = HMAC.union(RSA_DS).union(EC_DS).union([DIR]).union(AES_JWE_ENC).union(RSA_KW).union(AES_KW)
+    SUPPORTED = (
+        HMAC.union(RSA_DS)
+        .union(EC_DS)
+        .union([DIR])
+        .union(AES_JWE_ENC)
+        .union(RSA_KW)
+        .union(AES_KW)
+    )
 
     ALL = SUPPORTED.union([NONE]).union(AEC_GCM_KW).union(EC_KW).union(PBES2_KW)
 

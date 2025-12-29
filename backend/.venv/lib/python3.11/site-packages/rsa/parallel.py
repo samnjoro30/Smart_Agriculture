@@ -62,7 +62,10 @@ def getprime(nbits: int, poolsize: int) -> int:
 
     # Create processes
     try:
-        procs = [mp.Process(target=_find_prime, args=(nbits, pipe_send)) for _ in range(poolsize)]
+        procs = [
+            mp.Process(target=_find_prime, args=(nbits, pipe_send))
+            for _ in range(poolsize)
+        ]
         # Start processes
         for p in procs:
             p.start()

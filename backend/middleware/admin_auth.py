@@ -1,12 +1,14 @@
-from fastapi import Request, HTTPException
-from jose import jwt, JWTError
 import os
+
 from dotenv import load_dotenv
+from fastapi import HTTPException, Request
+from jose import JWTError, jwt
 
 load_dotenv()
 
 SECRET_KEY = os.getenv("ADMIN_JWT_SECRET")
 ALGORITHM = "HS256"
+
 
 async def require_admin_role(request: Request, required_role: str):
     token = request.cookies.get("admin_access_token")

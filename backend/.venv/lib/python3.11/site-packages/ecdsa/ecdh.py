@@ -76,24 +76,17 @@ class ECDH(object):
 
     def _get_shared_secret(self, remote_public_key):
         if not self.private_key:
-            raise NoKeyError(
-                "Private key needs to be set to create shared secret"
-            )
+            raise NoKeyError("Private key needs to be set to create shared secret")
         if not self.public_key:
-            raise NoKeyError(
-                "Public key needs to be set to create shared secret"
-            )
-        if not (
-            self.private_key.curve == self.curve == remote_public_key.curve
-        ):
+            raise NoKeyError("Public key needs to be set to create shared secret")
+        if not (self.private_key.curve == self.curve == remote_public_key.curve):
             raise InvalidCurveError(
                 "Curves for public key and private key is not equal."
             )
 
         # shared secret = PUBKEYtheirs * PRIVATEKEYours
         result = (
-            remote_public_key.pubkey.point
-            * self.private_key.privkey.secret_multiplier
+            remote_public_key.pubkey.point * self.private_key.privkey.secret_multiplier
         )
         if result == INFINITY:
             raise InvalidSharedSecretError("Invalid shared secret (INFINITY).")
@@ -237,9 +230,7 @@ class ECDH(object):
             raise InvalidCurveError("Curve mismatch.")
         self.public_key = public_key
 
-    def load_received_public_key_bytes(
-        self, public_key_str, valid_encodings=None
-    ):
+    def load_received_public_key_bytes(self, public_key_str, valid_encodings=None):
         """
         Load public key from byte string.
 
@@ -256,9 +247,7 @@ class ECDH(object):
         :type valid_encodings: :term:`set-like object`
         """
         return self.load_received_public_key(
-            VerifyingKey.from_string(
-                public_key_str, self.curve, valid_encodings
-            )
+            VerifyingKey.from_string(public_key_str, self.curve, valid_encodings)
         )
 
     def load_received_public_key_der(self, public_key_der):
@@ -276,9 +265,7 @@ class ECDH(object):
 
         :raises InvalidCurveError: public_key curve not the same as self.curve
         """
-        return self.load_received_public_key(
-            VerifyingKey.from_der(public_key_der)
-        )
+        return self.load_received_public_key(VerifyingKey.from_der(public_key_der))
 
     def load_received_public_key_pem(self, public_key_pem):
         """
@@ -295,9 +282,7 @@ class ECDH(object):
 
         :raises InvalidCurveError: public_key curve not the same as self.curve
         """
-        return self.load_received_public_key(
-            VerifyingKey.from_pem(public_key_pem)
-        )
+        return self.load_received_public_key(VerifyingKey.from_pem(public_key_pem))
 
     def generate_sharedsecret_bytes(self):
         """

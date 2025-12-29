@@ -1,13 +1,22 @@
-from fastapi import APIRouter, Request,HTTPException, Depends
+from fastapi import APIRouter, Depends, HTTPException, Request
 from sqlalchemy.ext.asyncio import AsyncSession
+
 from db.postgre_db import get_db
-from services.auth import get_user_by_email
-from services.user import get_userProfile, check_user_by_email, UpdateEmail, UpdatePhoneNumber, UpdateFarmname, UpdatePassword  
 from middleware.auth import decode_jwt_token
 from model.user import ChangeEmail, ChangeFarmname, ChangePassword, ChangePhonenumber
-from utils.hashing import verify_password, hash_password
+from services.auth import get_user_by_email
+from services.user import (
+    UpdateEmail,
+    UpdateFarmname,
+    UpdatePassword,
+    UpdatePhoneNumber,
+    check_user_by_email,
+    get_userProfile,
+)
+from utils.hashing import hash_password, verify_password
 
 app = APIRouter()
+
 
 def get_current_user(request: Request):
     token = request.cookies.get("access_token")
@@ -18,9 +27,10 @@ def get_current_user(request: Request):
         raise HTTPException(status_code=401, detail="Token expired")
     return payload["sub"]
 
+
 # farmer profile setting
 @app.get("/users/userprofile")
-async def users(request: Request, db: AsyncSession=Depends(get_db)):
+async def users(request: Request, db: AsyncSession = Depends(get_db)):
     token = request.cookies.get("access_token")
     if not token:
         raise HTTPException(status_code=401, detail="No access token found in cookies")
@@ -29,8 +39,10 @@ async def users(request: Request, db: AsyncSession=Depends(get_db)):
     email = payload.get("sub")
 
     if not email:
-        raise HTTPException(status_code=401, detail="Token expired logout and login again")
-    
+        raise HTTPException(
+            status_code=401, detail="Token expired logout and login again"
+        )
+
     results = await get_userProfile(db, email)
 
     if not results:
@@ -40,7 +52,9 @@ async def users(request: Request, db: AsyncSession=Depends(get_db)):
 
 
 @app.put("/users/update-email")
-async def update_email(request: ChangeEmail, db: AsyncSession = Depends(get_db), req: Request = None):
+async def update_email(
+    request: ChangeEmail, db: AsyncSession = Depends(get_db), req: Request = None
+):
     email = get_current_user(req)
     user = await get_user_by_email(email, db)
 
@@ -52,7 +66,9 @@ async def update_email(request: ChangeEmail, db: AsyncSession = Depends(get_db),
 
 
 @app.put("/users/update-phonenumber")
-async def update_phone(request: ChangePhonenumber, db: AsyncSession = Depends(get_db), req: Request = None):
+async def update_phone(
+    request: ChangePhonenumber, db: AsyncSession = Depends(get_db), req: Request = None
+):
     email = get_current_user(req)
     user = await get_user_by_email(email, db)
 
@@ -61,7 +77,9 @@ async def update_phone(request: ChangePhonenumber, db: AsyncSession = Depends(ge
 
 
 @app.put("/users/update-farmname")
-async def update_farm(request: ChangeFarmname, db: AsyncSession = Depends(get_db), req: Request = None):
+async def update_farm(
+    request: ChangeFarmname, db: AsyncSession = Depends(get_db), req: Request = None
+):
     email = get_current_user(req)
     user = await get_user_by_email(email, db)
 
@@ -70,7 +88,9 @@ async def update_farm(request: ChangeFarmname, db: AsyncSession = Depends(get_db
 
 
 @app.put("/users/update-password")
-async def update_password(request: ChangePassword, db: AsyncSession = Depends(get_db), req: Request = None):
+async def update_password(
+    request: ChangePassword, db: AsyncSession = Depends(get_db), req: Request = None
+):
     email = get_current_user(req)
     user = await get_user_by_email(email, db)
 
@@ -81,9 +101,10 @@ async def update_password(request: ChangePassword, db: AsyncSession = Depends(ge
     await UpdatePassword(user.id, new_hashed_pw, db)
     return {"message": "Password updated successfully"}
 
+
 # getting farmer weekly notification incoming updates
-@app.get("/users/notification")
-async def farmer_week_notification(request: Request, db: AsyncSession = Depends(get_db)):
-    email = get_current_user(request)
-
-
+# @app.get("/users/notification")
+# async def farmer_week_notification(
+#     request: Request, db: AsyncSession = Depends(get_db)
+# ):
+# email = get_current_user(request)

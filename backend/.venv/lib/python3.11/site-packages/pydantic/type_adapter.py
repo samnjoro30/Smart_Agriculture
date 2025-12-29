@@ -22,7 +22,15 @@ from typing_extensions import ParamSpec, is_typeddict
 from pydantic.errors import PydanticUserError
 from pydantic.main import BaseModel, IncEx
 
-from ._internal import _config, _generate_schema, _mock_val_ser, _namespace_utils, _repr, _typing_extra, _utils
+from ._internal import (
+    _config,
+    _generate_schema,
+    _mock_val_ser,
+    _namespace_utils,
+    _repr,
+    _typing_extra,
+    _utils,
+)
 from .config import ConfigDict
 from .errors import PydanticUndefinedAnnotation
 from .json_schema import (
@@ -34,21 +42,21 @@ from .json_schema import (
 )
 from .plugin._schema_validator import PluggableSchemaValidator, create_schema_validator
 
-T = TypeVar('T')
-R = TypeVar('R')
-P = ParamSpec('P')
-TypeAdapterT = TypeVar('TypeAdapterT', bound='TypeAdapter')
+T = TypeVar("T")
+R = TypeVar("R")
+P = ParamSpec("P")
+TypeAdapterT = TypeVar("TypeAdapterT", bound="TypeAdapter")
 
 
 def _getattr_no_parents(obj: Any, attribute: str) -> Any:
     """Returns the attribute value without attempting to look up attributes from parent types."""
-    if hasattr(obj, '__dict__'):
+    if hasattr(obj, "__dict__"):
         try:
             return obj.__dict__[attribute]
         except KeyError:
             pass
 
-    slots = getattr(obj, '__slots__', None)
+    slots = getattr(obj, "__slots__", None)
     if slots is not None and attribute in slots:
         return getattr(obj, attribute)
     else:
@@ -59,7 +67,9 @@ def _type_has_config(type_: Any) -> bool:
     """Returns whether the type has config."""
     type_ = _typing_extra.annotated_type(type_) or type_
     try:
-        return issubclass(type_, BaseModel) or is_dataclass(type_) or is_typeddict(type_)
+        return (
+            issubclass(type_, BaseModel) or is_dataclass(type_) or is_typeddict(type_)
+        )
     except TypeError:
         # type is not a class
         return False
@@ -202,11 +212,11 @@ class TypeAdapter(Generic[T]):
     ) -> None:
         if _type_has_config(type) and config is not None:
             raise PydanticUserError(
-                'Cannot use `config` when the type is a BaseModel, dataclass or TypedDict.'
-                ' These types can have their own config and setting the config via the `config`'
-                ' parameter to TypeAdapter will not override it, thus the `config` you passed to'
-                ' TypeAdapter becomes meaningless, which is probably not what you want.',
-                code='type-adapter-config-unused',
+                "Cannot use `config` when the type is a BaseModel, dataclass or TypedDict."
+                " These types can have their own config and setting the config via the `config`"
+                " parameter to TypeAdapter will not override it, thus the `config` you passed to"
+                " TypeAdapter becomes meaningless, which is probably not what you want.",
+                code="type-adapter-config-unused",
             )
 
         self._type = type
@@ -218,15 +228,19 @@ class TypeAdapter(Generic[T]):
         if parent_frame is not None:
             globalns = parent_frame.f_globals
             # Do not provide a local ns if the type adapter happens to be instantiated at the module level:
-            localns = parent_frame.f_locals if parent_frame.f_locals is not globalns else {}
+            localns = (
+                parent_frame.f_locals if parent_frame.f_locals is not globalns else {}
+            )
         else:
             globalns = {}
             localns = {}
 
-        self._module_name = module or cast(str, globalns.get('__name__', ''))
+        self._module_name = module or cast(str, globalns.get("__name__", ""))
         self._init_core_attrs(
             ns_resolver=_namespace_utils.NsResolver(
-                namespaces_tuple=_namespace_utils.NamespacesTuple(locals=localns, globals=globalns),
+                namespaces_tuple=_namespace_utils.NamespacesTuple(
+                    locals=localns, globals=globalns
+                ),
                 parent_namespace=localns,
             ),
             force=False,
@@ -234,7 +248,7 @@ class TypeAdapter(Generic[T]):
 
     def _fetch_parent_frame(self) -> FrameType | None:
         frame = sys._getframe(self._parent_depth)
-        if frame.f_globals.get('__name__') == 'typing':
+        if frame.f_globals.get("__name__") == "typing":
             # Because `TypeAdapter` is generic, explicitly parametrizing the class results
             # in a `typing._GenericAlias` instance, which proxies instantiation calls to the
             # "real" `TypeAdapter` class and thus adding an extra frame to the call. To avoid
@@ -244,7 +258,10 @@ class TypeAdapter(Generic[T]):
         return frame
 
     def _init_core_attrs(
-        self, ns_resolver: _namespace_utils.NsResolver, force: bool, raise_errors: bool = False
+        self,
+        ns_resolver: _namespace_utils.NsResolver,
+        force: bool,
+        raise_errors: bool = False,
     ) -> bool:
         """Initialize the core schema, validator, and serializer for the type.
 
@@ -267,9 +284,11 @@ class TypeAdapter(Generic[T]):
             return False
 
         try:
-            self.core_schema = _getattr_no_parents(self._type, '__pydantic_core_schema__')
-            self.validator = _getattr_no_parents(self._type, '__pydantic_validator__')
-            self.serializer = _getattr_no_parents(self._type, '__pydantic_serializer__')
+            self.core_schema = _getattr_no_parents(
+                self._type, "__pydantic_core_schema__"
+            )
+            self.validator = _getattr_no_parents(self._type, "__pydantic_validator__")
+            self.serializer = _getattr_no_parents(self._type, "__pydantic_serializer__")
 
             # TODO: we don't go through the rebuild logic here directly because we don't want
             # to repeat all of the namespace fetching logic that we've already done
@@ -283,7 +302,9 @@ class TypeAdapter(Generic[T]):
         except AttributeError:
             config_wrapper = _config.ConfigWrapper(self._config)
 
-            schema_generator = _generate_schema.GenerateSchema(config_wrapper, ns_resolver=ns_resolver)
+            schema_generator = _generate_schema.GenerateSchema(
+                config_wrapper, ns_resolver=ns_resolver
+            )
 
             try:
                 core_schema = schema_generator.generate_schema(self._type)
@@ -306,7 +327,7 @@ class TypeAdapter(Generic[T]):
                 schema_type=self._type,
                 schema_type_module=self._module_name,
                 schema_type_name=str(self._type),
-                schema_kind='TypeAdapter',
+                schema_kind="TypeAdapter",
                 config=core_config,
                 plugin_settings=config_wrapper.plugin_settings,
             )
@@ -319,18 +340,20 @@ class TypeAdapter(Generic[T]):
     def _defer_build(self) -> bool:
         config = self._config if self._config is not None else self._model_config
         if config:
-            return config.get('defer_build') is True
+            return config.get("defer_build") is True
         return False
 
     @property
     def _model_config(self) -> ConfigDict | None:
-        type_: Any = _typing_extra.annotated_type(self._type) or self._type  # Eg FastAPI heavily uses Annotated
+        type_: Any = (
+            _typing_extra.annotated_type(self._type) or self._type
+        )  # Eg FastAPI heavily uses Annotated
         if _utils.lenient_issubclass(type_, BaseModel):
             return type_.model_config
-        return getattr(type_, '__pydantic_config__', None)
+        return getattr(type_, "__pydantic_config__", None)
 
     def __repr__(self) -> str:
-        return f'TypeAdapter({_repr.display_as_type(self._type)})'
+        return f"TypeAdapter({_repr.display_as_type(self._type)})"
 
     def rebuild(
         self,
@@ -365,7 +388,12 @@ class TypeAdapter(Generic[T]):
         if _types_namespace is not None:
             rebuild_ns = _types_namespace
         elif _parent_namespace_depth > 0:
-            rebuild_ns = _typing_extra.parent_frame_namespace(parent_depth=_parent_namespace_depth, force=True) or {}
+            rebuild_ns = (
+                _typing_extra.parent_frame_namespace(
+                    parent_depth=_parent_namespace_depth, force=True
+                )
+                or {}
+            )
         else:
             rebuild_ns = {}
 
@@ -373,10 +401,14 @@ class TypeAdapter(Generic[T]):
         # and so we skip the globalns = get_module_ns_of(typ) call that would normally happen
         globalns = sys._getframe(max(_parent_namespace_depth - 1, 1)).f_globals
         ns_resolver = _namespace_utils.NsResolver(
-            namespaces_tuple=_namespace_utils.NamespacesTuple(locals=rebuild_ns, globals=globalns),
+            namespaces_tuple=_namespace_utils.NamespacesTuple(
+                locals=rebuild_ns, globals=globalns
+            ),
             parent_namespace=rebuild_ns,
         )
-        return self._init_core_attrs(ns_resolver=ns_resolver, force=True, raise_errors=raise_errors)
+        return self._init_core_attrs(
+            ns_resolver=ns_resolver, force=True, raise_errors=raise_errors
+        )
 
     def validate_python(
         self,
@@ -386,7 +418,9 @@ class TypeAdapter(Generic[T]):
         strict: bool | None = None,
         from_attributes: bool | None = None,
         context: dict[str, Any] | None = None,
-        experimental_allow_partial: bool | Literal['off', 'on', 'trailing-strings'] = False,
+        experimental_allow_partial: (
+            bool | Literal["off", "on", "trailing-strings"]
+        ) = False,
         by_alias: bool | None = None,
         by_name: bool | None = None,
     ) -> T:
@@ -414,8 +448,8 @@ class TypeAdapter(Generic[T]):
         """
         if by_alias is False and by_name is not True:
             raise PydanticUserError(
-                'At least one of `by_alias` or `by_name` must be set to True.',
-                code='validate-by-alias-and-name-false',
+                "At least one of `by_alias` or `by_name` must be set to True.",
+                code="validate-by-alias-and-name-false",
             )
 
         return self.validator.validate_python(
@@ -435,7 +469,9 @@ class TypeAdapter(Generic[T]):
         *,
         strict: bool | None = None,
         context: dict[str, Any] | None = None,
-        experimental_allow_partial: bool | Literal['off', 'on', 'trailing-strings'] = False,
+        experimental_allow_partial: (
+            bool | Literal["off", "on", "trailing-strings"]
+        ) = False,
         by_alias: bool | None = None,
         by_name: bool | None = None,
     ) -> T:
@@ -461,8 +497,8 @@ class TypeAdapter(Generic[T]):
         """
         if by_alias is False and by_name is not True:
             raise PydanticUserError(
-                'At least one of `by_alias` or `by_name` must be set to True.',
-                code='validate-by-alias-and-name-false',
+                "At least one of `by_alias` or `by_name` must be set to True.",
+                code="validate-by-alias-and-name-false",
             )
 
         return self.validator.validate_json(
@@ -481,7 +517,9 @@ class TypeAdapter(Generic[T]):
         *,
         strict: bool | None = None,
         context: dict[str, Any] | None = None,
-        experimental_allow_partial: bool | Literal['off', 'on', 'trailing-strings'] = False,
+        experimental_allow_partial: (
+            bool | Literal["off", "on", "trailing-strings"]
+        ) = False,
         by_alias: bool | None = None,
         by_name: bool | None = None,
     ) -> T:
@@ -504,8 +542,8 @@ class TypeAdapter(Generic[T]):
         """
         if by_alias is False and by_name is not True:
             raise PydanticUserError(
-                'At least one of `by_alias` or `by_name` must be set to True.',
-                code='validate-by-alias-and-name-false',
+                "At least one of `by_alias` or `by_name` must be set to True.",
+                code="validate-by-alias-and-name-false",
             )
 
         return self.validator.validate_strings(
@@ -517,7 +555,9 @@ class TypeAdapter(Generic[T]):
             by_name=by_name,
         )
 
-    def get_default_value(self, *, strict: bool | None = None, context: dict[str, Any] | None = None) -> Some[T] | None:
+    def get_default_value(
+        self, *, strict: bool | None = None, context: dict[str, Any] | None = None
+    ) -> Some[T] | None:
         """Get the default value for the wrapped type.
 
         Args:
@@ -534,7 +574,7 @@ class TypeAdapter(Generic[T]):
         instance: T,
         /,
         *,
-        mode: Literal['json', 'python'] = 'python',
+        mode: Literal["json", "python"] = "python",
         include: IncEx | None = None,
         exclude: IncEx | None = None,
         by_alias: bool | None = None,
@@ -542,7 +582,7 @@ class TypeAdapter(Generic[T]):
         exclude_defaults: bool = False,
         exclude_none: bool = False,
         round_trip: bool = False,
-        warnings: bool | Literal['none', 'warn', 'error'] = True,
+        warnings: bool | Literal["none", "warn", "error"] = True,
         fallback: Callable[[Any], Any] | None = None,
         serialize_as_any: bool = False,
         context: dict[str, Any] | None = None,
@@ -598,7 +638,7 @@ class TypeAdapter(Generic[T]):
         exclude_defaults: bool = False,
         exclude_none: bool = False,
         round_trip: bool = False,
-        warnings: bool | Literal['none', 'warn', 'error'] = True,
+        warnings: bool | Literal["none", "warn", "error"] = True,
         fallback: Callable[[Any], Any] | None = None,
         serialize_as_any: bool = False,
         context: dict[str, Any] | None = None,
@@ -650,7 +690,7 @@ class TypeAdapter(Generic[T]):
         by_alias: bool = True,
         ref_template: str = DEFAULT_REF_TEMPLATE,
         schema_generator: type[GenerateJsonSchema] = GenerateJsonSchema,
-        mode: JsonSchemaMode = 'validation',
+        mode: JsonSchemaMode = "validation",
     ) -> dict[str, Any]:
         """Generate a JSON schema for the adapted type.
 
@@ -663,10 +703,14 @@ class TypeAdapter(Generic[T]):
         Returns:
             The JSON schema for the model as a dictionary.
         """
-        schema_generator_instance = schema_generator(by_alias=by_alias, ref_template=ref_template)
+        schema_generator_instance = schema_generator(
+            by_alias=by_alias, ref_template=ref_template
+        )
         if isinstance(self.core_schema, _mock_val_ser.MockCoreSchema):
             self.core_schema.rebuild()
-            assert not isinstance(self.core_schema, _mock_val_ser.MockCoreSchema), 'this is a bug! please report it'
+            assert not isinstance(
+                self.core_schema, _mock_val_ser.MockCoreSchema
+            ), "this is a bug! please report it"
         return schema_generator_instance.generate(self.core_schema, mode=mode)
 
     @staticmethod
@@ -679,7 +723,9 @@ class TypeAdapter(Generic[T]):
         description: str | None = None,
         ref_template: str = DEFAULT_REF_TEMPLATE,
         schema_generator: type[GenerateJsonSchema] = GenerateJsonSchema,
-    ) -> tuple[dict[tuple[JsonSchemaKeyT, JsonSchemaMode], JsonSchemaValue], JsonSchemaValue]:
+    ) -> tuple[
+        dict[tuple[JsonSchemaKeyT, JsonSchemaMode], JsonSchemaValue], JsonSchemaValue
+    ]:
         """Generate a JSON schema including definitions from multiple type adapters.
 
         Args:
@@ -702,26 +748,30 @@ class TypeAdapter(Generic[T]):
                     element, along with the optional title and description keys.
 
         """
-        schema_generator_instance = schema_generator(by_alias=by_alias, ref_template=ref_template)
+        schema_generator_instance = schema_generator(
+            by_alias=by_alias, ref_template=ref_template
+        )
 
         inputs_ = []
         for key, mode, adapter in inputs:
             # This is the same pattern we follow for model json schemas - we attempt a core schema rebuild if we detect a mock
             if isinstance(adapter.core_schema, _mock_val_ser.MockCoreSchema):
                 adapter.core_schema.rebuild()
-                assert not isinstance(adapter.core_schema, _mock_val_ser.MockCoreSchema), (
-                    'this is a bug! please report it'
-                )
+                assert not isinstance(
+                    adapter.core_schema, _mock_val_ser.MockCoreSchema
+                ), "this is a bug! please report it"
             inputs_.append((key, mode, adapter.core_schema))
 
-        json_schemas_map, definitions = schema_generator_instance.generate_definitions(inputs_)
+        json_schemas_map, definitions = schema_generator_instance.generate_definitions(
+            inputs_
+        )
 
         json_schema: dict[str, Any] = {}
         if definitions:
-            json_schema['$defs'] = definitions
+            json_schema["$defs"] = definitions
         if title:
-            json_schema['title'] = title
+            json_schema["title"] = title
         if description:
-            json_schema['description'] = description
+            json_schema["description"] = description
 
         return json_schemas_map, json_schema

@@ -1,15 +1,11 @@
-from sqlalchemy.ext.asyncio import AsyncEngine, create_async_engine
+import os
 from logging.config import fileConfig
 
-from sqlalchemy import engine_from_config
-from sqlalchemy import pool
+from dotenv import load_dotenv
+from sqlalchemy.ext.asyncio import create_async_engine
 
 from alembic import context
-
-from db.postgre_db import Base, get_db
-from model.tables import Users, RefreshToken
-import os
-from dotenv import load_dotenv
+from db.postgre_db import Base
 
 load_dotenv()
 
@@ -38,6 +34,7 @@ if not db_url:
     raise ValueError("DATABASE_URL environment variable not set")
 
 config.set_main_option("sqlalchemy.url", db_url)
+
 
 def run_migrations_offline() -> None:
     """Run migrations in 'offline' mode.
@@ -70,12 +67,10 @@ async def run_migrations_online() -> None:
     and associate a connection with the context.
 
     """
-    connectable = create_async_engine(
-        db_url,
-        future=True
-    )
+    connectable = create_async_engine(db_url, future=True)
 
     async with connectable.connect() as conn:
+
         def do_run_migrations(sync_connection):
             context.configure(
                 connection=sync_connection,
@@ -107,4 +102,5 @@ if context.is_offline_mode():
     run_migrations_offline()
 else:
     import asyncio
+
     asyncio.run(run_migrations_online())

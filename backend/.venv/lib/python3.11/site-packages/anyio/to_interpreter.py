@@ -36,7 +36,8 @@ _default_interpreter_limiter = RunVar[CapacityLimiter]("_default_interpreter_lim
 
 class Worker:
     _run_func = compile(
-        dedent("""
+        dedent(
+            """
         import _interpqueues as queues
         import _interpreters as interpreters
         from pickle import loads, dumps, HIGHEST_PROTOCOL
@@ -56,7 +57,8 @@ class Worker:
         except interpreters.NotShareableError:
             retval = dumps(retval, HIGHEST_PROTOCOL)
             queues.put(queue_id, (retval, is_exception), FMT_PICKLED, UNBOUND)
-        """),
+        """
+        ),
         "<string>",
         "exec",
     )

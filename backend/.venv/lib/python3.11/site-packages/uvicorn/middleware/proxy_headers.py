@@ -2,7 +2,12 @@ from __future__ import annotations
 
 import ipaddress
 
-from uvicorn._types import ASGI3Application, ASGIReceiveCallable, ASGISendCallable, Scope
+from uvicorn._types import (
+    ASGI3Application,
+    ASGIReceiveCallable,
+    ASGISendCallable,
+    Scope,
+)
 
 
 class ProxyHeadersMiddleware:
@@ -20,11 +25,15 @@ class ProxyHeadersMiddleware:
     - <https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/X-Forwarded-For>
     """
 
-    def __init__(self, app: ASGI3Application, trusted_hosts: list[str] | str = "127.0.0.1") -> None:
+    def __init__(
+        self, app: ASGI3Application, trusted_hosts: list[str] | str = "127.0.0.1"
+    ) -> None:
         self.app = app
         self.trusted_hosts = _TrustedHosts(trusted_hosts)
 
-    async def __call__(self, scope: Scope, receive: ASGIReceiveCallable, send: ASGISendCallable) -> None:
+    async def __call__(
+        self, scope: Scope, receive: ASGIReceiveCallable, send: ASGISendCallable
+    ) -> None:
         if scope["type"] == "lifespan":
             return await self.app(scope, receive, send)
 
@@ -35,7 +44,9 @@ class ProxyHeadersMiddleware:
             headers = dict(scope["headers"])
 
             if b"x-forwarded-proto" in headers:
-                x_forwarded_proto = headers[b"x-forwarded-proto"].decode("latin1").strip()
+                x_forwarded_proto = (
+                    headers[b"x-forwarded-proto"].decode("latin1").strip()
+                )
 
                 if x_forwarded_proto in {"http", "https", "ws", "wss"}:
                     if scope["type"] == "websocket":
@@ -72,7 +83,9 @@ class _TrustedHosts:
 
         self.trusted_literals: set[str] = set()
         self.trusted_hosts: set[ipaddress.IPv4Address | ipaddress.IPv6Address] = set()
-        self.trusted_networks: set[ipaddress.IPv4Network | ipaddress.IPv6Network] = set()
+        self.trusted_networks: set[ipaddress.IPv4Network | ipaddress.IPv6Network] = (
+            set()
+        )
 
         # Notes:
         # - We separate hosts from literals as there are many ways to write

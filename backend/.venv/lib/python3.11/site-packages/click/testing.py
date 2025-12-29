@@ -175,8 +175,9 @@ class Result:
         return_value: t.Any,
         exit_code: int,
         exception: BaseException | None,
-        exc_info: tuple[type[BaseException], BaseException, TracebackType]
-        | None = None,
+        exc_info: (
+            tuple[type[BaseException], BaseException, TracebackType] | None
+        ) = None,
     ):
         self.runner = runner
         self.stdout_bytes = stdout_bytes

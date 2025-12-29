@@ -1,11 +1,13 @@
-import jwt
 import os
-from dotenv import load_dotenv
 from datetime import datetime, timedelta
+
+import jwt
+from dotenv import load_dotenv
 
 load_dotenv()
 SECRET_KEY = os.getenv("JWT_SECRET")
 ALGORITHM = "HS256"
+
 
 def create_access_token(data: dict, expires_delta: timedelta = timedelta(minutes=30)):
     to_encode = data.copy()
@@ -13,6 +15,7 @@ def create_access_token(data: dict, expires_delta: timedelta = timedelta(minutes
     to_encode.update({"exp": expire})
     encoded = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
     return encoded
+
 
 def refresh_token(data: dict, expires_delta: timedelta = timedelta(hours=1)):
     to_encode = data.copy()
