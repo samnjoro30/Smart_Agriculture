@@ -62,7 +62,7 @@ export default function Header(){
           </button>
 
           {/* Admin Profile */}
-          <div className="flex items-center space-x-3">
+          <div className="flex items-center space-x-4">
             <div className="text-right hidden sm:block">
               <p className="text-sm font-semibold text-gray-800">
                 {admin?.name || "Loading..."}
