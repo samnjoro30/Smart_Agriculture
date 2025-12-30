@@ -12,7 +12,7 @@ const nextConfig: NextConfig = {
   },
   reactStrictMode: true,
   eslint: { ignoreDuringBuilds: true },
-  turbopack: false,
+  //turbopack: false,
   // swcMinify: true,
 };
 
