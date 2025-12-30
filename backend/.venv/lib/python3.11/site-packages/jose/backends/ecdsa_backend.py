@@ -75,7 +75,9 @@ class ECDSAECKey(Key):
 
     def _process_jwk(self, jwk_dict):
         if not jwk_dict.get("kty") == "EC":
-            raise JWKError("Incorrect key type. Expected: 'EC', Received: %s" % jwk_dict.get("kty"))
+            raise JWKError(
+                "Incorrect key type. Expected: 'EC', Received: %s" % jwk_dict.get("kty")
+            )
 
         if not all(k in jwk_dict for k in ["x", "y", "crv"]):
             raise JWKError("Mandatory parameters are missing")
@@ -97,13 +99,20 @@ class ECDSAECKey(Key):
 
     def sign(self, msg):
         return self.prepared_key.sign(
-            msg, hashfunc=self.hash_alg, sigencode=ecdsa.util.sigencode_string, allow_truncate=False
+            msg,
+            hashfunc=self.hash_alg,
+            sigencode=ecdsa.util.sigencode_string,
+            allow_truncate=False,
         )
 
     def verify(self, msg, sig):
         try:
             return self.prepared_key.verify(
-                sig, msg, hashfunc=self.hash_alg, sigdecode=ecdsa.util.sigdecode_string, allow_truncate=False
+                sig,
+                msg,
+                hashfunc=self.hash_alg,
+                sigdecode=ecdsa.util.sigdecode_string,
+                allow_truncate=False,
             )
         except Exception:
             return False
@@ -140,11 +149,17 @@ class ECDSAECKey(Key):
             "alg": self._algorithm,
             "kty": "EC",
             "crv": crv,
-            "x": long_to_base64(public_key.pubkey.point.x(), size=key_size).decode("ASCII"),
-            "y": long_to_base64(public_key.pubkey.point.y(), size=key_size).decode("ASCII"),
+            "x": long_to_base64(public_key.pubkey.point.x(), size=key_size).decode(
+                "ASCII"
+            ),
+            "y": long_to_base64(public_key.pubkey.point.y(), size=key_size).decode(
+                "ASCII"
+            ),
         }
 
         if not self.is_public():
-            data["d"] = long_to_base64(self.prepared_key.privkey.secret_multiplier, size=key_size).decode("ASCII")
+            data["d"] = long_to_base64(
+                self.prepared_key.privkey.secret_multiplier, size=key_size
+            ).decode("ASCII")
 
         return data

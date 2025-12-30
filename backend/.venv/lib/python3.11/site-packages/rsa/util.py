@@ -73,7 +73,9 @@ def private_to_public() -> None:
         with open(cli.infilename, "rb") as infile:
             in_data = infile.read()
     else:
-        print("Reading private key from stdin in %s format" % cli.inform, file=sys.stderr)
+        print(
+            "Reading private key from stdin in %s format" % cli.inform, file=sys.stderr
+        )
         in_data = sys.stdin.read().encode("ascii")
 
     assert type(in_data) == bytes, type(in_data)
@@ -93,5 +95,7 @@ def private_to_public() -> None:
         with open(cli.outfilename, "wb") as outfile:
             outfile.write(out_data)
     else:
-        print("Writing public key to stdout in %s format" % cli.outform, file=sys.stderr)
+        print(
+            "Writing public key to stdout in %s format" % cli.outform, file=sys.stderr
+        )
         sys.stdout.write(out_data.decode("ascii"))

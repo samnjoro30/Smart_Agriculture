@@ -35,7 +35,7 @@ export default function Notification() {
     useEffect(() => {
         const fetchNotifications = async () => {
             try {
-                const res = await axiosInstance.get("/users/notification");
+                const res = await axiosInstance.get("/farm/notification");
                 const newData: NotificationType[] = res.data.notifications || [];
                 
                 

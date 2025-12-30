@@ -78,7 +78,10 @@ def set_dataclass_fields(
     """
     typevars_map = get_standard_typevars_map(cls)
     fields = collect_dataclass_fields(
-        cls, ns_resolver=ns_resolver, typevars_map=typevars_map, config_wrapper=config_wrapper
+        cls,
+        ns_resolver=ns_resolver,
+        typevars_map=typevars_map,
+        config_wrapper=config_wrapper,
     )
 
     cls.__pydantic_fields__ = fields  # type: ignore
@@ -117,12 +120,16 @@ def complete_dataclass(
 
     # dataclass.__init__ must be defined here so its `__qualname__` can be changed since functions can't be copied,
     # and so that the mock validator is used if building was deferred:
-    def __init__(__dataclass_self__: PydanticDataclass, *args: Any, **kwargs: Any) -> None:
+    def __init__(
+        __dataclass_self__: PydanticDataclass, *args: Any, **kwargs: Any
+    ) -> None:
         __tracebackhide__ = True
         s = __dataclass_self__
-        s.__pydantic_validator__.validate_python(ArgsKwargs(args, kwargs), self_instance=s)
+        s.__pydantic_validator__.validate_python(
+            ArgsKwargs(args, kwargs), self_instance=s
+        )
 
-    __init__.__qualname__ = f'{cls.__qualname__}.__init__'
+    __init__.__qualname__ = f"{cls.__qualname__}.__init__"
 
     cls.__init__ = __init__  # type: ignore
     cls.__pydantic_config__ = config_wrapper.config_dict  # type: ignore
@@ -133,9 +140,10 @@ def complete_dataclass(
         set_dataclass_mocks(cls)
         return False
 
-    if hasattr(cls, '__post_init_post_parse__'):
+    if hasattr(cls, "__post_init_post_parse__"):
         warnings.warn(
-            'Support for `__post_init_post_parse__` has been dropped, the method will not be called', DeprecationWarning
+            "Support for `__post_init_post_parse__` has been dropped, the method will not be called",
+            DeprecationWarning,
         )
 
     typevars_map = get_standard_typevars_map(cls)
@@ -149,7 +157,7 @@ def complete_dataclass(
     # (because instances can define `__call__`, and `inspect.signature` shouldn't
     # use the `__signature__` attribute and instead generate from `__call__`).
     cls.__signature__ = LazyClassAttribute(
-        '__signature__',
+        "__signature__",
         partial(
             generate_pydantic_signature,
             # It's important that we reference the `original_init` here,
@@ -167,7 +175,7 @@ def complete_dataclass(
     except PydanticUndefinedAnnotation as e:
         if raise_errors:
             raise
-        set_dataclass_mocks(cls, f'`{e.name}`')
+        set_dataclass_mocks(cls, f"`{e.name}`")
         return False
 
     core_config = config_wrapper.core_config(title=cls.__name__)
@@ -180,12 +188,18 @@ def complete_dataclass(
 
     # We are about to set all the remaining required properties expected for this cast;
     # __pydantic_decorators__ and __pydantic_fields__ should already be set
-    cls = typing.cast('type[PydanticDataclass]', cls)
+    cls = typing.cast("type[PydanticDataclass]", cls)
     # debug(schema)
 
     cls.__pydantic_core_schema__ = schema
     cls.__pydantic_validator__ = validator = create_schema_validator(
-        schema, cls, cls.__module__, cls.__qualname__, 'dataclass', core_config, config_wrapper.plugin_settings
+        schema,
+        cls,
+        cls.__module__,
+        cls.__qualname__,
+        "dataclass",
+        core_config,
+        config_wrapper.plugin_settings,
     )
     cls.__pydantic_serializer__ = SchemaSerializer(schema, core_config)
 
@@ -233,6 +247,8 @@ def is_builtin_dataclass(_cls: type[Any]) -> TypeGuard[type[StandardDataclass]]:
     """
     return (
         dataclasses.is_dataclass(_cls)
-        and not hasattr(_cls, '__pydantic_validator__')
-        and set(_cls.__dataclass_fields__).issuperset(set(getattr(_cls, '__annotations__', {})))
+        and not hasattr(_cls, "__pydantic_validator__")
+        and set(_cls.__dataclass_fields__).issuperset(
+            set(getattr(_cls, "__annotations__", {}))
+        )
     )

@@ -35,7 +35,9 @@ def _markers(pem_marker: FlexiText) -> typing.Tuple[bytes, bytes]:
     )
 
 
-def _pem_lines(contents: bytes, pem_start: bytes, pem_end: bytes) -> typing.Iterator[bytes]:
+def _pem_lines(
+    contents: bytes, pem_start: bytes, pem_end: bytes
+) -> typing.Iterator[bytes]:
     """Generator over PEM lines between pem_start and pem_end."""
 
     in_pem_part = False

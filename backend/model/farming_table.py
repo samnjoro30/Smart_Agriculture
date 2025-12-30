@@ -1,5 +1,6 @@
+from sqlalchemy import Column, DateTime, Integer, String
+
 from db.postgre_db import Base
-from sqlalchemy import Column, Integer, String, Boolean, DateTime
 
 
 class FarmingInput(Base):
@@ -12,6 +13,7 @@ class FarmingInput(Base):
     lastMate = Column(DateTime, nullable=True)
     calf = Column(Integer)
 
+
 class GoatFarming(Base):
     __tablename__ = "Goats"
 
@@ -22,7 +24,8 @@ class GoatFarming(Base):
     lastMate = Column(DateTime, nullable=True)
     calf = Column(Integer)
 
+
 class DataForAnalytic(Base):
     __tablename__ = "analyticFarmData"
 
-    cowlastBirth = Column(DateTime, foreign_key=true)
+    cowlastBirth = Column(DateTime, foreign_key=True)

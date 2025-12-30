@@ -1513,9 +1513,9 @@ class Group(Command):
     def __init__(
         self,
         name: str | None = None,
-        commands: cabc.MutableMapping[str, Command]
-        | cabc.Sequence[Command]
-        | None = None,
+        commands: (
+            cabc.MutableMapping[str, Command] | cabc.Sequence[Command] | None
+        ) = None,
         invoke_without_command: bool = False,
         no_args_is_help: bool | None = None,
         subcommand_metavar: str | None = None,
@@ -1616,9 +1616,9 @@ class Group(Command):
         func: t.Callable[..., t.Any] | None = None
 
         if args and callable(args[0]):
-            assert len(args) == 1 and not kwargs, (
-                "Use 'command(**kwargs)(callable)' to provide arguments."
-            )
+            assert (
+                len(args) == 1 and not kwargs
+            ), "Use 'command(**kwargs)(callable)' to provide arguments."
             (func,) = args
             args = ()
 
@@ -1665,9 +1665,9 @@ class Group(Command):
         func: t.Callable[..., t.Any] | None = None
 
         if args and callable(args[0]):
-            assert len(args) == 1 and not kwargs, (
-                "Use 'group(**kwargs)(callable)' to provide arguments."
-            )
+            assert (
+                len(args) == 1 and not kwargs
+            ), "Use 'group(**kwargs)(callable)' to provide arguments."
             (func,) = args
             args = ()
 
@@ -2086,10 +2086,10 @@ class Parameter:
         expose_value: bool = True,
         is_eager: bool = False,
         envvar: str | cabc.Sequence[str] | None = None,
-        shell_complete: t.Callable[
-            [Context, Parameter, str], list[CompletionItem] | list[str]
-        ]
-        | None = None,
+        shell_complete: (
+            t.Callable[[Context, Parameter, str], list[CompletionItem] | list[str]]
+            | None
+        ) = None,
         deprecated: bool | str = False,
     ) -> None:
         self.name: str | None

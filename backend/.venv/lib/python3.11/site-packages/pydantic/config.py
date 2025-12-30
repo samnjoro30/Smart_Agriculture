@@ -17,10 +17,10 @@ if TYPE_CHECKING:
     from ._internal._generate_schema import GenerateSchema as _GenerateSchema
     from .fields import ComputedFieldInfo, FieldInfo
 
-__all__ = ('ConfigDict', 'with_config')
+__all__ = ("ConfigDict", "with_config")
 
 
-JsonValue: TypeAlias = Union[int, float, str, bool, None, list['JsonValue'], 'JsonDict']
+JsonValue: TypeAlias = Union[int, float, str, bool, None, list["JsonValue"], "JsonDict"]
 JsonDict: TypeAlias = dict[str, JsonValue]
 
 JsonEncoder = Callable[[Any], Any]
@@ -30,7 +30,7 @@ JsonSchemaExtraCallable: TypeAlias = Union[
     Callable[[JsonDict, type[Any]], None],
 ]
 
-ExtraValues = Literal['allow', 'ignore', 'forbid']
+ExtraValues = Literal["allow", "ignore", "forbid"]
 
 
 class ConfigDict(TypedDict, total=False):
@@ -468,7 +468,7 @@ class ConfigDict(TypedDict, total=False):
     strict and lax modes.
     """
     # whether instances of models and dataclasses (including subclass instances) should re-validate, default 'never'
-    revalidate_instances: Literal['always', 'never', 'subclass-instances']
+    revalidate_instances: Literal["always", "never", "subclass-instances"]
     """
     When and how to revalidate models and dataclasses during validation. Accepts the string
     values of `'never'`, `'always'` and `'subclass-instances'`. Defaults to `'never'`.
@@ -589,7 +589,7 @@ class ConfigDict(TypedDict, total=False):
     3. Using `'never'` we would have gotten `user=SubUser(hobbies=['scuba diving'], sins=['lying'])`.
     """
 
-    ser_json_timedelta: Literal['iso8601', 'float']
+    ser_json_timedelta: Literal["iso8601", "float"]
     """
     The format of JSON serialized timedeltas. Accepts the string values of `'iso8601'` and
     `'float'`. Defaults to `'iso8601'`.
@@ -598,7 +598,7 @@ class ConfigDict(TypedDict, total=False):
     - `'float'` will serialize timedeltas to the total number of seconds.
     """
 
-    ser_json_bytes: Literal['utf8', 'base64', 'hex']
+    ser_json_bytes: Literal["utf8", "base64", "hex"]
     """
     The encoding of JSON serialized bytes. Defaults to `'utf8'`.
     Set equal to `val_json_bytes` to get back an equal value after serialization round trip.
@@ -608,7 +608,7 @@ class ConfigDict(TypedDict, total=False):
     - `'hex'` will serialize bytes to hexadecimal strings.
     """
 
-    val_json_bytes: Literal['utf8', 'base64', 'hex']
+    val_json_bytes: Literal["utf8", "base64", "hex"]
     """
     The encoding of JSON serialized bytes to decode. Defaults to `'utf8'`.
     Set equal to `ser_json_bytes` to get back an equal value after serialization round trip.
@@ -618,7 +618,7 @@ class ConfigDict(TypedDict, total=False):
     - `'hex'` will deserialize hexadecimal strings to bytes.
     """
 
-    ser_json_inf_nan: Literal['null', 'constants', 'strings']
+    ser_json_inf_nan: Literal["null", "constants", "strings"]
     """
     The encoding of JSON serialized infinity and NaN float values. Defaults to `'null'`.
 
@@ -835,7 +835,7 @@ class ConfigDict(TypedDict, total=False):
     ```
     """
 
-    json_schema_mode_override: Literal['validation', 'serialization', None]
+    json_schema_mode_override: Literal["validation", "serialization", None]
     """
     If not `None`, the specified mode will be used to generate the JSON schema regardless of what `mode` was passed to
     the function call. Defaults to `None`.
@@ -928,7 +928,7 @@ class ConfigDict(TypedDict, total=False):
     ```
     """
 
-    regex_engine: Literal['rust-regex', 'python-re']
+    regex_engine: Literal["rust-regex", "python-re"]
     """
     The regex engine to be used for pattern validation.
     Defaults to `'rust-regex'`.
@@ -1016,7 +1016,7 @@ class ConfigDict(TypedDict, total=False):
         - multiple classes have the same name in the same source file.
     '''
 
-    cache_strings: bool | Literal['all', 'keys', 'none']
+    cache_strings: bool | Literal["all", "keys", "none"]
     """
     Whether to cache strings to avoid constructing new Python objects. Defaults to True.
 
@@ -1138,11 +1138,13 @@ class ConfigDict(TypedDict, total=False):
     """
 
 
-_TypeT = TypeVar('_TypeT', bound=type)
+_TypeT = TypeVar("_TypeT", bound=type)
 
 
 @overload
-@deprecated('Passing `config` as a keyword argument is deprecated. Pass `config` as a positional argument instead.')
+@deprecated(
+    "Passing `config` as a keyword argument is deprecated. Pass `config` as a positional argument instead."
+)
 def with_config(*, config: ConfigDict) -> Callable[[_TypeT], _TypeT]: ...
 
 
@@ -1154,7 +1156,9 @@ def with_config(config: ConfigDict, /) -> Callable[[_TypeT], _TypeT]: ...
 def with_config(**config: Unpack[ConfigDict]) -> Callable[[_TypeT], _TypeT]: ...
 
 
-def with_config(config: ConfigDict | None = None, /, **kwargs: Any) -> Callable[[_TypeT], _TypeT]:
+def with_config(
+    config: ConfigDict | None = None, /, **kwargs: Any
+) -> Callable[[_TypeT], _TypeT]:
     """!!! abstract "Usage Documentation"
         [Configuration with other types](../concepts/config.md#configuration-on-other-supported-types)
 
@@ -1181,11 +1185,11 @@ def with_config(config: ConfigDict | None = None, /, **kwargs: Any) -> Callable[
         ```
     """
     if config is not None and kwargs:
-        raise ValueError('Cannot specify both `config` and keyword arguments')
+        raise ValueError("Cannot specify both `config` and keyword arguments")
 
-    if len(kwargs) == 1 and (kwargs_conf := kwargs.get('config')) is not None:
+    if len(kwargs) == 1 and (kwargs_conf := kwargs.get("config")) is not None:
         warnings.warn(
-            'Passing `config` as a keyword argument is deprecated. Pass `config` as a positional argument instead',
+            "Passing `config` as a keyword argument is deprecated. Pass `config` as a positional argument instead",
             category=PydanticDeprecatedSince211,
             stacklevel=2,
         )
@@ -1201,8 +1205,8 @@ def with_config(config: ConfigDict | None = None, /, **kwargs: Any) -> Callable[
 
         if is_model_class(class_):
             raise PydanticUserError(
-                f'Cannot use `with_config` on {class_.__name__} as it is a Pydantic model',
-                code='with-config-on-model',
+                f"Cannot use `with_config` on {class_.__name__} as it is a Pydantic model",
+                code="with-config-on-model",
             )
         class_.__pydantic_config__ = final_config
         return class_

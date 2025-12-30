@@ -33,7 +33,9 @@ class OpenSSLPubKey(univ.Sequence):
         # This little hack (the implicit tag) allows us to get a Bit String as Octet String
         namedtype.NamedType(
             "key",
-            univ.OctetString().subtype(implicitTag=tag.Tag(tagClass=0, tagFormat=0, tagId=3)),
+            univ.OctetString().subtype(
+                implicitTag=tag.Tag(tagClass=0, tagFormat=0, tagId=3)
+            ),
         ),
     )
 

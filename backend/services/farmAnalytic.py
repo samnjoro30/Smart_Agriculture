@@ -1,15 +1,15 @@
-from sqlalchemy import text, select
+from sqlalchemy import text
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy.orm import Session
 
-async def get_farmData(email: str ):
-    query = text("""
+
+async def get_farmData(email: str, db: AsyncSession):
+    query = text(
+        """
         SELECT date, produce, ExpectedMateDate FROM 'analyticFarmData' WHERE email = :email
-    """)
+    """
+    )
 
-    results = await db.execute(query, {
-        "email": email
-    })
+    results = await db.execute(query, {"email": email})
     row = results.fetchone()
 
     if row:

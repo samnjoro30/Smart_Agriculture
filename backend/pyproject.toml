@@ -1,6 +1,6 @@
 
 [project]
-name = "Smart Agri Backend"
+name = "Smart_Farm"
 version = "0.1.0"
 description = "Smart Agriculture backend for handling AI, ML and client request"
 readme = "README.md"
@@ -33,6 +33,10 @@ Repository = "https://github.com/samnjoro30/Smart_Agriculture.git"
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
+
+[tool.black]
+line-length = 88
+target-version = ["py311"]
 
 [build-system]
 requires = ["setuptools>=61.0"]

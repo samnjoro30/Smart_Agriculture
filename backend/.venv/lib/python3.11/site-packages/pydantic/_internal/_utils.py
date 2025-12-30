@@ -17,7 +17,14 @@ from copy import deepcopy
 from functools import cached_property
 from inspect import Parameter
 from itertools import zip_longest
-from types import BuiltinFunctionType, CodeType, FunctionType, GeneratorType, LambdaType, ModuleType
+from types import (
+    BuiltinFunctionType,
+    CodeType,
+    FunctionType,
+    GeneratorType,
+    LambdaType,
+    ModuleType,
+)
 from typing import Any, Callable, Generic, TypeVar, overload
 
 from typing_extensions import TypeAlias, TypeGuard, deprecated
@@ -28,8 +35,8 @@ from . import _repr, _typing_extra
 from ._import_utils import import_cached_base_model
 
 if typing.TYPE_CHECKING:
-    MappingIntStrAny: TypeAlias = 'typing.Mapping[int, Any] | typing.Mapping[str, Any]'
-    AbstractSetIntStr: TypeAlias = 'typing.AbstractSet[int] | typing.AbstractSet[str]'
+    MappingIntStrAny: TypeAlias = "typing.Mapping[int, Any] | typing.Mapping[str, Any]"
+    AbstractSetIntStr: TypeAlias = "typing.AbstractSet[int] | typing.AbstractSet[str]"
     from ..main import BaseModel
 
 
@@ -92,7 +99,9 @@ def sequence_like(v: Any) -> bool:
     return isinstance(v, (list, tuple, set, frozenset, GeneratorType, deque))
 
 
-def lenient_isinstance(o: Any, class_or_tuple: type[Any] | tuple[type[Any], ...] | None) -> bool:  # pragma: no cover
+def lenient_isinstance(
+    o: Any, class_or_tuple: type[Any] | tuple[type[Any], ...] | None
+) -> bool:  # pragma: no cover
     try:
         return isinstance(o, class_or_tuple)  # type: ignore[arg-type]
     except TypeError:
@@ -125,14 +134,20 @@ def is_valid_identifier(identifier: str) -> bool:
     return identifier.isidentifier() and not keyword.iskeyword(identifier)
 
 
-KeyType = TypeVar('KeyType')
+KeyType = TypeVar("KeyType")
 
 
-def deep_update(mapping: dict[KeyType, Any], *updating_mappings: dict[KeyType, Any]) -> dict[KeyType, Any]:
+def deep_update(
+    mapping: dict[KeyType, Any], *updating_mappings: dict[KeyType, Any]
+) -> dict[KeyType, Any]:
     updated_mapping = mapping.copy()
     for updating_mapping in updating_mappings:
         for k, v in updating_mapping.items():
-            if k in updated_mapping and isinstance(updated_mapping[k], dict) and isinstance(v, dict):
+            if (
+                k in updated_mapping
+                and isinstance(updated_mapping[k], dict)
+                and isinstance(v, dict)
+            ):
                 updated_mapping[k] = deep_update(updated_mapping[k], v)
             else:
                 updated_mapping[k] = v
@@ -143,7 +158,7 @@ def update_not_none(mapping: dict[Any, Any], **update: Any) -> None:
     mapping.update({k: v for k, v in update.items() if v is not None})
 
 
-T = TypeVar('T')
+T = TypeVar("T")
 
 
 def unique_list(
@@ -171,7 +186,7 @@ def unique_list(
 class ValueItems(_repr.Representation):
     """Class for more convenient calculation of excluded or included fields on values."""
 
-    __slots__ = ('_items', '_type')
+    __slots__ = ("_items", "_type")
 
     def __init__(self, value: Any, items: AbstractSetIntStr | MappingIntStrAny) -> None:
         items = self._coerce_items(items)
@@ -202,7 +217,9 @@ class ValueItems(_repr.Representation):
         item = self._items.get(e)  # type: ignore
         return item if not self.is_true(item) else None
 
-    def _normalize_indexes(self, items: MappingIntStrAny, v_length: int) -> dict[int | str, Any]:
+    def _normalize_indexes(
+        self, items: MappingIntStrAny, v_length: int
+    ) -> dict[int | str, Any]:
         """:param items: dict or set of indexes which will be normalized
         :param v_length: length of sequence indexes of which will be
 
@@ -214,18 +231,26 @@ class ValueItems(_repr.Representation):
         normalized_items: dict[int | str, Any] = {}
         all_items = None
         for i, v in items.items():
-            if not (isinstance(v, typing.Mapping) or isinstance(v, typing.AbstractSet) or self.is_true(v)):
-                raise TypeError(f'Unexpected type of exclude value for index "{i}" {v.__class__}')
-            if i == '__all__':
+            if not (
+                isinstance(v, typing.Mapping)
+                or isinstance(v, typing.AbstractSet)
+                or self.is_true(v)
+            ):
+                raise TypeError(
+                    f'Unexpected type of exclude value for index "{i}" {v.__class__}'
+                )
+            if i == "__all__":
                 all_items = self._coerce_value(v)
                 continue
             if not isinstance(i, int):
                 raise TypeError(
-                    'Excluding fields from a sequence of sub-models or dicts must be performed index-wise: '
+                    "Excluding fields from a sequence of sub-models or dicts must be performed index-wise: "
                     'expected integer keys or keyword "__all__"'
                 )
             normalized_i = v_length + i if i < 0 else i
-            normalized_items[normalized_i] = self.merge(v, normalized_items.get(normalized_i))
+            normalized_items[normalized_i] = self.merge(
+                v, normalized_items.get(normalized_i)
+            )
 
         if not all_items:
             return normalized_items
@@ -265,7 +290,9 @@ class ValueItems(_repr.Representation):
 
         # intersection or union of keys while preserving ordering:
         if intersect:
-            merge_keys = [k for k in base if k in override] + [k for k in override if k in base]
+            merge_keys = [k for k in base if k in override] + [
+                k for k in override if k in base
+            ]
         else:
             merge_keys = list(base) + [k for k in override if k not in base]
 
@@ -284,8 +311,8 @@ class ValueItems(_repr.Representation):
         elif isinstance(items, typing.AbstractSet):
             items = dict.fromkeys(items, ...)  # type: ignore
         else:
-            class_name = getattr(items, '__class__', '???')
-            raise TypeError(f'Unexpected type of exclude value {class_name}')
+            class_name = getattr(items, "__class__", "???")
+            raise TypeError(f"Unexpected type of exclude value {class_name}")
         return items  # type: ignore
 
     @classmethod
@@ -325,10 +352,12 @@ else:
         def __get__(self, instance: Any, owner: type[Any]) -> None:
             if instance is None:
                 return self.value
-            raise AttributeError(f'{self.name!r} attribute of {owner.__name__!r} is class-only')
+            raise AttributeError(
+                f"{self.name!r} attribute of {owner.__name__!r} is class-only"
+            )
 
 
-Obj = TypeVar('Obj')
+Obj = TypeVar("Obj")
 
 
 def smart_deepcopy(obj: Obj) -> Obj:
@@ -342,7 +371,9 @@ def smart_deepcopy(obj: Obj) -> Obj:
     try:
         if not obj and obj_type in BUILTIN_COLLECTIONS:
             # faster way for empty collections, no need to copy its members
-            return obj if obj_type is tuple else obj.copy()  # tuple doesn't have copy method  # type: ignore
+            return (
+                obj if obj_type is tuple else obj.copy()
+            )  # tuple doesn't have copy method  # type: ignore
     except (TypeError, ValueError, RuntimeError):
         # do we really dare to catch ALL errors? Seems a bit risky
         pass
@@ -377,7 +408,7 @@ class SafeGetItemProxy:
 
     # Define __slots__manually for performances
     # @dataclasses.dataclass() only support slots=True in python>=3.10
-    __slots__ = ('wrapped',)
+    __slots__ = ("wrapped",)
 
     wrapped: Mapping[str, Any]
 
@@ -394,8 +425,8 @@ class SafeGetItemProxy:
             return self.wrapped.__contains__(key)
 
 
-_ModelT = TypeVar('_ModelT', bound='BaseModel')
-_RT = TypeVar('_RT')
+_ModelT = TypeVar("_ModelT", bound="BaseModel")
+_RT = TypeVar("_RT")
 
 
 class deprecated_instance_property(Generic[_ModelT, _RT]):
@@ -414,17 +445,21 @@ class deprecated_instance_property(Generic[_ModelT, _RT]):
     def __get__(self, instance: None, objtype: type[_ModelT]) -> _RT: ...
     @overload
     @deprecated(
-        'Accessing this attribute on the instance is deprecated, and will be removed in Pydantic V3. '
-        'Instead, you should access this attribute from the model class.',
+        "Accessing this attribute on the instance is deprecated, and will be removed in Pydantic V3. "
+        "Instead, you should access this attribute from the model class.",
         category=None,
     )
     def __get__(self, instance: _ModelT, objtype: type[_ModelT]) -> _RT: ...
     def __get__(self, instance: _ModelT | None, objtype: type[_ModelT]) -> _RT:
         if instance is not None:
-            attr_name = self.fget.__name__ if sys.version_info >= (3, 10) else self.fget.__func__.__name__
+            attr_name = (
+                self.fget.__name__
+                if sys.version_info >= (3, 10)
+                else self.fget.__func__.__name__
+            )
             warnings.warn(
-                f'Accessing the {attr_name!r} attribute on the instance is deprecated. '
-                'Instead, you should access this attribute from the model class.',
+                f"Accessing the {attr_name!r} attribute on the instance is deprecated. "
+                "Instead, you should access this attribute from the model class.",
                 category=PydanticDeprecatedSince211,
                 stacklevel=2,
             )

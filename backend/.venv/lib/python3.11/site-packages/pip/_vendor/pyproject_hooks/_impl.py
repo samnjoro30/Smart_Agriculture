@@ -21,8 +21,7 @@ if TYPE_CHECKING:
             cmd: Sequence[str],
             cwd: Optional[str] = None,
             extra_environ: Optional[Mapping[str, str]] = None,
-        ) -> None:
-            ...
+        ) -> None: ...
 
 
 def write_json(obj: Mapping[str, Any], path: str, **kwargs) -> None:

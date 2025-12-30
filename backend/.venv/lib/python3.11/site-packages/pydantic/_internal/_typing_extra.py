@@ -17,7 +17,12 @@ from typing_inspection.introspection import is_union_origin
 
 from pydantic.version import version_short
 
-from ._namespace_utils import GlobalsNamespace, MappingNamespace, NsResolver, get_module_ns_of
+from ._namespace_utils import (
+    GlobalsNamespace,
+    MappingNamespace,
+    NsResolver,
+    get_module_ns_of,
+)
 
 if sys.version_info < (3, 10):
     NoneType = type(None)
@@ -91,7 +96,7 @@ def is_callable(tp: Any, /) -> bool:
     return tp is collections.abc.Callable or get_origin(tp) is collections.abc.Callable
 
 
-_classvar_re = re.compile(r'((\w+\.)?Annotated\[)?(\w+\.)?ClassVar\[')
+_classvar_re = re.compile(r"((\w+\.)?Annotated\[)?(\w+\.)?ClassVar\[")
 
 
 def is_classvar_annotation(tp: Any, /) -> bool:
@@ -115,7 +120,9 @@ def is_classvar_annotation(tp: Any, /) -> bool:
 
     if typing_objects.is_annotated(origin):
         annotated_type = tp.__origin__
-        if typing_objects.is_classvar(annotated_type) or typing_objects.is_classvar(get_origin(annotated_type)):
+        if typing_objects.is_classvar(annotated_type) or typing_objects.is_classvar(
+            get_origin(annotated_type)
+        ):
             return True
 
     str_ann: str | None = None
@@ -153,7 +160,12 @@ def is_finalvar(tp: Any, /) -> bool:
     return origin is _t_final or origin is _te_final
 
 
-_NONE_TYPES: tuple[Any, ...] = (None, NoneType, typing.Literal[None], typing_extensions.Literal[None])
+_NONE_TYPES: tuple[Any, ...] = (
+    None,
+    NoneType,
+    typing.Literal[None],
+    typing_extensions.Literal[None],
+)
 
 
 def is_none_type(tp: Any, /) -> bool:
@@ -180,7 +192,7 @@ def is_namedtuple(tp: Any, /) -> bool:
     """
     from ._utils import lenient_issubclass  # circ. import
 
-    return lenient_issubclass(tp, tuple) and hasattr(tp, '_fields')
+    return lenient_issubclass(tp, tuple) and hasattr(tp, "_fields")
 
 
 # TODO In 2.12, delete this export. It is currently defined only to not break
@@ -189,15 +201,24 @@ origin_is_union = is_union_origin
 
 
 def is_generic_alias(tp: Any, /) -> bool:
-    return isinstance(tp, (types.GenericAlias, typing._GenericAlias))  # pyright: ignore[reportAttributeAccessIssue]
+    return isinstance(
+        tp, (types.GenericAlias, typing._GenericAlias)
+    )  # pyright: ignore[reportAttributeAccessIssue]
 
 
 # TODO: Ideally, we should avoid relying on the private `typing` constructs:
 
 if sys.version_info < (3, 10):
-    WithArgsTypes: tuple[Any, ...] = (typing._GenericAlias, types.GenericAlias)  # pyright: ignore[reportAttributeAccessIssue]
+    WithArgsTypes: tuple[Any, ...] = (
+        typing._GenericAlias,
+        types.GenericAlias,
+    )  # pyright: ignore[reportAttributeAccessIssue]
 else:
-    WithArgsTypes: tuple[Any, ...] = (typing._GenericAlias, types.GenericAlias, types.UnionType)  # pyright: ignore[reportAttributeAccessIssue]
+    WithArgsTypes: tuple[Any, ...] = (
+        typing._GenericAlias,
+        types.GenericAlias,
+        types.UnionType,
+    )  # pyright: ignore[reportAttributeAccessIssue]
 
 
 # Similarly, we shouldn't rely on this `_Final` class, which is even more private than `_GenericAlias`:
@@ -207,7 +228,9 @@ typing_base: Any = typing._Final  # pyright: ignore[reportAttributeAccessIssue]
 ### Annotation evaluations functions:
 
 
-def parent_frame_namespace(*, parent_depth: int = 2, force: bool = False) -> dict[str, Any] | None:
+def parent_frame_namespace(
+    *, parent_depth: int = 2, force: bool = False
+) -> dict[str, Any] | None:
     """Fetch the local namespace of the parent frame where this function is called.
 
     Using this function is mostly useful to resolve forward annotations pointing to members defined in a local namespace,
@@ -248,7 +271,7 @@ def parent_frame_namespace(*, parent_depth: int = 2, force: bool = False) -> dic
     """
     frame = sys._getframe(parent_depth)
 
-    if frame.f_code.co_name.startswith('<generic parameters of'):
+    if frame.f_code.co_name.startswith("<generic parameters of"):
         # As `parent_frame_namespace` is mostly called in `ModelMetaclass.__new__`,
         # the parent frame can be the annotation scope if the PEP 695 generic syntax is used.
         # (see https://docs.python.org/3/reference/executionmodel.html#annotation-scopes,
@@ -265,7 +288,7 @@ def parent_frame_namespace(*, parent_depth: int = 2, force: bool = False) -> dic
     # If either of the following conditions are true, the class is defined at the top module level.
     # To better understand why we need both of these checks, see
     # https://github.com/pydantic/pydantic/pull/10113#discussion_r1714981531.
-    if frame.f_back is None or frame.f_code.co_name == '<module>':
+    if frame.f_back is None or frame.f_code.co_name == "<module>":
         return None
 
     return frame.f_locals
@@ -309,13 +332,13 @@ def get_model_type_hints(
     ns_resolver = ns_resolver or NsResolver()
 
     for base in reversed(obj.__mro__):
-        ann: dict[str, Any] | None = base.__dict__.get('__annotations__')
+        ann: dict[str, Any] | None = base.__dict__.get("__annotations__")
         if not ann or isinstance(ann, types.GetSetDescriptorType):
             continue
         with ns_resolver.push(base):
             globalns, localns = ns_resolver.types_namespace
             for name, value in ann.items():
-                if name.startswith('_'):
+                if name.startswith("_"):
                     # For private attributes, we only need the annotation to detect the `ClassVar` special form.
                     # For this reason, we still try to evaluate it, but we also catch any possible exception (on
                     # top of the `NameError`s caught in `try_eval_type`) that could happen so that users are free
@@ -345,7 +368,7 @@ def get_cls_type_hints(
     ns_resolver = ns_resolver or NsResolver()
 
     for base in reversed(obj.__mro__):
-        ann: dict[str, Any] | None = base.__dict__.get('__annotations__')
+        ann: dict[str, Any] | None = base.__dict__.get("__annotations__")
         if not ann or isinstance(ann, types.GetSetDescriptorType):
             continue
         with ns_resolver.push(base):
@@ -398,7 +421,7 @@ def eval_type(
 
 
 @deprecated(
-    '`eval_type_lenient` is deprecated, use `try_eval_type` instead.',
+    "`eval_type_lenient` is deprecated, use `try_eval_type` instead.",
     category=None,
 )
 def eval_type_lenient(
@@ -428,14 +451,14 @@ def eval_type_backport(
     try:
         return _eval_type_backport(value, globalns, localns, type_params)
     except TypeError as e:
-        if 'Unable to evaluate type annotation' in str(e):
+        if "Unable to evaluate type annotation" in str(e):
             raise
 
         # If it is a `TypeError` and value isn't a `ForwardRef`, it would have failed during annotation definition.
         # Thus we assert here for type checking purposes:
         assert isinstance(value, typing.ForwardRef)
 
-        message = f'Unable to evaluate type annotation {value.__forward_arg__!r}.'
+        message = f"Unable to evaluate type annotation {value.__forward_arg__!r}."
         if sys.version_info >= (3, 11):
             e.add_note(message)
             raise
@@ -446,14 +469,14 @@ def eval_type_backport(
         # is used directly in some places.
         message = (
             "If you made use of an implicit recursive type alias (e.g. `MyType = list['MyType']), "
-            'consider using PEP 695 type aliases instead. For more details, refer to the documentation: '
-            f'https://docs.pydantic.dev/{version_short()}/concepts/types/#named-recursive-types'
+            "consider using PEP 695 type aliases instead. For more details, refer to the documentation: "
+            f"https://docs.pydantic.dev/{version_short()}/concepts/types/#named-recursive-types"
         )
         if sys.version_info >= (3, 11):
             e.add_note(message)
             raise
         else:
-            raise RecursionError(f'{e.args[0]}\n{message}')
+            raise RecursionError(f"{e.args[0]}\n{message}")
 
 
 def _eval_type_backport(
@@ -472,10 +495,10 @@ def _eval_type_backport(
             from eval_type_backport import eval_type_backport
         except ImportError:
             raise TypeError(
-                f'Unable to evaluate type annotation {value.__forward_arg__!r}. If you are making use '
-                'of the new typing syntax (unions using `|` since Python 3.10 or builtins subscripting '
-                'since Python 3.9), you should either replace the use of new syntax with the existing '
-                '`typing` constructs or install the `eval_type_backport` package.'
+                f"Unable to evaluate type annotation {value.__forward_arg__!r}. If you are making use "
+                "of the new typing syntax (unions using `|` since Python 3.10 or builtins subscripting "
+                "since Python 3.9), you should either replace the use of new syntax with the existing "
+                "`typing` constructs or install the `eval_type_backport` package."
             ) from e
 
         return eval_type_backport(
@@ -497,15 +520,15 @@ def _eval_type(
             value, globalns, localns, type_params=type_params
         )
     else:
-        return typing._eval_type(  # type: ignore
-            value, globalns, localns
-        )
+        return typing._eval_type(value, globalns, localns)  # type: ignore
 
 
 def is_backport_fixable_error(e: TypeError) -> bool:
     msg = str(e)
 
-    return sys.version_info < (3, 10) and msg.startswith('unsupported operand type(s) for |: ')
+    return sys.version_info < (3, 10) and msg.startswith(
+        "unsupported operand type(s) for |: "
+    )
 
 
 def get_function_type_hints(
@@ -537,7 +560,7 @@ def get_function_type_hints(
     if localns is None:
         # If localns was specified, it is assumed to already contain type params. This is because
         # Pydantic has more advanced logic to do so (see `_namespace_utils.ns_for_function`).
-        type_params = getattr(function, '__type_params__', ())
+        type_params = getattr(function, "__type_params__", ())
 
     type_hints = {}
     for name, value in annotations.items():
@@ -635,17 +658,19 @@ else:
         - If two dict arguments are passed, they specify globals and
           locals, respectively.
         """
-        if getattr(obj, '__no_type_check__', None):
+        if getattr(obj, "__no_type_check__", None):
             return {}
         # Classes require a special treatment.
         if isinstance(obj, type):
             hints = {}
             for base in reversed(obj.__mro__):
                 if globalns is None:
-                    base_globals = getattr(sys.modules.get(base.__module__, None), '__dict__', {})
+                    base_globals = getattr(
+                        sys.modules.get(base.__module__, None), "__dict__", {}
+                    )
                 else:
                     base_globals = globalns
-                ann = base.__dict__.get('__annotations__', {})
+                ann = base.__dict__.get("__annotations__", {})
                 if isinstance(ann, types.GetSetDescriptorType):
                     ann = {}
                 base_locals = dict(vars(base)) if localns is None else localns
@@ -661,11 +686,13 @@ else:
                     if value is None:
                         value = type(None)
                     if isinstance(value, str):
-                        value = _make_forward_ref(value, is_argument=False, is_class=True)
+                        value = _make_forward_ref(
+                            value, is_argument=False, is_class=True
+                        )
 
                     value = eval_type_backport(value, base_globals, base_locals)
                     hints[name] = value
-            if not include_extras and hasattr(typing, '_strip_annotations'):
+            if not include_extras and hasattr(typing, "_strip_annotations"):
                 return {
                     k: typing._strip_annotations(t)  # type: ignore
                     for k, t in hints.items()
@@ -679,20 +706,20 @@ else:
             else:
                 nsobj = obj
                 # Find globalns for the unwrapped object.
-                while hasattr(nsobj, '__wrapped__'):
+                while hasattr(nsobj, "__wrapped__"):
                     nsobj = nsobj.__wrapped__
-                globalns = getattr(nsobj, '__globals__', {})
+                globalns = getattr(nsobj, "__globals__", {})
             if localns is None:
                 localns = globalns
         elif localns is None:
             localns = globalns
-        hints = getattr(obj, '__annotations__', None)
+        hints = getattr(obj, "__annotations__", None)
         if hints is None:
             # Return empty annotations for something that _could_ have them.
             if isinstance(obj, typing._allowed_types):  # type: ignore
                 return {}
             else:
-                raise TypeError(f'{obj!r} is not a module, class, method, or function.')
+                raise TypeError(f"{obj!r} is not a module, class, method, or function.")
         defaults = typing._get_defaults(obj)  # type: ignore
         hints = dict(hints)
         for name, value in hints.items():
