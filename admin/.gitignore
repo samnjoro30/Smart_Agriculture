@@ -25,3 +25,6 @@ dist-ssr
 
 #hosting file
 .firebase
+
+#docs
+Admin_Blueprint.pdf
