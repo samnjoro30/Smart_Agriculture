@@ -6,3 +6,25 @@ git push gitlab  main
 echo "pushing code to Github..."
 
 git push origin developer
+
+Smart_Agriculture/
+│
+├── docs/
+│   ├── README.md                ← entry point for product docs
+│   ├── PRD.md                  ← Product Requirements Doc
+│   ├── problem-statement.md
+│   ├── user-research.md
+│   ├── personas.md
+│   ├── roadmap.md
+│   ├── prioritization.md
+│   ├── user-stories.md
+│   ├── metrics.md
+│   ├── releases.md
+│   ├── decisions/              ← ADRs
+│   │     ├── adr-001-architecture.md
+│   │     ├── adr-002-pwa-choice.md
+│   │     └── adr-003-postgres.md
+│   └── screenshots/
+│
+├── README.md (update to include product summary)
+└── code...

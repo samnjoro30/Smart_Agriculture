@@ -1,11 +1,15 @@
 # 🌱SMART AGRICULTURE 
  
-
+For detailed system architecture refer to docs folder
  # Project Overview
 
  This is a modern monitoring system for Agriculture leveraging  modern web, AI, ML, and backend technologies to monitor, analyze, and automate agriculture operations.
 
 It is built using a full-stack, cloud-native approach with technologies like FastAPI, Next.js, Docker, Supabase, and more.
+
+Smart farm is a web-based livestock management system that helps dairy farmers digitize animal health, reproduction, and farm record-keeping.
+
+The platform enables farmers to track breeding cycles, health events, treatments, and expenses to improve productivity and reduce preventable losses.
 
 
 # Feature
