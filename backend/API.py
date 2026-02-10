@@ -11,6 +11,9 @@ from slowapi.util import get_remote_address
 
 from alembic import command
 from alembic.config import Config
+
+from config.middleware import logging_middleware
+
 from controller.admin_authentication import router as admin_auth_router
 from controller.authcontroller import router as auth_router
 from controller.farm import router as farm_router
@@ -25,7 +28,7 @@ app = FastAPI()
 limiter = Limiter(key_func=get_remote_address)
 app.state.limiter = limiter
 app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
-
+app.middleware("http")(logging_middleware)
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
