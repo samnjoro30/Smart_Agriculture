@@ -9,9 +9,14 @@ from starlette.status import HTTP_201_CREATED
 
 from .models import Users, RefreshToken, NewsSubscribers 
 from .repository import create_user, get_user_by_email, otp_verification, resendVerificationCode, reset_password_check_user, reset_password_update, revoke_refresh_token, store_refresh_token, verified_upate, create_user_newsLetter
+
 from config.security import create_access_token, refresh_token
+from config.logger import get_logger
+
 from utils.hashing import hash_password, verify_password
 from utils.otp import generate_otp, otp_expiry
+
+logger = get_logger(__name__)
 
 async def register_farm(payload, db):
     existing_user = await get_user_by_email(payload.email, db)
@@ -40,6 +45,7 @@ async def login_farmer(db, payload):
     if not existing_user or not verify_password(
         payload.password, existing_user["password"]
     ):
+        logger.warning("login_failed_user_not_found", email=payload.email)
         raise HTTPException(
             status_code=400, detail="Invalid credentials, Username not found"
         )

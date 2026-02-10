@@ -1,7 +1,7 @@
 import logging
 import sys
 import structlog
-from config.settings import settings
+from .setting import settings
 
 
 def setup_logging():
@@ -16,7 +16,7 @@ def setup_logging():
     ]
 
     # dev → pretty logs
-    if settings.ENV == "dev":
+    if Settings.ENV == "prod":
         renderer = structlog.dev.ConsoleRenderer()
     else:
         # prod → JSON logs
