@@ -4,12 +4,13 @@ from fastapi import Depends, HTTPException, Request, status
 from typing import Optional
 from jose import JWTError, jwt
 from sqlalchemy.ext.asyncio import AsyncSession
-from .setting import settings
+from .setting import get_settings
 from .database import get_db
 from modules.auth.repository import get_user_by_email
 
 from dotenv import load_dotenv
 
+settings = get_settings()
 load_dotenv()
 SECRET_KEY = settings.JWT_SECRET
 ALGORITHM = settings.ALGORITHM
