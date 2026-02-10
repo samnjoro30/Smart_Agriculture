@@ -14,7 +14,7 @@ class Settings(BaseSettings):
     #core
     APP_NAME: str = "Smart Farm"
     ENV: Literal["dev", "staging", "prod"] = "dev"
-    DEBUG: bool = True
+    DEBUG: bool = False
 
     # Server
     HOST: str = "0.0.0.0"

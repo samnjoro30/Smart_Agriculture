@@ -4,12 +4,14 @@ from dotenv import load_dotenv
 from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
 from sqlalchemy.orm import declarative_base, sessionmaker
 
+from .setting import settings
+
 load_dotenv()
 
 NEON_DB = os.getenv("NEON_DB")
 
 engine = create_async_engine(
-    NEON_DB,
+    settings.NEON_DB,
     echo=True,
     pool_size=5,  # adjust based on traffic
     max_overflow=10,  # temporary connections
