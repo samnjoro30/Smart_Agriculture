@@ -17,6 +17,8 @@ from controller.farm import router as farm_router
 from controller.farmAnalytic import router as farm_analytic_router
 from controller.users import app as user_router
 
+from modules.auth.router import router as auth_farmer
+
 app = FastAPI()
 
 # limiting number of request from ip
@@ -44,6 +46,8 @@ app.include_router(user_router)
 app.include_router(farm_router)
 app.include_router(farm_analytic_router)
 app.include_router(admin_auth_router)
+
+app.include_router(auth_farmer)
 
 
 @app.get("/ping")
