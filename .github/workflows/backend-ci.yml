@@ -55,5 +55,8 @@ jobs:
               working-directory: ./backend
               env: 
                 NEON_DB: postgresql+asyncpg://test_user:test_password@localhost:5432/test_db
+                JWT_SECRET: test-secret-key
+                JWT_REFRESH: test-refresh-key
+                ENV: test
               run: pytest --maxfail=1 --disable-warnings -v
     
