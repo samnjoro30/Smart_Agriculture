@@ -13,7 +13,7 @@ class Settings(BaseSettings):
 
     #core
     APP_NAME: str = "Smart Farm"
-    ENV: Literal["dev", "staging", "prod"] = "dev"
+    ENV: Literal["dev", "staging", "prod", "test"] = "dev"
     DEBUG: bool = False
 
     # Server
