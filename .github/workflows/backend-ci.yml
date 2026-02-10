@@ -38,12 +38,12 @@ jobs:
                 pip install -r requirements.txt
                 pip install pytest httpx pytest-asyncio
 
-            - name: Posgre connection
-              run: |
-                until pg_isready -h localhost -p 5432 -U test_user; do
-                  echo "Waiting for Postgres..."
-                  sleep 2
-                done
+            # - name: Posgre connection
+            #   run: |
+            #     until pg_isready -h localhost -p 5432 -U test_user; do
+            #       echo "Waiting for Postgres..."
+            #       sleep 2
+            #     done
             
             - name: Run migrations
               working-directory: ./backend
