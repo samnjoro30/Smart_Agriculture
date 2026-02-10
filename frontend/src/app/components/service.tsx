@@ -39,7 +39,7 @@ export default function ServiceHome() {
                     <div className={ImageDiv}>
                         <Image  src="/Agri3.jpg" alt="Irrigation" loading="lazy" fill className="cover"/>
                     </div>
-                    <h3 className={Hdiv}>Smart Irrigation</h3>
+                    <h3 className={Hdiv}>Farm Production</h3>
                     <p className={pservice}>The Platform is designed to help you as a farmer migrate  and get started with modern and emerging  Agricultural technology form irrifation to dairy farming and many more</p>
                 </div>
 

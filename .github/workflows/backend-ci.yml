@@ -38,12 +38,12 @@ jobs:
                 pip install -r requirements.txt
                 pip install pytest httpx pytest-asyncio
 
-            # - name: Posgre connection
-            #   run: |
-            #     until pg_isready -h localhost -p 5432 -U test_user; do
-            #       echo "Waiting for Postgres..."
-            #       sleep 2
-            #     done
+            - name: Posgre connection
+              run: |
+                until pg_isready -h localhost -p 5432 -U test_user; do
+                  echo "Waiting for Postgres..."
+                  sleep 2
+                done
             
             - name: Run migrations
               working-directory: ./backend
@@ -55,5 +55,8 @@ jobs:
               working-directory: ./backend
               env: 
                 NEON_DB: postgresql+asyncpg://test_user:test_password@localhost:5432/test_db
+                JWT_SECRET: test-secret-key
+                JWT_REFRESH: test-refresh-key
+                ENV: test
               run: pytest --maxfail=1 --disable-warnings -v
     
