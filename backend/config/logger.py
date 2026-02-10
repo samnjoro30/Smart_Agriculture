@@ -3,6 +3,7 @@ import sys
 import structlog
 from .setting import get_settings
 
+settings = get_settings()
 
 def setup_logging():
     timestamper = structlog.processors.TimeStamper(fmt="iso")
@@ -16,7 +17,7 @@ def setup_logging():
     ]
 
     # dev → pretty logs
-    if get_settings.ENV == "prod":
+    if settings.ENV == "prod":
         renderer = structlog.dev.ConsoleRenderer()
     else:
         # prod → JSON logs

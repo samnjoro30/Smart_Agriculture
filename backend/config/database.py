@@ -7,8 +7,8 @@ from sqlalchemy.orm import declarative_base, sessionmaker
 from .setting import get_settings
 
 load_dotenv()
-
-NEONB = get_settings().NEON_DB
+settings = get_settings()
+NEONB = settings.NEON_DB
 
 engine = create_async_engine(
     NEONB,
