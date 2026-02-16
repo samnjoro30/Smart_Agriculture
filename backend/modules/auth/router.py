@@ -5,7 +5,7 @@ from config.database import get_db
 from config.logger import get_logger
 
 from .schemas import RegisterRequest, LoginRequest, Token, RegisterSubscribers, codeResend, adminRegisterRequest, adminLoginRequest
-from .service import register_farm, login_farmer, page_refresh_token, Verify_farmer
+from .service import register_farm, login_farmer, page_refresh_token, Verify_farmer, Logout
 
 
 router = APIRouter(prefix="/auth", tags=["Auth"])
@@ -49,6 +49,12 @@ async def verify_otp(payload: codeResend, db: AsyncSession = Depends(get_db)):
     logger.info("OTP verified successfully", email=payload.email)
     return {"message": "OTP verified successfully"}
 # @router.post("/auth/reset-password")
-# @router.post("/auth/logout")
+@router.post("/auth/logout")
+async def logout(response: Response):
+    await Logout()
+    response.delete_cookie("access_token")
+    response.delete_cookie("refresh_token")
+    logger.info("logout successful")
+    return {"message": "Logged out successfully"}
 # @router.post("/newsletter/subscribe")
 # @router.post("/auth/resend-verificion-code")

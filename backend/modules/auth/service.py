@@ -124,19 +124,19 @@ async def Verify_farmer(request: Request, payload, db):
 
 #     return await reset_password_update(db, email, hash_new_password)
 
-# async def logout(
-#     request: Request, response: Response, db):
-#     token = request.cookies.get("refresh_token")
-#     if not token:
-#         raise HTTPException(status_code=401, detail="Missing token")
+async def Logout(
+    request: Request, response: Response, db):
+    token = request.cookies.get("refresh_token")
+    if not token:
+        raise HTTPException(status_code=401, detail="Missing token")
 
-#     await revoke_refresh_token(db, token)
-#     await db.commit()
+    await revoke_refresh_token(db, token)
+    return  await db.commit()
 
-#     response.delete_cookie("access_token")
-#     response.delete_cookie("refresh_token")
+    # response.delete_cookie("access_token")
+    # response.delete_cookie("refresh_token")
 
-#     return {"message": "Logged out Successfully"}
+    # return {"message": "Logged out Successfully"}
 
 
 # async def RegisterForNewsLetter(request: RegisterSubscribers, db):
