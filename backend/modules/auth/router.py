@@ -5,7 +5,7 @@ from config.database import get_db
 from config.logger import get_logger
 
 from .schemas import RegisterRequest, LoginRequest, Token, RegisterSubscribers, codeResend, adminRegisterRequest, adminLoginRequest
-from .service import register_farm, login_farmer, page_refresh_token
+from .service import register_farm, login_farmer, page_refresh_token, Verify_farmer
 
 
 router = APIRouter(prefix="/auth", tags=["Auth"])
@@ -43,7 +43,11 @@ async def refresh_token(db: AsyncSession = Depends(get_db)):
     logger.info("token refreshed successfully")
     return {"access_token": new_access_token}
 
-# @router.post("/auth/verification")
+@router.post("/auth/verification")
+async def verify_otp(payload: codeResend, db: AsyncSession = Depends(get_db)):
+    await Verify_farmer(db, payload)
+    logger.info("OTP verified successfully", email=payload.email)
+    return {"message": "OTP verified successfully"}
 # @router.post("/auth/reset-password")
 # @router.post("/auth/logout")
 # @router.post("/newsletter/subscribe")

@@ -1,7 +1,6 @@
 import os
 import sys
 
-
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from fastapi.testclient import TestClient
@@ -15,13 +14,13 @@ client = TestClient(app)
 def test_health_check():
     response = client.get("/")
     assert response.status_code in [200, 404]
-    assert.response.json() in [{"message": "Welcome to the Smart Farm API"}, {"detail": "Not Found"}]
+    assert response.json() in [{"message": "Welcome to the Smart Farm API"}, {"detail": "Not Found"}]
 
 def test_password():
     password = 'passw123'
     hashed = hash_password(password)
     assert hashed != password
-    
+
 def test_verify_password():
     password = 'passw123'
     hashed = hash_password(password)

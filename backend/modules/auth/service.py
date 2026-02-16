@@ -78,29 +78,29 @@ async def page_refresh_token(request: Request):
     except JWTError:
         raise HTTPException(status_code=500, detail="Expired refresh token")
 
-# async def Verify_farmer(request: Request, payload, db):
-#     try:
-#         body = await request.json()
-#         email = body.get("email")
-#         otp = body.get("otp")
+async def Verify_farmer(request: Request, payload, db):
+    try:
+        body = await request.json()
+        email = body.get("email")
+        otp = body.get("otp")
 
-#         if not email or not otp:
-#             raise HTTPException(status_code=400, detail="Email and OTP are required")
-#         user = await otp_verification(email, otp, db)
-#         if not user:
-#             raise HTTPException(status_code=400, detail="Invalid OTP or email")
-#         if user.is_verified:
-#             raise HTTPException(status_code=400, detail="Account already verified")
-#         if user.otp != otp:
-#             raise HTTPException(status_code=400, detail="Invalid OTP")
-#         if user.otp_expires_at < datetime.utcnow():
-#             raise HTTPException(status_code=400, detail="OTP has expired")
+        if not email or not otp:
+            raise HTTPException(status_code=400, detail="Email and OTP are required")
+        user = await otp_verification(email, otp, db)
+        if not user:
+            raise HTTPException(status_code=400, detail="Invalid OTP or email")
+        if user.is_verified:
+            raise HTTPException(status_code=400, detail="Account already verified")
+        if user.otp != otp:
+            raise HTTPException(status_code=400, detail="Invalid OTP")
+        if user.otp_expires_at < datetime.utcnow():
+            raise HTTPException(status_code=400, detail="OTP has expired")
         
-#         return await verified_upate(email, db)
+        return await verified_upate(email, db)
 
-#     except Exception as e:
-#         logger.error("verification_failed", error=str(e), email=email)
-#         raise HTTPException(status_code=500, detail="Verification failed")
+    except Exception as e:
+        logger.error("verification_failed", error=str(e), email=email)
+        raise HTTPException(status_code=500, detail="Verification failed")
 
 # async def reset_password(request: ResetPassword, db):
 #     body = await request.json()
