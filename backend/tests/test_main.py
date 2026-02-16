@@ -7,6 +7,7 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from fastapi.testclient import TestClient
 
 from API import app
+from utils.hashing import hash_password
 
 client = TestClient(app)
 
@@ -14,7 +15,18 @@ client = TestClient(app)
 def test_health_check():
     response = client.get("/")
     assert response.status_code in [200, 404]
+    assert.response.json() in [{"message": "Welcome to the Smart Farm API"}, {"detail": "Not Found"}]
 
+def test_password():
+    password = 'passw123'
+    hashed = hash_password(password)
+    assert hashed != password
+    
+def test_verify_password():
+    password = 'passw123'
+    hashed = hash_password(password)
+    assert verify_password(password, hashed) == True
+    assert verify_password('wrongpassword', hashed) == False
 
 def test_login_check():
     response = client.post(

@@ -5,7 +5,7 @@ from config.database import get_db
 from config.logger import get_logger
 
 from .schemas import RegisterRequest, LoginRequest, Token, RegisterSubscribers, codeResend, adminRegisterRequest, adminLoginRequest
-from .service import register_farm, login_farmer
+from .service import register_farm, login_farmer, page_refresh_token
 
 
 router = APIRouter(prefix="/auth", tags=["Auth"])
@@ -14,7 +14,7 @@ logger = get_logger(__name__)
 
 @router.post("/register")
 async def register(payload: RegisterRequest, db: AsyncSession = Depends(get_db)):
-    await register_user(db, payload)
+    await register_farm(db, payload)
     logger.info("farm registered succesfully", user_id=user.id)
     return {"message": "Registered successfully"}
 
@@ -25,7 +25,7 @@ async def login(
     response: Response,
     db: AsyncSession = Depends(get_db),
 ):
-    access_token, new_refresh_token = await login_user(db, payload)
+    access_token, new_refresh_token = await login_farmer(db, payload)
 
     response.set_cookie("access_token", access, httponly=True, samesite="none", secure=True)
     response.set_cookie("refresh_token", refresh, httponly=True, samesite="none", secure=True)
@@ -36,3 +36,15 @@ async def login(
         "access_token": access_token,
         "refresh_token": new_refresh_token,
     }
+
+@router.post("/auth/refresh")
+async def refresh_token(db: AsyncSession = Depends(get_db)):
+    await page_refresh_token(db)
+    logger.info("token refreshed successfully")
+    return {"access_token": new_access_token}
+
+# @router.post("/auth/verification")
+# @router.post("/auth/reset-password")
+# @router.post("/auth/logout")
+# @router.post("/newsletter/subscribe")
+# @router.post("/auth/resend-verificion-code")
