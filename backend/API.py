@@ -16,7 +16,7 @@ from alembic.config import Config
 #from config.lifespan import Lifespan
 
 from controller.admin_authentication import router as admin_auth_router
-from controller.authcontroller import router as auth_router
+#from controller.authcontroller import router as auth_router
 from controller.farm import router as farm_router
 from controller.farmAnalytic import router as farm_analytic_router
 from controller.users import app as user_router
@@ -47,7 +47,7 @@ app.add_middleware(
 )
 
 
-app.include_router(auth_router)
+#app.include_router(auth_router)
 app.include_router(user_router)
 app.include_router(farm_router)
 app.include_router(farm_analytic_router)
