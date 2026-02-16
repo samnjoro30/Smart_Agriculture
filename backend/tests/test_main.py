@@ -1,6 +1,6 @@
 import os
 import sys
-
+import pytest
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from fastapi.testclient import TestClient
@@ -21,12 +21,16 @@ def test_password():
     hashed = hash_password(password)
     assert hashed != password
 
-def test_verify_password():
+@pytest.mark.asyncio
+async def test_verify_password():
     password = 'passw123'
-    hashed = hash_password(password)
-    assert verify_password(password, hashed) == True
-    assert verify_password('wrongpassword', hashed) == False
-
+    hashed = await hash_password(password)  # Add await
+    result = await verify_password(password, hashed)  # Add await
+    assert result == True
+    
+    wrong_result = await verify_password('wrongpassword', hashed)  # Add await
+    assert wrong_result == False
+    
 def test_login_check():
     response = client.post(
         "/auth/login", json={"email": "test@gmail.com ", "password": "test"}

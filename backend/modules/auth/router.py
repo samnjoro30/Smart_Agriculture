@@ -48,7 +48,9 @@ async def verify_otp(payload: codeResend, db: AsyncSession = Depends(get_db)):
     await Verify_farmer(db, payload)
     logger.info("OTP verified successfully", email=payload.email)
     return {"message": "OTP verified successfully"}
+
 # @router.post("/auth/reset-password")
+
 @router.post("/auth/logout")
 async def logout(response: Response):
     await Logout()
@@ -56,5 +58,6 @@ async def logout(response: Response):
     response.delete_cookie("refresh_token")
     logger.info("logout successful")
     return {"message": "Logged out successfully"}
+    
 # @router.post("/newsletter/subscribe")
 # @router.post("/auth/resend-verificion-code")
