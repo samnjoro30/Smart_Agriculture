@@ -37,15 +37,15 @@ async def register_farm(payload, db):
         "is_verified": False,
         "password": hashed_pw,
     }
-
-    return await create_user(user_dict, db)
+    user = await create_user(user_dict, db)
+    return user
 
 async def login_farmer(db, payload):
     existing_user = await get_user_by_email(db, payload.email)
     if not existing_user or not verify_password(
         payload.password, existing_user["password"]
     ):
-        logger.warning("login_failed_user_not_found", email=payload.email)
+        logger.warning(f"login_failed_user_not_found email=payload.email")
         raise HTTPException(
             status_code=400, detail="Invalid credentials, Username not found"
         )
@@ -58,7 +58,7 @@ async def login_farmer(db, payload):
 
     #await store_refresh_token(email, new_refresh_token, expires_at, db)
 
-    return access_token, new_refresh_token
+    return access_token, refresh_token
 
 async def page_refresh_token(request: Request):
     SECRET_KEY = os.getenv("JWT_REFRESH")

@@ -25,10 +25,23 @@ async def login(
     response: Response,
     db: AsyncSession = Depends(get_db),
 ):
-    access_token, new_refresh_token = await login_farmer(db, payload)
+    access_token, refresh_token = await login_farmer(db, payload)
 
-    response.set_cookie("access_token", access, httponly=True, samesite="none", secure=True)
-    response.set_cookie("refresh_token", refresh, httponly=True, samesite="none", secure=True)
+    response.set_cookie(
+        key="access_token", 
+        value=access_token, 
+        httponly=True, 
+        samesite="none", 
+        secure=True
+    )
+
+    response.set_cookie(
+        key="refresh_token", 
+        value=refresh_token, 
+        httponly=True, 
+        samesite="none", 
+        secure=True
+    )
 
     logger.info("login successful", user_id=user.id)
 
@@ -58,6 +71,6 @@ async def logout(response: Response):
     response.delete_cookie("refresh_token")
     logger.info("logout successful")
     return {"message": "Logged out successfully"}
-    
+
 # @router.post("/newsletter/subscribe")
 # @router.post("/auth/resend-verificion-code")
