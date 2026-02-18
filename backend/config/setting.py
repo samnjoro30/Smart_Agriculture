@@ -11,7 +11,7 @@ class Settings(BaseSettings):
     Loads automatically from .env
     """
 
-    #core
+    # core
     APP_NAME: str = "Smart Farm"
     ENV: Literal["dev", "staging", "prod", "test"] = "dev"
     DEBUG: bool = False
@@ -19,41 +19,40 @@ class Settings(BaseSettings):
     # Server
     HOST: str = "0.0.0.0"
     PORT: int = 8000
-    WORKERS: int = 4 
+    WORKERS: int = 4
 
-    #Database
+    # Database
     NEON_DB: str
     DB_POOL_SIZE: int = 10
     DB_MAX_OVERFLOW: int = 20
     DB_POOL_TIMEOUT: int = 30
     DB_POOL_RECYCLE: int = 1800
 
-    #Auth
+    # Auth
     JWT_SECRET: str
     JWT_REFRESH: str
-    ALGORITHM: str="HS256"
-    ACCESS_EXPIRE_MINUTES: int= 15
-    REFRESH_EXPIRE_DAY: int= 7
+    ALGORITHM: str = "HS256"
+    ACCESS_EXPIRE_MINUTES: int = 15
+    REFRESH_EXPIRE_DAY: int = 7
 
-    #Cookies
+    # Cookies
     COOKIE_SECURE: bool = True
     COOKIE_SAMESITE: Literal["lax", "strict", "none"] = "none"
     COOKIE_HTTPONLY: bool = True
-    
-    #Redis
-    REDIS_URL: str | None=None
+
+    # Redis
+    REDIS_URL: str | None = None
     REDIS_CACHE_TTL: int = 300
 
-    #logs
+    # logs
     LOG_LEVEL: Literal["DEBUG", "INFO", "WARNING", "ERROR"] = "INFO"
     LOG_JSON: bool = False
 
-    #Cors
+    # Cors
     BACKEND_CORS_ORIGINS: list[str] = Field(default_factory=list)
 
-
     # rate limiting
-    RATE_LIMITING_PER_MINUTE: int=60
+    RATE_LIMITING_PER_MINUTE: int = 60
     model_config = SettingsConfigDict(
         env_file=".env",
         case_sensitive=True,
@@ -61,8 +60,7 @@ class Settings(BaseSettings):
     )
 
 
-#skeleton
+# skeleton
 @lru_cache
 def get_settings() -> Settings:
     return Settings()
-

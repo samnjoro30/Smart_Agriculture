@@ -1,7 +1,7 @@
 """initial
 
 Revision ID: da32c570ac13
-Revises: 
+Revises:
 Create Date: 2025-07-31 18:00:09.408436
 
 """

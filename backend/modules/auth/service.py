@@ -7,19 +7,33 @@ from jose import JWTError, jwt
 from sqlalchemy.ext.asyncio import AsyncSession
 from starlette.status import HTTP_201_CREATED
 
-from .models import Users, RefreshToken, NewsSubscribers 
-from .repository import create_user, get_user_by_email, otp_verification, resendVerificationCode, reset_password_check_user, reset_password_update, revoke_refresh_token, store_refresh_token, verified_upate, create_user_newsLetter
+from .models import Users, RefreshToken, NewsSubscribers
+from .repository import (
+    create_user,
+    get_user_by_email,
+    otp_verification,
+    resendVerificationCode,
+    reset_password_check_user,
+    reset_password_update,
+    revoke_refresh_token,
+    store_refresh_token,
+    get_refresh_token,
+    verified_upate,
+    create_user_newsLetter,
+)
 
-from config.security import create_access_token, refresh_token
+from config.security import create_access_token, create_refresh_token
 from config.logger import get_logger
 
 from utils.hashing import hash_password, verify_password
 from utils.otp import generate_otp, otp_expiry
 
 logger = get_logger(__name__)
+REFRESH_TOKEN_DAYS = 7
 
-async def register_farm(payload, db):
-    existing_user = await get_user_by_email(payload.email, db)
+
+async def register_farm(db: AsyncSession, payload):
+    existing_user = await get_user_by_email(db, payload.email)
     if existing_user:
         raise HTTPException(status_code=409, detail="email already exists")
 
@@ -38,105 +52,113 @@ async def register_farm(payload, db):
         "password": hashed_pw,
     }
     user = await create_user(user_dict, db)
+
+    await db.commit()
+
     return user
 
-async def login_farmer(db, payload):
-    existing_user = await get_user_by_email(db, payload.email)
-    if not existing_user or not verify_password(
-        payload.password, existing_user["password"]
-    ):
+
+async def login_farmer(db: AsyncSession, payload):
+    user = await get_user_by_email(db, payload.email)
+    if not user or not verify_password(payload.password, user["password"]):
         logger.warning(f"login_failed_user_not_found email=payload.email")
         raise HTTPException(
             status_code=400, detail="Invalid credentials, Username not found"
         )
-    if not existing_user.get("is_verified"):
+    if not user.get("is_verified"):
         raise HTTPException(status_code=403, detail="Account not verified")
 
-    access_token = create_access_token(data={"sub": existing_user.email})
-    new_refresh_token = refresh_token({"sub": existing_user.email})
-    #expires_at = datetime.utcnow() + timedelta(hours=24)
+    access_token = create_access_token(data={"sub": user.email})
+    refresh_token = create_refresh_token({"sub": user.email})
 
-    #await store_refresh_token(email, new_refresh_token, expires_at, db)
+    await store_refresh_token(
+        db=db,
+        user_id=user.id,
+        token=refresh_token,
+        expires_at=datetime.utcnow() + timedelta(days=7),
+    )
 
-    return access_token, refresh_token
+    await db.commit()
 
-async def page_refresh_token(request: Request):
-    SECRET_KEY = os.getenv("JWT_REFRESH")
-    ALGORITHM = os.getenv("ALGORITHM")
-    try:
-        refresh_token_str = request.cookies.get("refresh_token")
+    return {
+        "access_token": access_token,
+        "refresh_token": refresh_token,
+    }
 
-        if not refresh_token_str:
-            raise HTTPException(status_code=400, detail="Refresh token missing")
 
-        payload = jwt.decode(refresh_token_str, SECRET_KEY, algorithms=[ALGORITHM])
-        username = payload.get("sub")
-        if username is None:
-            raise HTTPException(status_code=401, detail="Invalid token")
-        new_access_token = create_access_token({"sub": username})
-        return {"access_token": new_access_token, "token_type": "bearer"}
-    except JWTError:
-        raise HTTPException(status_code=500, detail="Expired refresh token")
+async def refresh_access_token(
+    db: AsyncSession,
+    old_refresh_token: str,
+):
+    if not old_refresh_token:
+        raise HTTPException(status_code=401, detail="Missing refresh token")
 
-async def Verify_farmer(request: Request, payload, db):
-    try:
-        body = await request.json()
-        email = body.get("email")
-        otp = body.get("otp")
+    stored_token = await get_refresh_token(db, old_refresh_token)
 
-        if not email or not otp:
-            raise HTTPException(status_code=400, detail="Email and OTP are required")
-        user = await otp_verification(email, otp, db)
-        if not user:
-            raise HTTPException(status_code=400, detail="Invalid OTP or email")
-        if user.is_verified:
-            raise HTTPException(status_code=400, detail="Account already verified")
-        if user.otp != otp:
-            raise HTTPException(status_code=400, detail="Invalid OTP")
-        if user.otp_expires_at < datetime.utcnow():
-            raise HTTPException(status_code=400, detail="OTP has expired")
-        
-        return await verified_upate(email, db)
+    if not stored_token:
+        raise HTTPException(status_code=401, detail="Invalid refresh token")
 
-    except Exception as e:
-        logger.error("verification_failed", error=str(e), email=email)
-        raise HTTPException(status_code=500, detail="Verification failed")
+    if stored_token.is_revoked:
+        raise HTTPException(status_code=401, detail="Token already revoked")
 
-# async def reset_password(request: ResetPassword, db):
-#     body = await request.json()
-#     email = body.get("email")
-#     newPassword = body.get("newPassword")
-#     confirmPassword = body.get("confirmPassword")
+    if stored_token.expires_at < datetime.utcnow():
+        raise HTTPException(status_code=401, detail="Refresh token expired")
 
-#     if not email:
-#         raise HTTPException(status_code=400, detail="Email doesn't exist")
-#     if newPassword != confirmPassword:
-#         raise HTTPException(
-#             status_code=400,
-#             detail="New password and confirm password do not correspond",
-#         )
+    user = stored_token.user
 
-#     user = await reset_password_check_user(db, email)
-#     if not user:
-#         raise HTTPException(status_code=400, detail="user credentials not found")
+    await revoke_refresh_token(db, stored_token)
 
-#     hash_new_password = hash_password(newPassword)
+    new_refresh_token = create_refresh_token({"sub": str(user.id)})
+    new_access_token = create_access_token({"sub": str(user.id)})
 
-#     return await reset_password_update(db, email, hash_new_password)
+    await store_refresh_token(
+        db=db,
+        user_id=user.id,
+        token=new_refresh_token,
+        expires_at=datetime.utcnow() + timedelta(days=REFRESH_TOKEN_DAYS),
+    )
 
-async def Logout(
-    request: Request, response: Response, db):
-    token = request.cookies.get("refresh_token")
-    if not token:
-        raise HTTPException(status_code=401, detail="Missing token")
+    await db.commit()
 
-    await revoke_refresh_token(db, token)
-    return  await db.commit()
+    return {
+        "access_token": new_access_token,
+        "refresh_token": new_refresh_token,
+    }
 
-    # response.delete_cookie("access_token")
-    # response.delete_cookie("refresh_token")
 
-    # return {"message": "Logged out Successfully"}
+async def Verify_farmer(db: AsyncSession, email: str, otp: str):
+    user = await otp_verification(db, email)
+
+    if not user:
+        raise HTTPException(status_code=400, detail="Invalid email")
+
+    if user.is_verified:
+        raise HTTPException(status_code=400, detail="Already verified")
+
+    if user.otp != otp:
+        raise HTTPException(status_code=400, detail="Invalid OTP")
+
+    if user.otp_expires_at < datetime.utcnow():
+        raise HTTPException(status_code=400, detail="OTP expired")
+
+    await verified_update(db, email)
+
+    await db.commit()
+
+
+async def reset_password(db: AsyncSession, email: str, new_password: str):
+    user = await reset_password_check_user(db, email)
+
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+
+    hashed_pw = hash_password(new_password)
+    return await reset_password_update(db, email, hashed_pw)
+
+
+async def logout_user(db: AsyncSession, refresh_token: str):
+    await revoke_refresh_token(db, refresh_token)
+    await db.commit()
 
 
 # async def RegisterForNewsLetter(request: RegisterSubscribers, db):
@@ -144,7 +166,6 @@ async def Logout(
 #         "email": request.email,
 #     }
 #     return await create_user_newsLetter(user_news, db)
-
 
 
 # async def resendCode(request: codeResend, db):
