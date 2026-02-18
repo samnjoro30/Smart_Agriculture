@@ -22,7 +22,7 @@ class Settings(BaseSettings):
     WORKERS: int = 4
 
     # Database
-    NEON_DB: str
+    NEON_DB: Optional[str] = None
     DB_POOL_SIZE: int = 10
     DB_MAX_OVERFLOW: int = 20
     DB_POOL_TIMEOUT: int = 30
