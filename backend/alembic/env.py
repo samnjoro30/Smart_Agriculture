@@ -5,7 +5,7 @@ from dotenv import load_dotenv
 from sqlalchemy.ext.asyncio import create_async_engine
 
 from alembic import context
-from db.postgre_db import Base
+from config.database import Base
 
 load_dotenv()
 
