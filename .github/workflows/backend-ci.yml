@@ -49,6 +49,8 @@ jobs:
               working-directory: ./backend
               env:
                 NEON_DB: postgresql+asyncpg://test_user:test_password@localhost:5432/test_db
+                JWT_SECRET: ${{ secrets.JWT_SECRET }}
+                JWT_REFRESH: ${{ secrets.JWT_REFRESH }}
               run: |
                 alembic upgrade head
             - name: Run tests

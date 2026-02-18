@@ -29,8 +29,8 @@ class Settings(BaseSettings):
     DB_POOL_RECYCLE: int = 1800
 
     # Auth
-    JWT_SECRET: str
-    JWT_REFRESH: str
+    JWT_SECRET: Optional[str] = None
+    JWT_REFRESH: Optional[str] = None
     ALGORITHM: str = "HS256"
     ACCESS_EXPIRE_MINUTES: int = 15
     REFRESH_EXPIRE_DAY: int = 7
