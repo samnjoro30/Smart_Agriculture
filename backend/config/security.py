@@ -15,6 +15,7 @@ load_dotenv()
 SECRET_KEY = settings.JWT_SECRET
 ALGORITHM = settings.ALGORITHM
 
+
 def decode_token(token: str):
     try:
         payload = jwt.decode(
@@ -29,6 +30,7 @@ def decode_token(token: str):
             detail="Invalid or expired token",
         )
 
+
 def get_token_from_cookie(request: Request) -> str:
     token = request.cookies.get("access_token")
 
@@ -39,6 +41,7 @@ def get_token_from_cookie(request: Request) -> str:
         )
 
     return token
+
 
 async def get_current_user(
     token: str = Depends(get_token_from_cookie),
@@ -58,6 +61,7 @@ async def get_current_user(
 
     return user
 
+
 def create_access_token(data: dict, expires_delta: timedelta = timedelta(minutes=30)):
     to_encode = data.copy()
     expire = datetime.utcnow() + expires_delta
@@ -66,7 +70,7 @@ def create_access_token(data: dict, expires_delta: timedelta = timedelta(minutes
     return encoded
 
 
-def refresh_token(data: dict, expires_delta: timedelta = timedelta(hours=1)):
+def create_refresh_token(data: dict, expires_delta: timedelta = timedelta(hours=1)):
     to_encode = data.copy()
     expire = datetime.utcnow() + expires_delta
     to_encode.update({"exp": expire})

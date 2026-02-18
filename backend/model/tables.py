@@ -24,7 +24,9 @@ class RefreshToken(Base):
     __tablename__ = "refresh_token"
 
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
-    user_id = Column(UUID(as_uuid=True), ForeignKey("users.id", ondelete="CASCADE"), nullable=False)
+    user_id = Column(
+        UUID(as_uuid=True), ForeignKey("users.id", ondelete="CASCADE"), nullable=False
+    )
     username = Column(String(200), nullable=False)
     token = Column(String(500), nullable=False)
     expires_at = Column(DateTime, nullable=False)

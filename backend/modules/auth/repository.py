@@ -1,8 +1,9 @@
 # from db.postgre_db import AsyncSession
 from datetime import datetime
 
-from sqlalchemy import text
+from sqlalchemy import text, select
 from sqlalchemy.ext.asyncio import AsyncSession
+from .models import RefreshToken
 
 
 async def get_user_by_email(email: str, db: AsyncSession):
@@ -41,23 +42,37 @@ async def create_user_newsLetter(user: dict, db: AsyncSession):
 
 
 async def store_refresh_token(
-    username: str, token: str, expires_at: datetime, db: AsyncSession
+    db: AsyncSession, user_id, token: str, expires_at: datetime
 ):
-    query = text(
-        """
-        INSERT INTO refresh_token (username, token, expires_at)
-        VALUES (:username, :token, :expires_at )
-    """
+    refresh = RefreshToken(
+        user_id=user_id,
+        token=token,
+        expires_at=expires_at,
     )
-    await db.execute(
-        query, {"username": username, "token": token, "expires_at": expires_at}
-    )
-    await db.commit()
+
+    db.add(refresh)
+    await db.flush()
+    return refresh
+    # query = text(
+    #     """
+    #     INSERT INTO refresh_token (username, token, expires_at)
+    #     VALUES (:username, :token, :expires_at )
+    # """
+    # )
+    # await db.execute(
+    #     query, {"username": username, "token": token, "expires_at": expires_at}
+    # )
+    # await db.commit()
 
 
-async def revoke_refresh_token(db: AsyncSession, token: str):
-    query = text("UPDATE refresh_token SET is_revoked = TRUE WHERE token = :token")
-    await db.execute(query, {"token": token})
+async def get_refresh_token(db: AsyncSession, token: str):
+    result = await db.execute(select(RefreshToken).where(RefreshToken.token == token))
+    return result.scalar_one_or_none()
+
+
+async def revoke_refresh_token(db: AsyncSession, token_obj: RefreshToken):
+    token_obj.is_revoked = True
+    await db.flush()
 
 
 async def is_token_revoked(db: AsyncSession, token: str):

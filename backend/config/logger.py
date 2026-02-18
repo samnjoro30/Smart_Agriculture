@@ -5,6 +5,7 @@ from .setting import get_settings
 
 settings = get_settings()
 
+
 def setup_logging():
     timestamper = structlog.processors.TimeStamper(fmt="iso")
 
