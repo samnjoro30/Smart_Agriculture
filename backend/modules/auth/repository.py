@@ -27,8 +27,6 @@ async def create_user(user_data: dict, db: AsyncSession):
     """
     )
     await db.execute(query, user_data)
-    await db.commit()
-
 
 async def create_user_newsLetter(user: dict, db: AsyncSession):
     query = text(
@@ -38,7 +36,6 @@ async def create_user_newsLetter(user: dict, db: AsyncSession):
     """
     )
     await db.execute(query, user)
-    await db.commit()
 
 
 async def store_refresh_token(
@@ -112,8 +109,6 @@ async def verified_upate(db: AsyncSession, email: str):
     """
     )
     await db.execute(query, {"email": email})
-    await db.commit()
-    return {"message": "verification successful"}
 
 
 async def reset_password_check_user(db: AsyncSession, email: str):

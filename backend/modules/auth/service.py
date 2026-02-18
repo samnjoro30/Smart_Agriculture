@@ -52,6 +52,9 @@ async def register_farm(db: AsyncSession, payload):
         "password": hashed_pw,
     }
     user = await create_user(user_dict, db)
+
+    await db.commit()
+
     return user
 
 
@@ -138,7 +141,9 @@ async def Verify_farmer(db: AsyncSession, email: str, otp: str):
     if user.otp_expires_at < datetime.utcnow():
         raise HTTPException(status_code=400, detail="OTP expired")
 
-    return await verified_update(db, email)
+    await verified_update(db, email)
+
+    await db.commit()
 
 
 async def reset_password(db: AsyncSession, email: str, new_password: str):
