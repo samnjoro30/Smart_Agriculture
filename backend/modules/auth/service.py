@@ -59,7 +59,7 @@ async def register_farm(db: AsyncSession, payload):
 
 
 async def login_farmer(db: AsyncSession, payload):
-    user = await get_user_by_email(db, payload.email)
+    user = await get_user_by_email(db, payload.email or payload.phonenumber)
     if not user or not verify_password(payload.password, user["password"]):
         logger.warning(f"login_failed_user_not_found email=payload.email")
         raise HTTPException(
