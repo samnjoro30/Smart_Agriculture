@@ -6,13 +6,14 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from .models import RefreshToken
 
 
-async def get_user_by_email(email: str, db: AsyncSession):
-    query = text("SELECT email, password, is_verified FROM users WHERE email = :email")
+async def get_user_by_email(email: str, phonenumber: str, db: AsyncSession):
+    query = text("SELECT email, phonenumber, password, is_verified FROM users WHERE email = :email")
     results = await db.execute(query, {"email": email})
     row = results.fetchone()
     if row:
         return {
             "email": row.email,
+            "phonenumber": row.phonenumber,
             "password": row.password,
             "is_verified": row.is_verified,
         }
