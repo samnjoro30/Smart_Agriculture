@@ -33,11 +33,11 @@ REFRESH_TOKEN_DAYS = 7
 
 
 async def register_farm(db: AsyncSession, payload):
-    existing_user = await get_user_by_email(db, payload.email)
+    existing_user = await get_user_by_email(db, payload.email) 
     if existing_user:
         raise HTTPException(status_code=409, detail="email already exists")
 
-    hashed_pw = hash_password(payload.password)
+    hashed_pw = await hash_password(payload.password)
     otp = generate_otp()
     expires_at = otp_expiry()
 

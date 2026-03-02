@@ -71,7 +71,7 @@ async def add_process_time_header(request: Request, call_next):
 
 @app.on_event("startup")
 async def startup():
-    if os.getenv("RUN_MIGRATIONS") == "true":
+    if os.getenv("RUN_MIGRATIONS") == "false":
         alembic_cfg = Config("alembic.ini")
         command.upgrade(alembic_cfg, "head")
 

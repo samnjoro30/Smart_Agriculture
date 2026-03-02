@@ -24,7 +24,7 @@ logger = get_logger(__name__)
 
 @router.post("/register")
 async def register(payload: RegisterRequest, db: AsyncSession = Depends(get_db)):
-    await register_farm(db, payload)
+    user = await register_farm(db, payload)
     logger.info("farm registered succesfully", user_id=user.id)
     return {"message": "Registered successfully"}
 
