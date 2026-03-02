@@ -1,4 +1,4 @@
-# from db.postgre_db import AsyncSession
+#from db.postgre_db import AsyncSession
 from datetime import datetime
 
 from sqlalchemy import text, select
@@ -6,7 +6,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from .models import RefreshToken
 
 
-async def get_user_by_email(email: str, phonenumber: str, db: AsyncSession):
+async def get_user_by_email(db: AsyncSession, email: str,):
     query = text("SELECT email, phonenumber, password, is_verified FROM users WHERE email = :email")
     results = await db.execute(query, {"email": email})
     row = results.fetchone()

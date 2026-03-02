@@ -3,7 +3,7 @@ from logging.config import fileConfig
 
 from dotenv import load_dotenv
 from sqlalchemy.ext.asyncio import create_async_engine
-
+from modules.auth.models import Users, RefreshToken, NewsSubscribers
 from alembic import context
 from config.database import Base
 
