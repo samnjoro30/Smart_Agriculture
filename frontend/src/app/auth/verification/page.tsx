@@ -56,7 +56,7 @@ const Verification = () => {
         setMessage("");
         try{
 
-            const res = await axiosInstance.post("/auth/resend-verificion-code", {
+            const res = await axiosInstance.post("/auth/resend-code", {
                 email: formData.email,
             });
             setMessage( res.data.message || "Resend code successful");
