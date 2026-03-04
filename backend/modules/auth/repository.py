@@ -50,10 +50,15 @@ async def get_refresh_token(db: AsyncSession, token: str):
     return result.scalar_one_or_none()
 
 
-async def revoke_refresh_token(db: AsyncSession, token_obj: RefreshToken):
-    token_obj.is_revoked = True
-    await db.flush()
+async def revoke_refresh_token(db: AsyncSession, token: str):
+    result = await db.execute(
+        select(RefreshToken).where(RefreshToken.token == token)
+    )
 
+    token_obj = result.scalars().first() 
+
+    if token_obj:
+        token_obj.is_revoked = True
 
 async def verified_update(user: Users):
     user.is_verified = True
