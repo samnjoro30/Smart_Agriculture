@@ -14,7 +14,7 @@ from .schemas import (
     adminLoginRequest,
     VerifyCode,
 )
-from .service import register_farm, logout_user, Verify_farmer, refresh_access_token
+from .service import register_farm, logout_user, Verify_farmer, refresh_access_token, resend_verification_code
 
 
 router = APIRouter(prefix="/auth", tags=["Auth"])
@@ -89,7 +89,14 @@ async def verify_otp(payload: VerifyCode, db: AsyncSession = Depends(get_db)):
     return {"message": "OTP verified successfully"}
 
 
-# @router.post("/auth/reset-password")
+@router.post("/resend-code")
+async def resend_code(payload: codeResend, db: AsyncSession = Depends(get_db)):
+    otp = await resend_verification_code(db, payload.email)
+
+    # TODO: send email here
+    # send_email(payload.email, otp)
+
+    return {"message": "Verification code resent successfully"}
 
 
 @router.post("/logout")
