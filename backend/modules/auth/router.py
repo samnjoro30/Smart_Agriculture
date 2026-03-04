@@ -1,9 +1,9 @@
-from fastapi import APIRouter, Depends, HTTPException, Request, Response
+from fastapi import APIRouter, Depends, HTTPException, Request, Response, BackgroundTasks
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from config.database import get_db
 from config.logger import get_logger
-
+from datetime import datetime, timedelta
 from .schemas import (
     RegisterRequest,
     LoginRequest,
@@ -14,7 +14,7 @@ from .schemas import (
     adminLoginRequest,
     VerifyCode,
 )
-from .service import register_farm, logout_user, Verify_farmer, refresh_access_token, resend_verification_code
+from .service import register_farm,login_farmer, logout_user, Verify_farmer, refresh_access_token, resend_verification_code, store_refresh_token_background
 
 
 router = APIRouter(prefix="/auth", tags=["Auth"])
@@ -33,9 +33,19 @@ async def register(payload: RegisterRequest, db: AsyncSession = Depends(get_db))
 async def login(
     payload: LoginRequest,
     response: Response,
+    background_tasks: BackgroundTasks,
     db: AsyncSession = Depends(get_db),
 ):
     result = await login_farmer(db, payload)
+
+    background_tasks.add_task(
+        store_refresh_token_background,
+        db,
+        result["user_id"],
+        result["refresh_token"],
+        datetime.utcnow() + timedelta(days=7),
+    )
+
 
     response.set_cookie(
         key="access_token",
@@ -53,12 +63,9 @@ async def login(
         secure=True,
     )
 
-    logger.info("login successful", user_id=user.id)
+    #logger.info("login successful", user_id=result.id)
 
-    return {
-        "access_token": access_token,
-        "refresh_token": refresh_token,
-    }
+    return result
 
 
 @router.post("/refresh")

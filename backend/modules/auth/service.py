@@ -54,13 +54,13 @@ async def register_farm(db: AsyncSession, payload):
 
 
 async def login_farmer(db: AsyncSession, payload):
-    user = await get_user_by_email(db, payload.email or payload.phonenumber)
-    if not user or not verify_password(payload.password, user["password"]):
+    user = await get_user_by_email(db, payload.email)
+    if not user or not await verify_password(payload.password, user.password):
         logger.warning(f"login_failed_user_not_found email=payload.email")
         raise HTTPException(
             status_code=400, detail="Invalid credentials, Username not found"
         )
-    if not user.get("is_verified"):
+    if not user.is_verified:
         raise HTTPException(status_code=403, detail="Account not verified")
 
     access_token = create_access_token(data={"sub": user.email})
@@ -76,10 +76,21 @@ async def login_farmer(db: AsyncSession, payload):
     await db.commit()
 
     return {
+        "user_id": user.id,
         "access_token": access_token,
         "refresh_token": refresh_token,
+        "token_type": "bearer",
     }
 
+
+async def store_refresh_token_background(db, user_id, token, expiry):
+    await store_refresh_token(
+        db=db,
+        user_id=user_id,
+        token=token,
+        expires_at=expiry
+    )
+    await db.commit()
 
 async def refresh_access_token(
     db: AsyncSession,
@@ -164,7 +175,7 @@ async def resend_verification_code(db: AsyncSession, email: str):
     await db.refresh(user)
 
     return new_otp 
-    
+
 async def reset_password(db: AsyncSession, email: str, new_password: str):
     user = await reset_password_check_user(db, email)
 

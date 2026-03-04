@@ -21,7 +21,6 @@ class RegisterSubscribers(BaseModel):
 
 class LoginRequest(BaseModel):
     email: EmailStr
-    phonenumber: constr(min_length=10, max_length=15)
     password: constr(min_length=6)
 
 
