@@ -11,15 +11,10 @@ from .models import Users, RefreshToken, NewsSubscribers
 from .repository import (
     create_user,
     get_user_by_email,
-    otp_verification,
-    resendVerificationCode,
-    reset_password_check_user,
-    reset_password_update,
     revoke_refresh_token,
     store_refresh_token,
     get_refresh_token,
-    verified_upate,
-    create_user_newsLetter,
+    verified_update,
 )
 
 from config.security import create_access_token, create_refresh_token
@@ -59,13 +54,13 @@ async def register_farm(db: AsyncSession, payload):
 
 
 async def login_farmer(db: AsyncSession, payload):
-    user = await get_user_by_email(db, payload.email or payload.phonenumber)
-    if not user or not verify_password(payload.password, user["password"]):
+    user = await get_user_by_email(db, payload.email)
+    if not user or not await verify_password(payload.password, user.password):
         logger.warning(f"login_failed_user_not_found email=payload.email")
         raise HTTPException(
             status_code=400, detail="Invalid credentials, Username not found"
         )
-    if not user.get("is_verified"):
+    if not user.is_verified:
         raise HTTPException(status_code=403, detail="Account not verified")
 
     access_token = create_access_token(data={"sub": user.email})
@@ -81,10 +76,21 @@ async def login_farmer(db: AsyncSession, payload):
     await db.commit()
 
     return {
+        "user_id": user.id,
         "access_token": access_token,
         "refresh_token": refresh_token,
+        "token_type": "bearer",
     }
 
+
+async def store_refresh_token_background(db, user_id, token, expiry):
+    await store_refresh_token(
+        db=db,
+        user_id=user_id,
+        token=token,
+        expires_at=expiry
+    )
+    await db.commit()
 
 async def refresh_access_token(
     db: AsyncSession,
@@ -127,7 +133,8 @@ async def refresh_access_token(
 
 
 async def Verify_farmer(db: AsyncSession, email: str, otp: str):
-    user = await otp_verification(db, email)
+    user = await get_user_by_email(db, email)
+    print("USER TYPE:", type(user))
 
     if not user:
         raise HTTPException(status_code=400, detail="Invalid email")
@@ -138,13 +145,36 @@ async def Verify_farmer(db: AsyncSession, email: str, otp: str):
     if user.otp != otp:
         raise HTTPException(status_code=400, detail="Invalid OTP")
 
-    if user.otp_expires_at < datetime.utcnow():
+    if user.otp_expires_at and user.otp_expires_at < datetime.utcnow():
         raise HTTPException(status_code=400, detail="OTP expired")
 
-    await verified_update(db, email)
+    user.is_verified = True
+    user.otp = None
+    user.otp_expires_at = None
 
     await db.commit()
 
+async def resend_verification_code(db: AsyncSession, email: str):
+    user = await get_user_by_email(db, email)
+
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+
+    if user.is_verified:
+        raise HTTPException(status_code=400, detail="Account already verified")
+
+    # Generate new OTP
+    new_otp = generate_otp()
+    new_expiry = otp_expiry()
+
+    # Update user
+    user.otp = new_otp
+    user.otp_expires_at = new_expiry
+
+    await db.commit()
+    await db.refresh(user)
+
+    return new_otp 
 
 async def reset_password(db: AsyncSession, email: str, new_password: str):
     user = await reset_password_check_user(db, email)

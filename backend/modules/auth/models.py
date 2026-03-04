@@ -11,12 +11,12 @@ class Users(Base):
 
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     username = Column(String(200), unique=True)
-    email = Column(String(150), unique=True)
+    email = Column(String(150), unique=True, index=True)
     farmname = Column(String(200))
     otp_expires_at = Column(DateTime, nullable=True)
-    is_verified = Column(Boolean(), default=False)
+    is_verified = Column(Boolean(), index=True, default=False)
     otp = Column(String(8))
-    phonenumber = Column(String(200), unique=True)
+    phonenumber = Column(String(200), unique=True, index=True)
     password = Column(String(200))
     createdAt = Column(DateTime, server_default=func.now())
     refresh_tokens = relationship(
@@ -40,6 +40,15 @@ class RefreshToken(Base):
     is_revoked = Column(Boolean, default=False)
     user = relationship("Users", back_populates="refresh_tokens")
 
+class OTPVerification(Base):
+    __tablename__ = "otp_verification"
+
+    id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    user_id = Column(UUID, ForeignKey("users.id"))
+    otp = Column(String(8))
+    expires_at = Column(DateTime, nullable=False)
+    created_at = Column(DateTime, server_default=func.now())
+    user = relationship("Users")
 
 class NewsSubscribers(Base):
     __tablename__ = "subscribers"

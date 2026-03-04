@@ -17,6 +17,7 @@ engine = create_async_engine(
     max_overflow=10,  # temporary connections
     pool_timeout=30,  # wait before raising error
     pool_recycle=1800,
+    pool_pre_ping=True,  # check connection health
 )
 
 # Create async sessionmaker
