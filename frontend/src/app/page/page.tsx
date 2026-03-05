@@ -5,6 +5,15 @@ import HeaderHome from '../components/headerHomepage';
 import Link from 'next/link';
 import dynamic from 'next/dynamic';
 
+const LearningHub = dynamic(() => import('../components/learningHub'),{
+    ssr: false,
+    loading: () => (
+        <div className="flex items-center justify-center py-10">
+          <div className="w-12 h-12 border-4 border-green-500 border-t-transparent rounded-full animate-spin"></div>
+        </div>
+    )
+})
+
 const Gallery = dynamic(() => import('../components/FarmerGallery'),{
     ssr: false,
     loading: () => (
@@ -59,6 +68,7 @@ export  default function Homepage() {
                 
             </header>
             <main>
+                
                 <section className="relative h-[50vh] w-full mt-1 overflow-hidden">
                     <video 
                         autoPlay 
@@ -66,10 +76,10 @@ export  default function Homepage() {
                         loop
                         preload="none"
                         playsInline
-                        poster="/farmer5.jpg"
+                        poster="/cowface.jpg"
                         className="absolute top-0 left-0 w-full h-full object-cover z-0"
                     >
-                        <source src="/background.mp4" type="video/mp4" />
+                        <source src="/C2.mp4" type="video/mp4" />
                     </video>
                     <div className="relative z-10 flex flex-col items-center justify-center h-full text-white px-4 text-center backdrop-blur-sm bg-white/10 rounded-xl">
 
@@ -84,8 +94,9 @@ export  default function Homepage() {
                        
                     </div>
                 </section>
+               
                 <Gallery />
-                
+                <LearningHub />
                 <Service />
 
                 <section className="py-12 px-4 bg-white">
