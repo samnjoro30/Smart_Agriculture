@@ -17,7 +17,7 @@ export default function Overview(){
         const fetchUserDetails = async () =>{
 
             try{
-                const res = await axiosInstance.get("/users/userprofile", {
+                const res = await axiosInstance.get("/farm/farm-profile", {
                     withCredentials: true,
                 })
                 setUser(res.data.message);
