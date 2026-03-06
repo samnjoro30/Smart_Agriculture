@@ -25,7 +25,7 @@ export default function ProfileSetting() {
   useEffect(() => {
     const fetchProfile = async () => {
       try {
-        const res = await axiosInstance.get("/users/userprofile", {
+        const res = await axiosInstance.get("/farm/farm-profile", {
           withCredentials: true,
         })
         let details = res.data.message

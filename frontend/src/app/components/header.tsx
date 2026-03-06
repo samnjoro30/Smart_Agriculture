@@ -1,95 +1,100 @@
 "use client"
 
-import { useState, useEffect} from 'react'
-import Image from 'next/image';
-import { Sun, Moon, User, LogOut } from 'lucide-react';
-import { useTheme } from "next-themes";
-import axiosInstance from '../API/axiosInstance';
+import { useState, useEffect } from 'react'
+import Image from 'next/image'
+import { Sun, Moon, User, LogOut } from 'lucide-react'
+import axiosInstance from '../API/axiosInstance'
 
-export default function Header (){
-    const [theme, setTheme] = useState<'light' | 'dark'>('light');
-    const [mounted, setMounted] = useState<boolean>(false);
-    const [userLetters, setUserLetters] = useState<string>('')
+export default function Header() {
 
-    useEffect(() => setMounted(true), []);
+  const [theme, setTheme] = useState<'light' | 'dark'>('light')
+  const [mounted, setMounted] = useState(false)
+  const [userLetters, setUserLetters] = useState('')
 
+  useEffect(() => setMounted(true), [])
 
-    // useEffect(() => {
-    //     const savedTheme = localStorage.getItem('theme') as "light" | "dark" | null;
-    //     if(savedTheme){
-    //         setTheme(savedTheme);
-    //         document.documentElement.classList.toggle('dark', savedTheme === 'dark' );
-    //     }
-    // }, []);
+  useEffect(() => {
+    const Username = async () => {
+      try {
+        const res = await axiosInstance.get("/farm/farm-profile", {
+          withCredentials: true,
+        })
 
-    useEffect(() => {
-        const Username =  async() =>{
-            try{
-                const res = await axiosInstance.get("/users/userprofile",{
-                    withCredentials: true,
-                });
-                const name = res.data.message || 'user';
+        const username = res.data.message?.username || "User"
 
-                const nameLetter = name.username;
-
-                if (nameLetter >= 2){
-                    setUserLetters(name.substring(0).toUpperCase());
-                }else {
-                    setUserLetters(nameLetter[0]?.toUpperCase() || 'U');
-
-                }
-            }catch(err){
-                const error  = err instanceof Error ? err : new Error(String(err));
-                console.error("Error retriving username letters", error);
-            }
+        if (username.length >= 2) {
+          setUserLetters(username.substring(0,2).toUpperCase())
+        } else {
+          setUserLetters(username[0]?.toUpperCase() || "U")
         }
-        Username();
-    }, [])
 
-    // const toggleTheme = () => {
-    //     const newTheme = theme === 'light' ? 'dark' : 'light';
-    //     setTheme(newTheme);
-    //     localStorage.setItem('theme', newTheme);
-    //     document.documentElement.classList.toggle('dark', newTheme === 'dark');
-    //   };
-      const handleLogout = async () => {
-        try{
-            await axiosInstance.post("/auth/logout")
-            window.location.href = '/auth/login';
-        }catch(err){
-            const error = err instanceof Error ? err : new Error(String(err));
-            console.error("Error occurred during logout", error);
-        }
-      };
+      } catch (err) {
+        console.error("Error retrieving username letters", err)
+      }
+    }
 
-      if (!mounted) return null;
+    Username()
+  }, [])
 
-    return(
-        <div className="bg-green-200 shadow-green-400 sticky mb-1 rounded-b-xl">
-            <div className="max-w-7xl mx-auto px-1 py-4 flex items-center justify-between">
-                <Image src="/logo.png" width={60} height={40} alt="logo" className="left-3 rounded-full"/>
-                <h2 className="text-xl font-bold text-green-500">Smart Agriculture</h2>
-                <div
-                  className="bg-green-600 text-white px-3 py-1 rounded-full hover:bg-green-700 transition-all duration-200"
-                >{ 
-                    userLetters || <User/>
-                }
-                </div>
+  const handleLogout = async () => {
+    try {
+      await axiosInstance.post("/auth/logout")
+      window.location.href = '/auth/login'
+    } catch (err) {
+      console.error("Error occurred during logout", err)
+    }
+  }
 
-                <button
-                  className='bg-green-600 text-white px-3 py-1 rounded-full hover:bg-green-700 transition-all duration-200'
-                  onClick={() => setTheme(theme === "light" ? "dark" : "light")}
-                >
-                    {theme === 'light' ?  < Moon/>: < Sun/>}
-                </button>
-                <button
-                  className="flex items-center space-x-1 bg-gradient-to-r from-green-500 to-emerald-600 text-white px-4 py-2 rounded-full hover:from-green-600 hover:to-emerald-700 transition-all duration-200 shadow-sm"
-                  onClick={handleLogout}
-                >
-                    <LogOut size={18}/>
-                    <span className="hidden sm:block">Logout</span>
-                </button>
-            </div>
+  if (!mounted) return null
+
+  return (
+    <header className="bg-green-500 sticky top-0 mb-1 rounded-b-xl shadow-sm">
+
+      <div className="max-w-7xl mx-auto px-3 py-2 flex items-center justify-between">
+
+        {/* LEFT SIDE (Logo + Title) */}
+        <div className="flex items-center gap-2">
+          <Image
+            src="/logo.png"
+            width={40}
+            height={40}
+            alt="logo"
+            className="rounded-full"
+          />
+
+          <h2 className="text-lg font-bold text-green-900">
+            Smart Agriculture
+          </h2>
         </div>
-    )
+
+        {/* RIGHT SIDE (Icons grouped closely) */}
+        <div className="flex items-center gap-2">
+
+          {/* User */}
+          <div className="flex items-center justify-center w-9 h-9 bg-green-600 text-white rounded-full hover:bg-green-700 transition">
+            {userLetters || <User size={18}/>}
+          </div>
+
+          {/* Theme Toggle */}
+          <button
+            className="flex items-center justify-center w-9 h-9 bg-green-600 text-white rounded-full hover:bg-green-700 transition"
+            onClick={() => setTheme(theme === "light" ? "dark" : "light")}
+          >
+            {theme === 'light' ? <Moon size={18}/> : <Sun size={18}/>}
+          </button>
+
+          {/* Logout */}
+          <button
+            className="flex items-center gap-1 bg-gradient-to-r from-green-500 to-emerald-600 text-white px-3 py-1 rounded-full hover:from-green-600 hover:to-emerald-700 transition shadow-sm"
+            onClick={handleLogout}
+          >
+            <LogOut size={16}/>
+            <span className="hidden sm:block text-sm">Logout</span>
+          </button>
+
+        </div>
+
+      </div>
+    </header>
+  )
 }
