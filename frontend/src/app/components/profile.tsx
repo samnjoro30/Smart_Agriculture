@@ -28,7 +28,7 @@ export default function ProfileSetting() {
         const res = await axiosInstance.get("/farm/farm-profile", {
           withCredentials: true,
         })
-        let details = res.data.message
+        let details = res.data.farmer
         setProfile(details)
         setFormData({
           email: details.email,

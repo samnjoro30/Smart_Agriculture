@@ -20,7 +20,7 @@ export default function Header() {
           withCredentials: true,
         })
 
-        const username = res.data.message?.username || "User"
+        const username = res.data.farmer?.username || "User"
 
         if (username.length >= 2) {
           setUserLetters(username.substring(0,2).toUpperCase())
