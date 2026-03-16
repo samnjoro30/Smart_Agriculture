@@ -20,7 +20,7 @@ class RegisterSubscribers(BaseModel):
 
 
 class LoginRequest(BaseModel):
-    email: EmailStr
+    identifier: str
     password: constr(min_length=6)
 
 

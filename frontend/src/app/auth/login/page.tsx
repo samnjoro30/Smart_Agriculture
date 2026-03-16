@@ -9,7 +9,7 @@ import axios from 'axios';
 import { EyeOff, Eye } from 'lucide-react';
 
 interface FormData {
-  indentifier: string,
+  identifier: string,
   password: string,
 }
 
@@ -22,7 +22,7 @@ export default function Login() {
   const router = useRouter();
 
   const [formData, setFormData] = useState<FormData>({ 
-    indentifier: '', 
+    identifier: '', 
     password: ''
   });
   const labelStyle="block text-green-700 font-bold mb-1"
@@ -86,11 +86,11 @@ export default function Login() {
                 </label>
                 <input
                   id="username"
-                  name="email"
+                  name="identifier"
                   type="text"
                   placeholder="Email"
                   className={InputStyle}
-                  value={formData.indentifier}
+                  value={formData.identifier}
                   onChange={handleChange}
                 />
               </div>

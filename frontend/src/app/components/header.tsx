@@ -4,8 +4,9 @@ import { useState, useEffect } from 'react'
 import Image from 'next/image'
 import { Sun, Moon, User, LogOut, ChevronDown, Globe } from 'lucide-react'
 import { useTheme } from "next-themes"
-import axiosInstance from '../API/axiosInstance'
-import { useUser } from '../lib/context/context'
+import axiosInstance from '../API/axiosInstance';
+import { useUser } from '../lib/context/context';
+import { logout } from '../lib/flag';
 
 export default function Header() {
 
@@ -38,9 +39,10 @@ export default function Header() {
   const handleLogout = async () => {
     try {
       await axiosInstance.post("/auth/logout")
-      window.location.replace('/auth/login')
     } catch (err) {
       console.error("Error occurred during logout", err)
+    }finally{
+      logout();
     }
   }
 

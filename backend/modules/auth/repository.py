@@ -4,6 +4,7 @@ from datetime import datetime
 from sqlalchemy import text, select, or_
 from sqlalchemy.ext.asyncio import AsyncSession
 from .models import RefreshToken, Users
+from .security import detect_identifier, normalize_identifier
 
 
 async def get_user_by_email(db: AsyncSession, email: str):
@@ -13,15 +14,18 @@ async def get_user_by_email(db: AsyncSession, email: str):
     return result.scalar_one_or_none()
 
 async def get_user_by_identifier(db: AsyncSession, identifier: str):
-    result = await db.execute(
-        select(Users).where(
-            or_(
-                Users.email == identifier,
-                Users.username == identifier,
-                Users.phonenumber == identifier
-            )
-        )
-    )
+    id_type = detect_identifier(identifier)
+    if id_type == "email":
+        query = select(Users).where(Users.email == identifier)
+
+    elif id_type == "phone":
+        #identifier = normalize_identifier(identifier)
+        query = select(Users).where(Users.phonenumber == identifier)
+
+    else:
+        query = select(Users).where(Users.username == identifier)
+
+    result = await db.execute(query)
     return result.scalar_one_or_none()
 
 async def create_user(user_data: dict, db: AsyncSession):
