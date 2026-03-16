@@ -20,7 +20,7 @@ export default function Overview(){
                 const res = await axiosInstance.get("/farm/farm-profile", {
                     withCredentials: true,
                 })
-                setUser(res.data.message);
+                setUser(res.data.farmer);
 
             }catch(err){
                 const error = err instanceof Error ? err : new Error(String(err));

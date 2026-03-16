@@ -43,6 +43,7 @@ export default function Login() {
         withCredentials: true,
       });
       
+      //sessionStorage.setItem("access_token", res.data.access_token);
       setMessage(res.data.message || "login successful");
       router.push('/dashboard')
       setTimeout(() => setMessage(''), 3000);

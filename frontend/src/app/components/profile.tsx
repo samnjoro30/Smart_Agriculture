@@ -23,27 +23,28 @@ export default function ProfileSetting() {
   const [editingField, setEditingField] = useState<string | null>(null)
 
   useEffect(() => {
+    let cancelled = false
     const fetchProfile = async () => {
       try {
-        const res = await axiosInstance.get("/farm/farm-profile", {
-          withCredentials: true,
-        })
-        let details = res.data.farmer
-        setProfile(details)
-        setFormData({
-          email: details.email,
-          farmname: details.farmname,
-          phonenumber: details.phonenumber,
-          password: "",
-        })
+        const res = await axiosInstance.get("/farm/farm-profile", { withCredentials: true })
+        if (!cancelled) {
+          const details = res.data  // directly
+          setProfile(details)
+          setFormData({
+            email: details.email,
+            farmname: details.farmname,
+            phonenumber: details.phonenumber,
+            password: "",
+          })
+        }
       } catch (err) {
-        const error = err instanceof Error ? err : new Error(String(err))
-        console.error("Error fetching details", error)
+        console.error(err)
       } finally {
-        setLoading(false)
+        if (!cancelled) setLoading(false)
       }
     }
     fetchProfile()
+    return () => { cancelled = true }
   }, [])
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -59,6 +60,7 @@ export default function ProfileSetting() {
         [field]: formData[field as keyof typeof formData],
       })
       setEditingField(null)
+      
       alert(`${field} updated successfully!`)
     } catch (error) {
       console.error(`Error updating ${field}`, error)

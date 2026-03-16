@@ -3,17 +3,18 @@
 import { useState, useEffect } from 'react'
 import Image from 'next/image'
 import { Sun, Moon, User, LogOut, ChevronDown, Globe } from 'lucide-react'
+import { useTheme } from "next-themes"
 import axiosInstance from '../API/axiosInstance'
 import { useUser } from '../lib/context/context'
 
 export default function Header() {
 
-  const [theme, setTheme] = useState<'light' | 'dark'>('light')
+  //const [theme, setTheme] = useState<'light' | 'dark'>('light')
+  const { theme, setTheme, systemTheme } = useTheme()
   const [mounted, setMounted] = useState(false)
   const [userLetters, setUserLetters] = useState('')
   const [dropdownOpen, setDropdownOpen] = useState(false)
 
-  useEffect(() => setMounted(true), [])
 
   const { user } = useUser()
   useEffect(() => {
@@ -43,7 +44,13 @@ export default function Header() {
     }
   }
 
+  useEffect(() => {
+    setMounted(true)
+  }, [])
+  
   if (!mounted) return null
+
+  const currentTheme = theme === "system" ? systemTheme : theme
 
   return (
     <header className="bg-green-500 sticky top-0 mb-1 rounded-b-xl shadow-sm">
@@ -79,9 +86,9 @@ export default function Header() {
           {/* Theme Toggle */}
           <button
             className="flex items-center justify-center w-9 h-9 bg-green-600 text-white rounded-full hover:bg-green-700 transition"
-            onClick={() => setTheme(theme === "light" ? "dark" : "light")}
+            onClick={() => setTheme(currentTheme === "light" ? "dark" : "light")}
           >
-            {theme === "light" ? <Moon size={18}/> : <Sun size={18}/>}
+            {currentTheme === "light" ? <Moon size={18}/> : <Sun size={18}/>}
           </button>
 
           <div className="relative">

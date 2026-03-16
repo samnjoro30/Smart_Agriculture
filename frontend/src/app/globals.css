@@ -6,11 +6,11 @@
   --background: #ffffff;
   --foreground: #171717;
   --pageformatcolor:#f0fdf4;
-  
 }
+/* }
 @tailwindcss base;
 @tailwindcss components;
-@tailwind utilities;
+@tailwind utilities; */
 
 @theme inline {
   --color-background: var(--background);
@@ -26,24 +26,16 @@
   }
 }
 
+/* Light mode */
 body {
-  background: var(--pageformatcolor);
+  background-color: var(--background);
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
   box-sizing: border-box;
 }
-
-/* @keyframes slideDown {
-  0% {
-    transform: translate(-50%, -100%);
-    opacity: 0;
-  }
-  100% {
-    transform: translate(-50%, 0);
-    opacity: 1;
-  }
+/* Dark mode */
+html.dark {
+  --background: #0d0f0f;
+  --foreground: #ecfdf5;
+  --pageformatcolor: #0f1712;
 }
-
-.animate-slideDown {
-  animation: slideDown 0.4s ease-out forwards;
-} */
