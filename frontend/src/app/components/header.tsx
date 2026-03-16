@@ -20,7 +20,10 @@ export default function Header() {
   const { user } = useUser()
   useEffect(() => {
 
-    if (!user?.username) return
+    if (!user?.username){
+      setUserLetters("")
+      return
+    } 
   
     const parts = user.username.trim().split(" ")
   

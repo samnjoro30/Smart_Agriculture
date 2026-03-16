@@ -3,7 +3,7 @@ import axios from 'axios';
 import { getIsLoggedOut, logout } from '../lib/flag';
 
 const axiosInstance = axios.create({
-    baseURL: "https://smart-agriculture-21dt.onrender.com/", //"http://localhost:8000/",// "https://smart-agriculture-21dt.onrender.com/", //"http://localhost:8000/", //process.env.BACKEND_URL,
+    baseURL: "http://localhost:8000/",//"https://smart-agriculture-21dt.onrender.com/", //"http://localhost:8000/",// "https://smart-agriculture-21dt.onrender.com/", //"http://localhost:8000/", //process.env.BACKEND_URL,
     withCredentials: true,
 });
 
@@ -30,8 +30,9 @@ axiosInstance.interceptors.response.use(
             logout();
             return Promise.reject(error);
         }
-        if (error.response?.status === 401 && !originalRequest._retry) {
-            originalRequest._retry = true;
+        if(error.response && error.response.status===401){
+        // if (error.response?.status === 401 && !originalRequest._retry) {
+        //     originalRequest._retry = true;
             try{
                await axiosInstance.post("/auth/refresh", {}, {withCredentials: true});
                return axiosInstance(originalRequest);
