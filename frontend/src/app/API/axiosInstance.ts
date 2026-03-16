@@ -24,7 +24,8 @@ axiosInstance.interceptors.response.use(
             window.location.href="/auth/login"
             return Promise.reject(error);
         }
-        if(error.response && error.response.status===401){
+        if (error.response?.status === 401 && !originalRequest._retry) {
+            originalRequest._retry = true;
             try{
                await axiosInstance.post("/auth/refresh", {}, {withCredentials: true});
                return axiosInstance(originalRequest);

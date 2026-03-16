@@ -1,7 +1,7 @@
 #from db.postgre_db import AsyncSession
 from datetime import datetime
 
-from sqlalchemy import text, select
+from sqlalchemy import text, select, or_
 from sqlalchemy.ext.asyncio import AsyncSession
 from .models import RefreshToken, Users
 
@@ -12,6 +12,17 @@ async def get_user_by_email(db: AsyncSession, email: str):
     )
     return result.scalar_one_or_none()
 
+async def get_user_by_identifier(db: AsyncSession, identifier: str):
+    result = await db.execute(
+        select(Users).where(
+            or_(
+                Users.email == identifier,
+                Users.username == identifier,
+                Users.phonenumber == identifier
+            )
+        )
+    )
+    return result.scalar_one_or_none()
 
 async def create_user(user_data: dict, db: AsyncSession):
     user = Users(**user_data)   
@@ -46,8 +57,8 @@ async def store_refresh_token(
 
 
 async def get_refresh_token(db: AsyncSession, token: str):
-    result = await db.execute(select(RefreshToken).where(RefreshToken.token == token))
-    return result.scalar_one_or_none()
+    result = await db.execute(select(RefreshToken).where(RefreshToken.token == token).with_for_update())
+    return result.scalars().first()
 
 
 async def revoke_refresh_token(db: AsyncSession, token: str):

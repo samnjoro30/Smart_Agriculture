@@ -32,6 +32,11 @@ def decode_token(token: str):
 
 
 def get_token_from_cookie(request: Request) -> str:
+
+    auth_header = request.headers.get("Authorization")
+    if auth_header and auth_header.startswith("Bearer "):
+        return auth_header.split(" ")[1]
+        
     token = request.cookies.get("access_token")
 
     if not token:
@@ -54,7 +59,7 @@ async def get_current_user(
     if not email:
         raise HTTPException(status_code=401, detail="Invalid token")
 
-    user = await get_user_by_email(email, db)
+    user = await get_user_by_email(db, email)
 
     if not user:
         raise HTTPException(status_code=401, detail="User not found")
