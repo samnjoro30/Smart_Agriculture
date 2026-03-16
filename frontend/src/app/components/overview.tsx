@@ -29,32 +29,44 @@ export default function Overview(){
     const [stats, setStats] = useState<FarmStats | null>(null);
     const [activities, setActivities] = useState<Activity[]>([]);
 
-    useEffect(() => {
+    // useEffect(() => {
 
-        const fetchData = async () => {
+    //     const fetchData = async () => {
 
-            try{
+    //         try{
+    //             const [userRes, statsRes, activityRes] = await Promise.all([
+    //                 axiosInstance.get("/farm/farm-profile", {withCredentials: true}),
+    //                 axiosInstance.get("/farm/stats"),
+    //                 axiosInstance.get("/farm/recent-activity")
+    //             ])
 
-                const [userRes, statsRes, activityRes] = await Promise.all([
-                    axiosInstance.get("/farm/farm-profile", {withCredentials: true}),
-                    axiosInstance.get("/farm/stats"),
-                    axiosInstance.get("/farm/recent-activity")
-                ])
+    //             setUser(userRes.data)
+    //             setStats(statsRes.data)
+    //             setActivities(activityRes.data)
 
-                setUser(userRes.data)
-                setStats(statsRes.data)
-                setActivities(activityRes.data)
+    //         }catch(err){
+    //             console.error("Dashboard fetch error", err)
+    //         }
 
-            }catch(err){
-                console.error("Dashboard fetch error", err)
-            }
+    //     }
 
+    //     fetchData()
+
+    // }, [])
+
+    const fetchUser = async () => {
+        try {
+            const res = await axiosInstance.get("/farm/farm-profile", { withCredentials: true })
+            setUser(res.data)
+        } catch (err) {
+            console.error("Failed to load user", err)
         }
-
-        fetchData()
-
-    }, [])
-
+    }
+    useEffect(() => {
+        fetchUser()
+        // fetchStats()
+        // fetchActivity()
+      }, [])
 
     return(
         <div className="bg-white p-4 rounded-xl space-y-6">
