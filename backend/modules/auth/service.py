@@ -11,6 +11,7 @@ from .models import Users, RefreshToken, NewsSubscribers
 from .repository import (
     create_user,
     get_user_by_email,
+    get_user_by_identifier,
     revoke_refresh_token,
     store_refresh_token,
     get_refresh_token,
@@ -54,7 +55,7 @@ async def register_farm(db: AsyncSession, payload):
 
 
 async def login_farmer(db: AsyncSession, payload):
-    user = await get_user_by_email(db, payload.email)
+    user = await get_user_by_identifier(db, payload.identifier)
     if not user or not await verify_password(payload.password, user.password):
         logger.warning(f"login_failed_user_not_found email=payload.email")
         raise HTTPException(
@@ -111,8 +112,9 @@ async def refresh_access_token(
         raise HTTPException(status_code=401, detail="Refresh token expired")
 
     user = stored_token.user
-
-    await revoke_refresh_token(db, stored_token)
+    
+    await db.delete(stored_token)
+    #await revoke_refresh_token(db, stored_token)
 
     new_refresh_token = create_refresh_token({"sub": str(user.id)})
     new_access_token = create_access_token({"sub": str(user.id)})
