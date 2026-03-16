@@ -2,39 +2,37 @@
 
 import { useState, useEffect } from 'react'
 import Image from 'next/image'
-import { Sun, Moon, User, LogOut } from 'lucide-react'
+import { Sun, Moon, User, LogOut, ChevronDown, Globe } from 'lucide-react'
 import axiosInstance from '../API/axiosInstance'
+import { useUser } from '../lib/context/context'
 
 export default function Header() {
 
   const [theme, setTheme] = useState<'light' | 'dark'>('light')
   const [mounted, setMounted] = useState(false)
   const [userLetters, setUserLetters] = useState('')
+  const [dropdownOpen, setDropdownOpen] = useState(false)
 
   useEffect(() => setMounted(true), [])
 
+  const { user } = useUser()
   useEffect(() => {
-    const Username = async () => {
-      try {
-        const res = await axiosInstance.get("/farm/farm-profile", {
-          withCredentials: true,
-        })
 
-        const username = res.data.farmer?.username || "User"
-
-        if (username.length >= 2) {
-          setUserLetters(username.substring(0,2).toUpperCase())
-        } else {
-          setUserLetters(username[0]?.toUpperCase() || "U")
-        }
-
-      } catch (err) {
-        console.error("Error retrieving username letters", err)
-      }
+    if (!user?.username) return
+  
+    const parts = user.username.trim().split(" ")
+  
+    let letters = ""
+  
+    if (parts.length === 1) {
+      letters = parts[0].substring(0,2)
+    } else {
+      letters = parts[0][0] + parts[1][0]
     }
-
-    Username()
-  }, [])
+  
+    setUserLetters(letters.toUpperCase())
+  
+  }, [user])
 
   const handleLogout = async () => {
     try {
@@ -68,29 +66,55 @@ export default function Header() {
         </div>
 
         {/* RIGHT SIDE (Icons grouped closely) */}
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-3">
 
           {/* User */}
-          <div className="flex items-center justify-center w-9 h-9 bg-green-600 text-white rounded-full hover:bg-green-700 transition">
+          {/* <div className="flex items-center justify-center w-9 h-9 bg-green-600 text-white rounded-full hover:bg-green-700 transition">
             {userLetters || <User size={18}/>}
-          </div>
+          </div> */}
+          <button className="flex items-center justify-center w-9 h-9 bg-green-600 text-white rounded-full hover:bg-green-700 transition">
+            <Globe size={18}/>
+          </button>
 
           {/* Theme Toggle */}
           <button
             className="flex items-center justify-center w-9 h-9 bg-green-600 text-white rounded-full hover:bg-green-700 transition"
             onClick={() => setTheme(theme === "light" ? "dark" : "light")}
           >
-            {theme === 'light' ? <Moon size={18}/> : <Sun size={18}/>}
+            {theme === "light" ? <Moon size={18}/> : <Sun size={18}/>}
           </button>
 
-          {/* Logout */}
-          <button
-            className="flex items-center gap-1 bg-gradient-to-r from-green-500 to-emerald-600 text-white px-3 py-1 rounded-full hover:from-green-600 hover:to-emerald-700 transition shadow-sm"
-            onClick={handleLogout}
-          >
-            <LogOut size={16}/>
-            <span className="hidden sm:block text-sm">Logout</span>
-          </button>
+          <div className="relative">
+
+            <button
+              onClick={() => setDropdownOpen(!dropdownOpen)}
+              className="flex items-center gap-2 bg-green-600 text-white px-3 py-1 rounded-full hover:bg-green-700 transition"
+            >
+
+              <div className="flex items-center justify-center w-8 h-8 bg-green-700 rounded-full text-sm font-bold">
+                {userLetters || <User size={16}/>}
+              </div>
+
+              <ChevronDown size={16}/>
+            </button>
+
+            {dropdownOpen && (
+
+              <div className="absolute right-0 mt-2 w-40 bg-green-500 rounded-lg shadow-lg border">
+
+                <button
+                  onClick={handleLogout}
+                  className="flex items-center gap-2 w-full px-4 py-2 text-sm rounded-full hover:bg-green-400"
+                >
+                  <LogOut size={16}/>
+                  Logout
+                </button>
+
+              </div>
+
+            )}
+
+          </div>
 
         </div>
 
