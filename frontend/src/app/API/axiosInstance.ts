@@ -9,6 +9,9 @@ const axiosInstance = axios.create({
 
 axiosInstance.interceptors.request.use(
     (config) => {
+        if (getIsLoggedOut()) {
+            return Promise.reject({ message: "User logged out" });
+        }
         config.withCredentials = true;
         return config;
     },
@@ -30,6 +33,7 @@ axiosInstance.interceptors.response.use(
             logout();
             return Promise.reject(error);
         }
+        // if(error.response && error.response.status===401){
         if (error.response?.status === 401 && !originalRequest._retry) {
             originalRequest._retry = true;
             try{

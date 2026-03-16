@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from 'react';
 import axiosInstance from '../API/axiosInstance';
-
 interface User {
     farmname: string,
     username: string,

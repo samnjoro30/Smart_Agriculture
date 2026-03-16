@@ -1,5 +1,7 @@
 let isLoggedOut = false;
 
+export const logoutController = new AbortController();
+
 export const logout = () => {
   if (isLoggedOut) return; // prevent multiple calls
 

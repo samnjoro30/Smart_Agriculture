@@ -6,7 +6,7 @@ import { Sun, Moon, User, LogOut, ChevronDown, Globe } from 'lucide-react'
 import { useTheme } from "next-themes"
 import axiosInstance from '../API/axiosInstance';
 import { useUser } from '../lib/context/context';
-import { logout } from '../lib/flag';
+import { logout} from '../lib/flag';
 
 export default function Header() {
 
@@ -20,7 +20,10 @@ export default function Header() {
   const { user } = useUser()
   useEffect(() => {
 
-    if (!user?.username) return
+    if (!user?.username){
+      setUserLetters("")
+      return
+    } 
   
     const parts = user.username.trim().split(" ")
   

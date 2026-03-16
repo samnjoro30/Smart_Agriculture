@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
-import { ThemeProvider } from "./lib/providers/theme";
+//import { ThemeProvider } from "./lib/providers/theme";
 import "./globals.css";
 import { FirebaseProvider } from "./lib/firebaseProvider";
 import { UserProvider } from "./lib/context/context";
@@ -31,14 +31,12 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <ThemeProvider>
         {/* <ThemeProvider attribute="class" defaultTheme="light" enableSystem={false}> */}
           <FirebaseProvider />
           <UserProvider>
             {children}
           </UserProvider>
         {/* </ThemeProvider> */}
-        </ThemeProvider>
       </body>
     </html>
   );
