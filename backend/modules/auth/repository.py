@@ -3,7 +3,7 @@ from datetime import datetime
 
 from sqlalchemy import text, select, or_
 from sqlalchemy.ext.asyncio import AsyncSession
-from .models import RefreshToken, Users
+from .models import RefreshToken, Users, NewsSubscribers
 from .security import detect_identifier, normalize_identifier
 
 
@@ -79,5 +79,15 @@ async def verified_update(user: Users):
     user.is_verified = True
     user.otp = None
 
-
-
+async def get_subscriber_by_email(db: AsyncSession, email: str):
+    result = await db.execute(
+        select(NewsSubscribers).where(NewsSubscribers.email == email)
+    )
+    return result.scalar_one_or_none()
+    
+async def Create_news_letter_subscriber(db: AsyncSession, email: str):
+    subscriber = NewsSubscribers(email=email, is_verified=False)
+    db.add(subscriber)
+    await db.flush()
+    await db.refresh(subscriber)
+    return subscriber

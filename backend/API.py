@@ -21,6 +21,7 @@ from alembic.config import Config
 # from controller.users import app as user_router
 
 from modules.auth.router import router as auth_farmer
+from modules.farmers.router import router as farm_router
 
 app = FastAPI(
     title="Smart farm API",
@@ -53,6 +54,7 @@ app.add_middleware(
 # app.include_router(admin_auth_router)
 
 app.include_router(auth_farmer)
+app.include_router(farm_router)
 
 
 @app.get("/ping")

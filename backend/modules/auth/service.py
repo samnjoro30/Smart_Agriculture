@@ -7,7 +7,11 @@ from jose import JWTError, jwt
 from sqlalchemy.ext.asyncio import AsyncSession
 from starlette.status import HTTP_201_CREATED
 
-from .models import Users, RefreshToken, NewsSubscribers
+from .models import (
+    Users, 
+    RefreshToken, 
+    NewsSubscribers,
+)
 from .repository import (
     create_user,
     get_user_by_email,
@@ -16,6 +20,8 @@ from .repository import (
     store_refresh_token,
     get_refresh_token,
     verified_update,
+    get_subscriber_by_email,
+    Create_news_letter_subscriber,
 )
 
 from config.security import create_access_token, create_refresh_token
@@ -193,11 +199,16 @@ async def logout_user(db: AsyncSession, refresh_token: str):
     await db.commit()
 
 
-# async def RegisterForNewsLetter(request: RegisterSubscribers, db):
-#     user_news = {
-#         "email": request.email,
-#     }
-#     return await create_user_newsLetter(user_news, db)
+async def RegisterForNewsLetter(db: AsyncSession, payload):
+    existing_subscriber = await get_subscriber_by_email(db, payload.email)
+
+    if existing_subscriber:
+        raise HTTPException(status_code=409, detail="Email already subscribed")
+    
+    subscriber = Create_news_letter_subscriber(db, payload.email)
+
+    await db.commit()
+    return subscriber
 
 
 # async def resendCode(request: codeResend, db):

@@ -14,8 +14,16 @@ from .schemas import (
     adminLoginRequest,
     VerifyCode,
 )
-from .service import register_farm,login_farmer, logout_user, Verify_farmer, refresh_access_token, resend_verification_code, store_refresh_token_background
-
+from .service import (
+    register_farm,
+    login_farmer, 
+    logout_user, 
+    Verify_farmer, 
+    refresh_access_token, 
+    resend_verification_code, 
+    store_refresh_token_background, 
+    RegisterForNewsLetter,
+)
 
 router = APIRouter(prefix="/auth", tags=["Auth"])
 
@@ -121,5 +129,10 @@ async def logout(
     return {"message": "Logged out successfully"}
 
 
-# @router.post("/newsletter/subscribe")
+@router.post("/newsletter/subscribe")
+async def news_letter(payload: RegisterSubscribers, db: AsyncSession = Depends(get_db)):
+    await RegisterForNewsLetter(db, payload)
+     
+    return  {"message": "Subscribed to newsletter successfully"}
+
 # @router.post("/auth/resend-verificion-code")
