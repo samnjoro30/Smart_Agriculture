@@ -21,13 +21,15 @@ export default function FooterHome (){
         setFormData(prev => ({...prev,[name]: value}))
     }
 
-    const handleSubmit = async() =>{
+    const handleSubmit = async(e: React.FormEvent) =>{
+        e.preventDefault();
         setLoading(true);
         setMessage('');
         setError('');
         try{
-            const res = await axiosInstance.post("/newsletter/subscribe", formData);
+            const res = await axiosInstance.post("/auth/newsletter/subscribe", formData);
             setMessage(res.data.message || 'Successfully subscribed to news letter')
+            setFormData({ email: "" });
             if (res.data.message == 'Subscribed Successfully'){
                 alert("subscribtion successful");
             }
@@ -35,6 +37,8 @@ export default function FooterHome (){
             const error = err instanceof Error ? err : new Error(String(err));
             console.log("Error subscribing to newsletter", error);
             setError("Error subscribing to newsletter, Try again later!")
+        }finally{
+            setLoading(false);
         }
     }
     return(
@@ -78,7 +82,11 @@ export default function FooterHome (){
                           placeholder="Enter your email"
                           className="w-full px-3 py-2 rounded-md text-white-900 border-2 focus:outline-none"
                        />
-                        <button className="mt-2 w-full bg-white text-green-900 font-semibold py-2 px-4 rounded-md hover:bg-gray-200 transition">
+                        <button 
+                          type="submit"
+                          className="mt-2 w-full bg-white text-green-900 font-semibold py-2 px-4 rounded-md hover:bg-gray-200 transition"
+                          disabled={loading}
+                        >
                             {loading ? 'subscribe ...' : 'subscribe'}
                         </button>
                     </form>
