@@ -2,7 +2,6 @@ import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
 const PUBLIC_ROUTES = [
-  "/",
   "/auth/login",
   "/auth/register",
 ];
@@ -15,31 +14,17 @@ export function middleware(request: NextRequest) {
     pathname.startsWith(route)
   );
 
-  const isApiRoute = pathname.startsWith("/api");
+  console.log("Middleware:", pathname, "Token:", !!token);
 
-  console.log("Middleware running:", pathname);
-
-  // 1️⃣ Protect API routes
-  if (isApiRoute) {
-    if (!token) {
-      return NextResponse.json(
-        { message: "Unauthorized" },
-        { status: 401 }
-      );
-    }
-  }
-
-  // 2️⃣ Protect pages (dashboard etc.)
+  // ✅ 1. Protect private pages
   if (!token && !isPublicRoute) {
     const loginUrl = new URL("/auth/login", request.url);
-
-    // preserve the page user tried to visit
     loginUrl.searchParams.set("callbackUrl", pathname);
 
     return NextResponse.redirect(loginUrl);
   }
 
-  // 3️⃣ Prevent logged-in users from visiting login page
+  // ✅ 2. Prevent logged-in users from visiting auth pages
   if (token && pathname.startsWith("/auth/login")) {
     return NextResponse.redirect(new URL("/dashboard", request.url));
   }
@@ -49,8 +34,7 @@ export function middleware(request: NextRequest) {
 
 export const config = {
   matcher: [
-    "/dashboard/:path*",
-    "/api/:path*",
-    "/auth/login",
+    "/dashboard/:path*",  // protected pages
+    "/auth/login",        // redirect if logged in
   ],
 };

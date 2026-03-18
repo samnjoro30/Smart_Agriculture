@@ -30,6 +30,7 @@ axiosInstance.interceptors.response.use(
           } 
 
         if(originalRequest.url.includes('/auth/refresh')){
+            console.log("Refresh failed → logging out");
             logout();
             return Promise.reject(error);
         }

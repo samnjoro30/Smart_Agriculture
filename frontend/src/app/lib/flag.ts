@@ -12,7 +12,7 @@ export const logout = () => {
   document.cookie = "refresh_token=; Max-Age=0; path=/";
 
   // Optional: clear localStorage/sessionStorage if used
-  localStorage.clear();
+  // localStorage.clear();
 
   // Redirect to login
   window.location.replace("/auth/login");

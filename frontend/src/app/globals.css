@@ -1,16 +1,15 @@
-@import "tailwindcss";
+@import "tailwindcss"; 
 /* @plugin "daisyui";  */
 @import "keen-slider/keen-slider.min.css";
 
 :root {
   --background: #ffffff;
-  --foreground: #171717;
+  --foreground: #84bd87;
   --pageformatcolor:#f0fdf4;
 }
-/* }
-@tailwindcss base;
+/* @tailwindcss base;
 @tailwindcss components;
-@tailwind utilities; */
+@tailwind utilities;  */
 
 @theme inline {
   --color-background: var(--background);
@@ -21,7 +20,7 @@
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0a0a0a;
+    --background: #a9c6af;
     --foreground: #ededed;
   }
 }
@@ -35,7 +34,7 @@ body {
 }
 /* Dark mode */
 html.dark {
-  --background: #0d0f0f;
+  --background: #87bf8c;
   --foreground: #ecfdf5;
-  --pageformatcolor: #0f1712;
+  --pageformatcolor: #8ecaa5;
 }
