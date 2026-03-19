@@ -1,9 +1,10 @@
 from fastapi import APIRouter, Depends, HTTPException, Request, Response, BackgroundTasks
 from sqlalchemy.ext.asyncio import AsyncSession
-
+from fastapi.responses import JSONResponse
 from config.database import get_db
 from config.logger import get_logger
 from datetime import datetime, timedelta
+from config.setting import get_settings
 from .schemas import (
     RegisterRequest,
     LoginRequest,
@@ -28,6 +29,8 @@ from .service import (
 router = APIRouter(prefix="/auth", tags=["Auth"])
 
 logger = get_logger(__name__)
+
+settings = get_settings()
 
 
 @router.post("/register")
@@ -54,26 +57,29 @@ async def login(
         datetime.utcnow() + timedelta(days=7),
     )
 
+    response = JSONResponse(content=result)
 
     response.set_cookie(
         key="access_token",
         value=result["access_token"],
-        httponly=True,
-        samesite="none",
-        secure=True,
+        httponly=settings.COOKIE_HTTPONLY,
+        samesite=settings.cookie_samesite,
+        secure=settings.cookie_secure,
+        path="/",
     )
 
     response.set_cookie(
         key="refresh_token",
         value=result["refresh_token"],
-        httponly=True,
-        samesite="none",
-        secure=True,
+        httponly=settings.COOKIE_HTTPONLY,
+        samesite=settings.cookie_samesite,
+        secure=settings.cookie_secure,
+        path="/",
     )
-
+    
     #logger.info("login successful", user_id=result.id)
 
-    return result
+    return response
 
 
 @router.post("/refresh")
@@ -86,15 +92,18 @@ async def refresh(
 
     result = await refresh_access_token(db, old_token)
 
+    response = JSONResponse(content={"access_token": result["access_token"]})
+
     response.set_cookie(
         key="refresh_token",
         value=result["refresh_token"],
-        httponly=True,
-        secure=True,
-        samesite="none",
+        httponly=settings.COOKIE_HTTPONLY,
+        samesite=settings.cookie_samesite,
+        secure=settings.cookie_secure,
+        path="/",
     )
 
-    return {"access_token": result["access_token"]}
+    return response
 
 
 @router.post("/verification")
