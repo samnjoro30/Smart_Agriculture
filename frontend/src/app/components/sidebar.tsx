@@ -174,7 +174,7 @@ export default function Sidebar() {
       </aside>
 
       {/* Scrollable Content */}
-      <main className="flex-1 overflow-y-auto bg-green-200 p-0.2">
+      <main className="flex-1 overflow-y-auto bg-green-50 p-0.2">
         {render()}
       </main>
 

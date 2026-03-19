@@ -35,10 +35,18 @@ class Settings(BaseSettings):
     ACCESS_EXPIRE_MINUTES: int = 15
     REFRESH_EXPIRE_DAY: int = 7
 
-    # Cookies
+    #Cookies
     COOKIE_SECURE: bool = True
     COOKIE_SAMESITE: Literal["lax", "strict", "none"] = "none"
     COOKIE_HTTPONLY: bool = True
+
+    @property
+    def cookie_secure(self) -> bool:
+        return self.ENV == "prod"
+
+    @property
+    def cookie_samesite(self) -> str:
+        return "none" if self.ENV == "prod" else "lax"
 
     # Redis
     REDIS_URL: str | None = None

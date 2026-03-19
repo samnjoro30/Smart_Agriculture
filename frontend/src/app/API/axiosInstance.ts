@@ -3,7 +3,7 @@ import axios from 'axios';
 import { getIsLoggedOut, logout } from '../lib/flag';
 
 const axiosInstance = axios.create({
-    baseURL: "https://smart-agriculture-21dt.onrender.com/", //"http://localhost:8000/",// "https://smart-agriculture-21dt.onrender.com/", //"http://localhost:8000/", //process.env.BACKEND_URL,
+    baseURL: "https://smart-agriculture-21dt.onrender.com", //"http://localhost:8000",// "https://smart-agriculture-21dt.onrender.com/", //"http://localhost:8000/", //process.env.BACKEND_URL,
     withCredentials: true,
 });
 
@@ -22,35 +22,39 @@ axiosInstance.interceptors.request.use(
 );
 axiosInstance.interceptors.response.use(
     (response) => response,
-    async (error) =>{
-        const originalRequest = error.config;
-
-        if (getIsLoggedOut()) {
-            return Promise.reject(error);
-          } 
-
-        if(originalRequest.url.includes('/auth/refresh')){
-            console.log("Refresh failed → logging out");
-            logout();
-            return Promise.reject(error);
-        }
-        // if(error.response && error.response.status===401){
-        if (error.response?.status === 401 && !originalRequest._retry) {
-            originalRequest._retry = true;
-            try{
-               await axiosInstance.post("/auth/refresh", {}, {withCredentials: true});
-               return axiosInstance(originalRequest);
-            }
-            catch(refreshError){
-               logout();
-               return Promise.reject(refreshError);
-            }
-        }
+    async (error) => {
+      const originalRequest = error.config;
+  
+      // Already logged out → reject immediately
+      if (getIsLoggedOut()) {
         return Promise.reject(error);
+      }
+  
+      // Don't retry refresh endpoint itself
+      if (originalRequest?.url.includes("/auth/refresh")) {
+        console.log("Refresh failed → logging out");
+        logout();
+        return Promise.reject(error);
+      }
+  
+      // Retry 401 only once
+      if (error.response?.status === 401 && !originalRequest._retry) {
+        originalRequest._retry = true;
+        try {
+          await axiosInstance.post("/auth/refresh", {}, { withCredentials: true });
+          return axiosInstance(originalRequest);
+        } catch (refreshError) {
+          logout();
+          return Promise.reject(refreshError);
+        }
+      }
+  
+      return Promise.reject(error);
     }
-);
+  );
 
 axiosInstance.defaults.withCredentials=true
+console.log(axiosInstance.defaults.baseURL);
 
 export default axiosInstance;
 //firebase init hosting

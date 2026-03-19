@@ -1,76 +1,150 @@
-// "use client";
+"use client"
 
-import axiosInstance from "../API/axiosInstance";
-import { useState } from 'react';
+import { useState } from "react"
+import axiosInstance from "../API/axiosInstance"
 
+export default function SupportCenter() {
 
-export default function ContactCentre(){
-    const [message, setMessage] = useState<string>('');
-    const [loading, setLoading] = useState<boolean>(false);
+  const [formData, setFormData] = useState({
+    type: "feedback",
+    subject: "",
+    message: ""
+  })
 
+  const [loading, setLoading] = useState(false)
 
-    const handleSubmit = async () => {
-        setLoading(true);
-        setMessage('');
-        try{
-            const res = await axiosInstance.post("/user/contact");
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
+  ) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value
+    })
+  }
 
-            const Data = res.data.message;
-            setMessage(Data || "Message delivered Seccessfully" )
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+    setLoading(true)
 
-        }catch(err){
-            console.error("error sending the message")
+    try {
+      await axiosInstance.post("/support/message", formData)
+      alert("Message sent successfully ✅")
 
-        }finally{
-            setLoading(false)
+      setFormData({
+        type: "feedback",
+        subject: "",
+        message: ""
+      })
 
-        }
+    } catch (error) {
+      console.error(error)
+      alert("Failed to send message ❌")
+    } finally {
+      setLoading(false)
     }
-    return(
-        <div className="grid grid-cols-1 md:grid-cols gap-6 rounded-lg p3 bg-gray-50 h-auto">
-            <div className="space-y-6">
-                <div className="bg-green-100 rounded-xl px-2  py-3">
-                    <h3>Get Intouch with us:</h3>
-                    <p>Contact: +254 799 169 720</p>
-                    <p>Email: samnjorokibandi@gmail.com</p>
-                </div>
-            </div>
-            <div className="space-y-6 bg-green-100 py-2 px-2 rounded-lg">
-                <form onSubmit={handleSubmit} className="">
-                    <div>
-                        <label>Email: </label>
-                        <input
-                          type="email"
-                          value=""
-                          className=""
-                        />
-                    </div>
-                    <div>
-                        <label>Phone Number:</label>
-                        <input
-                          type="email"
-                          value=""
-                          className=""
-                        />
-                    </div>
-                    <div>
-                        <label>Issue</label>
-                        <input
-                          type="email"
-                          value=""
-                          className=""
-                        />
-                    </div>
-                    <button
-                      type="submit"
-                      disabled={loading}
-                      className=""
-                    >
-                        send message
-                    </button>
-                </form>
-                {message && ( <p style={{color: 'red'}}>{message}</p>)}
-            </div>
-        </div>        
-    )
+  }
+
+  return (
+    <div className="max-w-5xl mx-auto p-4 space-y-6">
+
+      {/* Header */}
+      <div className="bg-green-100 p-6 rounded-2xl shadow-sm">
+        <h2 className="text-3xl font-bold text-gray-800">
+          Support Center
+        </h2>
+        <p className="text-green-700">
+          Need help? Send feedback, report issues, or contact our support team.
+        </p>
+      </div>
+
+
+      <div className="grid md:grid-cols-2 gap-6">
+
+        {/* Contact Info */}
+        <div className="bg-white p-6 rounded-xl shadow-sm border space-y-4">
+          <h3 className="text-lg font-semibold text-green-700">
+            Contact Us
+          </h3>
+
+          <div className="space-y-3 text-gray-700">
+
+            <p>📧 Email: support@smartfarm.com</p>
+            <p>📞 Phone: +254 700 000 000</p>
+            <p>💬 WhatsApp: +254 700 000 000</p>
+
+          </div>
+
+          <div className="bg-green-50 p-3 rounded-lg text-sm text-gray-600">
+            Our team typically responds within 24 hours.
+          </div>
+        </div>
+
+
+        {/* Feedback / Complaint Form */}
+        <form
+          onSubmit={handleSubmit}
+          className="bg-white p-6 rounded-xl shadow-sm border space-y-4"
+        >
+
+          <h3 className="text-lg font-semibold text-green-700">
+            Send a Message
+          </h3>
+
+          {/* Type */}
+          <div>
+            <label className="text-sm text-gray-600">Message Type</label>
+            <select
+              name="type"
+              value={formData.type}
+              onChange={handleChange}
+              className="w-full border rounded-lg px-3 py-2 mt-1"
+            >
+              <option value="feedback">Feedback</option>
+              <option value="complaint">Complaint</option>
+              <option value="support">Support Request</option>
+            </select>
+          </div>
+
+          {/* Subject */}
+          <div>
+            <label className="text-sm text-gray-600">Subject</label>
+            <input
+              type="text"
+              name="subject"
+              value={formData.subject}
+              onChange={handleChange}
+              placeholder="Enter subject"
+              className="w-full border rounded-lg px-3 py-2 mt-1"
+              required
+            />
+          </div>
+
+          {/* Message */}
+          <div>
+            <label className="text-sm text-gray-600">Message</label>
+            <textarea
+              name="message"
+              value={formData.message}
+              onChange={handleChange}
+              placeholder="Describe your issue or feedback..."
+              className="w-full border rounded-lg px-3 py-2 mt-1 h-32"
+              required
+            />
+          </div>
+
+          {/* Submit */}
+          <button
+            type="submit"
+            disabled={loading}
+            className="w-full bg-green-600 text-white py-2 rounded-lg hover:bg-green-700"
+          >
+            {loading ? "Sending..." : "Send Message"}
+          </button>
+
+        </form>
+
+      </div>
+
+    </div>
+  )
 }

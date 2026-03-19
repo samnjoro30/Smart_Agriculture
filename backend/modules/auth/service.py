@@ -83,7 +83,7 @@ async def login_farmer(db: AsyncSession, payload):
     await db.commit()
 
     return {
-        "user_id": user.id,
+        "user_id": str(user.id),
         "access_token": access_token,
         "refresh_token": refresh_token,
         "token_type": "bearer",
@@ -104,7 +104,7 @@ async def refresh_access_token(
     old_refresh_token: str,
 ):
     if not old_refresh_token:
-        raise HTTPException(status_code=401, detail="Missing refresh token")
+        raise HTTPException(status_code=401, detail="No active session")
 
     stored_token = await get_refresh_token(db, old_refresh_token)
 

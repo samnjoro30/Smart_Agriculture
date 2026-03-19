@@ -3,7 +3,7 @@ import threading
 import time
 
 import requests
-from fastapi import FastAPI, Request
+from fastapi import FastAPI, Request, Response
 from fastapi.middleware.cors import CORSMiddleware
 from slowapi import Limiter, _rate_limit_exceeded_handler
 from slowapi.errors import RateLimitExceeded
@@ -36,6 +36,7 @@ app.add_middleware(
     CORSMiddleware,
     allow_origins=[
         "http://localhost:3000",
+        "http://127.0.0.1:3000",
         "https://smart-agriculture-git-main-samnjoro30s-projects.vercel.app",
         "https://smart-agriculture-pied.vercel.app",
         "https://smart-farming-agriculture.web.app",
