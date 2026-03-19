@@ -28,7 +28,7 @@ export default function ProfileSetting() {
       try {
         const res = await axiosInstance.get("/farm/farm-profile", { withCredentials: true })
         if (!cancelled) {
-          const details = res.data  // directly
+          const details = res.data
           setProfile(details)
           setFormData({
             email: details.email,
@@ -60,192 +60,178 @@ export default function ProfileSetting() {
         [field]: formData[field as keyof typeof formData],
       })
       setEditingField(null)
-      
-      alert(`${field} updated successfully!`)
     } catch (error) {
       console.error(`Error updating ${field}`, error)
     }
   }
 
-  if (loading) return <p className="text-center">Loading profile...</p>
+  if (loading) {
+    return <p className="text-center text-gray-500 mt-10">Loading profile...</p>
+  }
 
   return (
-    <div className="max-w-6xl mx-auto bg-white p-2 rounded-xl shadow-md mt-2">
-      <h2 className="text-2xl font-bold text-green-700 mb-3 text-center">
-        Profile Settings
-      </h2>
+    <div className="max-w-5xl mx-auto p-4 space-y-6">
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 h-auto">
-        <div className="bg-green-100 p-4 rounded-lg shadow-sm">
-          <h3 className="text-green-500 font-bold text-center border-b border-green-500 mb-6">Details</h3>
-          {profile ? (
-            <ul className="space-y-1 text-gray-700">
-              <li><strong className="text-gray-800 font-bold py-2">FarmName: </strong> {profile.farmname}</li>
-              <li><strong className="text-gray-800 font-bold py-2">Username: </strong> {profile.username}</li>
-              <li><strong className="text-gray-800 font-bold py-2">Email: </strong> {profile.email}</li>
-              <li><strong className="text-gray-800 font-bold py-2">PhoneNumber: </strong> {profile.phonenumber}</li>
-            </ul>
-          ) :(
-            <p>loading ...</p>
-          )
-          }
+      {/* Header */}
+      <div className="bg-green-100 p-6 rounded-2xl shadow-sm">
+        <h2 className="text-3xl font-bold text-gray-800">
+          {profile?.username}
+        </h2>
+        <p className="text-green-700">{profile?.farmname}</p>
+      </div>
+
+      <div className="grid md:grid-cols-2 gap-6">
+
+        {/* Profile Info */}
+        <div className="bg-green-100 p-6 rounded-xl shadow-sm border">
+          <h3 className="text-lg font-semibold text-green-700 mb-4">
+            Profile Details
+          </h3>
+
+          <ul className="space-y-3 text-gray-700">
+            <li><strong>Username:</strong> {profile?.username}</li>
+            <li><strong>Email:</strong> {profile?.email}</li>
+            <li><strong>Farm:</strong> {profile?.farmname}</li>
+            <li><strong>Phone:</strong> {profile?.phonenumber}</li>
+          </ul>
         </div>
 
-        <div className="bg-green-100 p-4 rounded-lg shadow-sm space-y-4">
-          <h3 className="text-green-500 text-center font-bold">Setting</h3>
-          <div className="flex flex-col">
-            <label className="text-sm text-gray-700 mb-1 font-bold">Email:</label>
-            {editingField === "email" ? (
-              <div className="flex gap-2">
-                <input
-                  type="email"
-                  name="email"
-                  value={formData.email}
-                  onChange={handleChange}
-                  className="flex-1 border rounded-lg px-3 py-2 text-gray-700"
-                />
-                <button
-                  onClick={() => handleSave("email")}
-                  className="bg-green-600 text-white px-3 py-2 rounded-lg"
-                >
-                  Save
-                </button>
-                <button
-                  onClick={() => setEditingField(null)}
-                  className="bg-red-600 px-3 py-2 rounded-lg"
-                >
-                  Cancel
-                </button>
-              </div>
-              ) : (
+        {/* Editable Settings */}
+        <div className="bg-green-100 p-6 rounded-xl shadow-sm border space-y-5">
+          <h3 className="text-lg font-semibold text-green-700">
+            Edit Settings
+          </h3>
 
-                <div className="flex justify-between items-center">
-                  <span>{profile?.email}</span>
-                  <button
-                    onClick={() => setEditingField("email")}
-                    className="text-green-600 font-medium"
-                  >
-                    Change
-                  </button>
-                </div>
-              )}
-            </div>
+          {/* Reusable Field */}
+          {["email", "farmname", "phonenumber", "password"].map((field) => (
+            <div key={field}>
+              <label className="text-sm font-medium text-gray-600 capitalize">
+                {field}
+              </label>
 
-            {/* Farm Name */}
-            <div className="flex flex-col">
-              <label className="text-sm text-gray-600 mb-1 font-bold">Farm Name:</label>
-              {editingField === "farmname" ? (
-                <div className="flex gap-2">
+              {editingField === field ? (
+                <div className="flex gap-2 mt-1">
                   <input
-                    type="text"
-                    name="farmname"
-                    value={formData.farmname}
+                    type={field === "password" ? "password" : "text"}
+                    name={field}
+                    value={formData[field as keyof typeof formData]}
                     onChange={handleChange}
-                    className="flex-1 border rounded-lg px-3 py-2 text-gray-500"
+                    className="flex-1 border rounded-lg px-3 py-2"
                   />
+
                   <button
-                    onClick={() => handleSave("farmname")}
-                    className="bg-green-600 text-white px-3 py-2 rounded-lg"
+                    onClick={() => handleSave(field)}
+                    className="bg-green-600 text-white px-3 py-2 rounded-lg hover:bg-green-700"
                   >
                     Save
                   </button>
+
                   <button
                     onClick={() => setEditingField(null)}
-                    className="bg-red-500 px-3 py-2 rounded-lg"
+                    className="bg-gray-200 px-3 py-2 rounded-lg hover:bg-gray-300"
                   >
                     Cancel
                   </button>
                 </div>
-                ) : (
-                  <div className="flex justify-between items-center">
-                    <span>{profile?.farmname}</span>
-                    <button
-                      onClick={() => setEditingField("farmname")}
-                      className="text-green-600 font-medium"
-                    >
-                      Change
-                    </button>
-                  </div>
-                )}
-              </div>
+              ) : (
+                <div className="flex justify-between items-center mt-1">
+                  <span className="text-gray-700">
+                    {field === "password" ? "••••••••" : profile?.[field as keyof Profile]}
+                  </span>
 
-              {/* Phone */}
-              <div className="flex flex-col">
-                <label className="text-sm text-gray-600 mb-1 font-bold">Phone:</label>
-                  {editingField === "phonenumber" ? (
-                    <div className="flex gap-2">
-                      <input
-                        type="text"
-                        name="phonenumber"
-                        value={formData.phonenumber}
-                        onChange={handleChange}
-                        className="flex-1 border rounded-lg px-3 py-2 text-gray-500"
-                      />
-                      <button
-                        onClick={() => handleSave("phonenumber")}
-                        className="bg-green-600 text-white px-3 py-2 rounded-lg"
-                      >
-                        Save
-                      </button>
-                      <button
-                        onClick={() => setEditingField(null)}
-                        className="bg-red-500 px-3 py-2 rounded-lg"
-                      >
-                        Cancel
-                      </button>
-                    </div>
-                    ) : (
-                      <div className="flex justify-between items-center">
-                        <span>{profile?.phonenumber}</span>
-                        <button
-                          onClick={() => setEditingField("phonenumber")}
-                          className="text-green-600 font-medium"
-                        >
-                          Change
-                        </button>
-                      </div>
-                    )}
-                  </div>
-
-                  {/* Password */}
-                  <div className="flex flex-col">
-                    <label className="text-sm text-gray-600 mb-1 font-bold">Password</label>
-                    {editingField === "password" ? (
-                      <div className="flex gap-2">
-                        <input
-                          type="password"
-                          name="password"
-                          value={formData.password}
-                          onChange={handleChange}
-                          className="flex-1 border rounded-lg px-3 py-2 text-gray-500"
-                        />
-                        <button
-                          onClick={() => handleSave("password")}
-                          className="bg-green-600 text-white px-3 py-2 rounded-lg"
-                        >
-                          Save
-                        </button>
-                      <button
-                        onClick={() => setEditingField(null)}
-                        className="bg-red-500 px-3 py-2 rounded-lg "
-                      >
-                        Cancel
-                      </button>
-                    </div>
-                    ) : (
-                      <div className="flex justify-between items-center">
-                        <span className="text-gray-500">••••••••</span>
-                        <button
-                          onClick={() => setEditingField("password")}
-                          className="text-green-600 font-medium"
-                        >
-                          Change
-                        </button>
-                      </div>
-                    )}
-                  </div>
+                  <button
+                    onClick={() => setEditingField(field)}
+                    className="text-green-600 text-sm font-medium hover:underline"
+                  >
+                    Edit
+                  </button>
                 </div>
-              </div>
+              )}
             </div>
+          ))}
+
+        </div>
+
+      </div>
+      {/* Notifications + Subscription */}
+<div className="grid md:grid-cols-2 gap-6">
+
+{/* Notification Preferences */}
+<div className="bg-green-100 p-6 rounded-xl shadow-sm border space-y-4">
+  <h3 className="text-lg font-semibold text-green-700">
+    Notification Preferences
+  </h3>
+
+  <div className="space-y-3 text-gray-700">
+
+    <label className="flex items-center justify-between">
+      <span>📱 WhatsApp Alerts</span>
+      <input type="checkbox" className="accent-green-600" />
+    </label>
+
+    <label className="flex items-center justify-between">
+      <span>📩 SMS Notifications</span>
+      <input type="checkbox" className="accent-green-600" />
+    </label>
+
+    <label className="flex items-center justify-between">
+      <span>📧 Email Updates</span>
+      <input type="checkbox" className="accent-green-600" />
+    </label>
+
+  </div>
+
+  <button
+    onClick={async () => {
+      try {
+        await axiosInstance.put("/users/preferences", {
+          whatsapp: true,
+          sms: false,
+          email: true,
+        })
+        alert("Preferences updated")
+      } catch (err) {
+        console.error(err)
+      }
+    }}
+    className="w-full mt-4 bg-green-600 text-white py-2 rounded-lg hover:bg-green-700"
+  >
+    Save Preferences
+  </button>
+</div>
+
+
+{/* Subscription Plan */}
+<div className="bg-green-100 p-6 rounded-xl shadow-sm border space-y-4">
+  <h3 className="text-lg font-semibold text-green-700">
+    Subscription Plan
+  </h3>
+
+  <div className="bg-green-50 p-4 rounded-lg">
+
+    <p className="text-gray-700">
+      <strong>Plan:</strong> Basic
+    </p>
+
+    <p className="text-gray-700">
+      <strong>Status:</strong>
+      <span className="text-green-600 font-medium ml-1">
+        Active
+      </span>
+    </p>
+
+    <p className="text-gray-500 text-sm mt-2">
+      Access to livestock tracking, reproduction monitoring, and basic analytics.
+    </p>
+
+  </div>
+
+  <button className="w-full bg-green-600 text-white py-2 rounded-lg hover:bg-green-700">
+    Upgrade Plan
+  </button>
+</div>
+
+</div>
+    </div>
   )
 }
