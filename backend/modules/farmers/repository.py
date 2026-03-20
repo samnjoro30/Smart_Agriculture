@@ -20,6 +20,12 @@ async def get_userProfile(db: AsyncSession, email: str):
         "phonenumber": row.phonenumber,
     }
 
+async def get_username_l(db: AsyncSession, email:str):
+    result = await db.execute(
+        select(Users.username).where(Users.email == email)
+    )
+    return result.scalar()
+
 # async def check_user_by_email(db: AsyncSession, email: str):
 #     query = text(
 #         """

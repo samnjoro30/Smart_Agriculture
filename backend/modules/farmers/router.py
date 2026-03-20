@@ -4,7 +4,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from config.logger import get_logger
 from config.database import get_db
 
-from .service import farmUser
+from .service import farmUser, get_username
 from config.security import get_current_user
 
 router = APIRouter(prefix="/farm", tags=["Farmers"])
@@ -19,6 +19,16 @@ async def get_farm_profile(
     ):
     farmer = await farmUser(db, current_user) 
     return farmer
+
+@router.get("/username")
+async def get_username_letters(
+    db: AsyncSession = Depends(get_db),
+    current_user = Depends(get_current_user)
+   ):
+
+   username = await get_username(db, current_user)
+   return { "username": username}
+
 
 @router.get("/farm/stats")
 async def get_farm_stats():

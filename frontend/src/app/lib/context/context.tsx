@@ -27,10 +27,16 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
 
     const fetchUser = async () => {
       try {
-        const res = await axiosInstance.get("/farm/farm-profile")
+        const res = await axiosInstance.get("/farm/username", {
+          withCredentials: true,
+        })
         setUser(res.data)
-      } catch (err) {
-        console.error("Failed to load user", err)
+      } catch (err: any) {
+        if (err.response?.status ===401){
+          setUser(null);
+        }else{
+          console.error("failed to load user", err);
+        }
       } finally {
         setLoading(false)
       }
@@ -47,3 +53,4 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
 }
 
 export const useUser = () => useContext(UserContext)
+
