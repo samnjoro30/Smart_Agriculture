@@ -2,15 +2,22 @@ from fastapi import APIRouter, Depends, HTTPException, Request
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from middleware.auth import decode_jwt_token
-from .repository import get_userProfile
+from .repository import get_userProfile, get_username_l
+
+
+async def get_username(db: AsyncSession, current_user):
+
+    username = await get_username_l(db, current_user.email)
+    if not username: 
+        raise HTTPException(status_code=404, detail="User not found")
+    
+    return username
 
 async def farmUser(db: AsyncSession, current_user):
 
     results = await get_userProfile(db, current_user.email)
     if not results:
         raise HTTPException(status_code=404, detail="User not found")
-
-    await db.commit()
 
     return results
 
