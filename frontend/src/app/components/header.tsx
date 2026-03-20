@@ -6,11 +6,9 @@ import { Sun, Moon, User, LogOut, ChevronDown, Globe } from 'lucide-react'
 import { useTheme } from "next-themes"
 import axiosInstance from '../API/axiosInstance';
 import { useUser } from '../lib/context/context';
-import { logout} from '../lib/flag';
 
 export default function Header() {
 
-  //const [theme, setTheme] = useState<'light' | 'dark'>('light')
   const { theme, setTheme, systemTheme } = useTheme()
   const [mounted, setMounted] = useState(false)
   const [userLetters, setUserLetters] = useState('')
@@ -45,7 +43,7 @@ export default function Header() {
     } catch (err) {
       console.error("Error occurred during logout", err)
     }finally{
-      logout();
+      window.location.replace("/auth/login");
     }
   }
 

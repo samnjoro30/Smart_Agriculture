@@ -56,7 +56,6 @@ export default function Overview(){
     const fetchUser = async () => {
         try {
             const res = await axiosInstance.get("/farm/farm-profile", 
-                { withCredentials: true }
             )
             setUser(res.data)
         } catch (err) {

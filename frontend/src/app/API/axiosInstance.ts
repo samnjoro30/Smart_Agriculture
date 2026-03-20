@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-import { getIsLoggedOut, logout } from '../lib/flag';
+//import { getIsLoggedOut, logout } from '../lib/flag';
 
 const axiosInstance = axios.create({
     baseURL: "https://smart-agriculture-21dt.onrender.com", //"http://localhost:8000",// "https://smart-agriculture-21dt.onrender.com/", //"http://localhost:8000/", //process.env.BACKEND_URL,
@@ -9,9 +9,6 @@ const axiosInstance = axios.create({
 
 axiosInstance.interceptors.request.use(
     (config) => {
-        if (getIsLoggedOut()) {
-            return Promise.reject({ message: "User logged out" });
-        }
         config.withCredentials = true;
         return config;
     },
@@ -25,15 +22,9 @@ axiosInstance.interceptors.response.use(
     async (error) => {
       const originalRequest = error.config;
   
-      // Already logged out → reject immediately
-      if (getIsLoggedOut()) {
-        return Promise.reject(error);
-      }
-  
       // Don't retry refresh endpoint itself
       if (originalRequest?.url.includes("/auth/refresh")) {
         console.log("Refresh failed → logging out");
-        logout();
         return Promise.reject(error);
       }
   
@@ -44,7 +35,6 @@ axiosInstance.interceptors.response.use(
           await axiosInstance.post("/auth/refresh", {}, { withCredentials: true });
           return axiosInstance(originalRequest);
         } catch (refreshError) {
-          logout();
           return Promise.reject(refreshError);
         }
       }
