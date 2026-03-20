@@ -4,7 +4,7 @@
 
 :root {
   --background: #ffffff;
-  --foreground: #84bd87;
+  --foreground:   #ffffde;
   --pageformatcolor:#f0fdf4;
 }
 /* @tailwindcss base;
@@ -20,7 +20,7 @@
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #a9c6af;
+    --background: #ffffff;
     --foreground: #ededed;
   }
 }
