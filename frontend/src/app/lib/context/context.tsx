@@ -2,7 +2,6 @@
 
 import { createContext, useContext, useEffect, useState } from "react"
 import axiosInstance from "../../API/axiosInstance"
-//import { getIsLoggedOut } from "../flag";
 
 type User = {
   username: string
@@ -36,7 +35,6 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
         setLoading(false)
       }
     }
-    if (!document.cookie.includes("access_token")) return;
     fetchUser()
 
   }, [])

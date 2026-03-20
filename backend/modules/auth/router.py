@@ -63,8 +63,8 @@ async def login(
         key="access_token",
         value=result["access_token"],
         httponly=settings.COOKIE_HTTPONLY,
-        samesite=settings.cookie_samesite,
         secure=settings.cookie_secure,
+        samesite=settings.cookie_samesite,
         path="/",
     )
 
@@ -72,8 +72,8 @@ async def login(
         key="refresh_token",
         value=result["refresh_token"],
         httponly=settings.COOKIE_HTTPONLY,
-        samesite=settings.cookie_samesite,
         secure=settings.cookie_secure,
+        samesite=settings.cookie_samesite,
         path="/",
     )
     
@@ -95,11 +95,20 @@ async def refresh(
     response = JSONResponse(content={"access_token": result["access_token"]})
 
     response.set_cookie(
+        key="access_token",
+        value=result["access_token"],
+        httponly=settings.COOKIE_HTTPONLY,
+        secure=settings.cookie_secure,
+        samesite=settings.cookie_samesite,
+        path="/",
+    )
+
+    response.set_cookie(
         key="refresh_token",
         value=result["refresh_token"],
         httponly=settings.COOKIE_HTTPONLY,
-        samesite=settings.cookie_samesite,
         secure=settings.cookie_secure,
+        samesite=settings.cookie_samesite,
         path="/",
     )
 
