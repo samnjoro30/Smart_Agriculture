@@ -40,13 +40,21 @@ class Settings(BaseSettings):
     COOKIE_SAMESITE: Literal["lax", "strict", "none"] = "none"
     COOKIE_HTTPONLY: bool = True
 
-    @property
-    def cookie_secure(self) -> bool:
-        return self.ENV == "prod"
+    # @property
+    # def cookie_secure(self) -> bool:
+    #     return self.ENV == "prod"
 
+    # @property
+    # def cookie_samesite(self) -> str:
+    #     return "none" if self.ENV == "prod" else "lax"
+    
     @property
     def cookie_samesite(self) -> str:
-        return "none" if self.ENV == "prod" else "lax"
+        return "none"
+
+    @property
+    def cookie_secure(self) -> bool:
+        return True
 
     # Redis
     REDIS_URL: str | None = None
