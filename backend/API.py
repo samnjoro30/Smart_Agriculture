@@ -36,7 +36,6 @@ app.add_middleware(
     CORSMiddleware,
     allow_origins=[
         "http://localhost:3000",
-        "http://127.0.0.1:3000",
         "https://smart-agriculture-git-main-samnjoro30s-projects.vercel.app",
         "https://smart-agriculture-pied.vercel.app",
         "https://smart-farming-agriculture.web.app",
