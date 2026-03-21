@@ -57,7 +57,7 @@ async def login(
         datetime.utcnow() + timedelta(days=7),
     )
 
-    response = JSONResponse(content=result)
+    #response = JSONResponse(content=result)
 
     response.set_cookie(
         key="access_token",
@@ -79,7 +79,7 @@ async def login(
     
     #logger.info("login successful", user_id=result.id)
 
-    return response
+    return result
 
 
 @router.post("/refresh")
@@ -92,7 +92,7 @@ async def refresh(
 
     result = await refresh_access_token(db, old_token)
 
-    response = JSONResponse(content={"access_token": result["access_token"]})
+    #response = JSONResponse(content={"access_token": result["access_token"]})
 
     response.set_cookie(
         key="access_token",
@@ -112,7 +112,7 @@ async def refresh(
         path="/",
     )
 
-    return response
+    return {"access_token": result["access_token"]}
 
 
 @router.post("/verification")

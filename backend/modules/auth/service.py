@@ -83,7 +83,7 @@ async def login_farmer(db: AsyncSession, payload):
     await db.commit()
 
     return {
-        "user_id": str(user.id),
+        "user_id": user.id,
         "access_token": access_token,
         "refresh_token": refresh_token,
         "token_type": "bearer",
