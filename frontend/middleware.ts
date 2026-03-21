@@ -2,45 +2,48 @@ import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
 const PUBLIC_ROUTES = ["/auth/login", "/auth/register"];
-
-// List of protected routes
 const PROTECTED_ROUTES = ["/dashboard"];
 
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
   const token = request.cookies.get("access_token")?.value;
 
-  console.log("Middleware check:",{
+  console.log("Middleware check:", {
     path: pathname,
+    token: token,
     hasToken: !!token,
-  })
+  });
 
-  // Determine if this is a public route
-  const isPublicRoute = PUBLIC_ROUTES.some((route) =>
+  const isPublicRoute = PUBLIC_ROUTES.some(route =>
     pathname.startsWith(route)
   );
-  // Determine if this is a protected route
-  if (isPublicRoute) {
-    // If logged in → redirect to dashboard
-    if (token) {
-      return NextResponse.redirect(new URL("/dashboard", request.url));
-    }
-    return NextResponse.next();
+
+  const isProtectedRoute = PROTECTED_ROUTES.some(route =>
+    pathname.startsWith(route)
+  );
+
+  // 🟢 1. If user is logged in and tries to access auth pages → redirect to dashboard
+  if (isPublicRoute && token) {
+    return NextResponse.redirect(new URL("/dashboard", request.url));
   }
 
+  const isValidToken =
+  token && token !== "undefined" && token !== "null";
 
-  // ✅ Protect dashboard ONLY
-  if (pathname.startsWith("/dashboard")) {
-    if (!token) {
-      const loginUrl = new URL("/auth/login", request.url);
-      loginUrl.searchParams.set("callbackUrl", pathname);
-      return NextResponse.redirect(loginUrl);
-    }
+  // 🔐 2. Protect dashboard routes
+  if (isProtectedRoute && !isValidToken) {
+    const loginUrl = new URL("/auth/login", request.url);
+    loginUrl.searchParams.set("callbackUrl", pathname);
+    return NextResponse.redirect(loginUrl);
   }
 
-  return NextResponse.next();
+  // 🟢 3. Allow everything else
+  //return NextResponse.next();
 }
 
 export const config = {
-  matcher: ["/dashboard/:path*", "/auth/:path*"],
+  matcher: [
+    "/dashboard/:path*",
+    "/auth/:path*",
+  ],
 };

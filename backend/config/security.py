@@ -13,6 +13,7 @@ from dotenv import load_dotenv
 settings = get_settings()
 load_dotenv()
 SECRET_KEY = settings.JWT_SECRET
+REFRESH_KEY = settings.JWT_REFRESH
 ALGORITHM = settings.ALGORITHM
 
 
@@ -75,9 +76,9 @@ def create_access_token(data: dict, expires_delta: timedelta = timedelta(minutes
     return encoded
 
 
-def create_refresh_token(data: dict, expires_delta: timedelta = timedelta(hours=1)):
+def create_refresh_token(data: dict, expires_delta: timedelta = timedelta(hours=7)):
     to_encode = data.copy()
     expire = datetime.utcnow() + expires_delta
     to_encode.update({"exp": expire})
-    refresh_token = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
+    refresh_token = jwt.encode(to_encode, REFRESH_KEY, algorithm=ALGORITHM)
     return refresh_token
