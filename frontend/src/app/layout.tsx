@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+import { SpeedInsights } from '@vercel/speed-insights/next';
 //import { ThemeProvider } from "./lib/providers/theme";
 import "./globals.css";
 import { FirebaseProvider } from "./lib/firebaseProvider";
@@ -33,9 +34,11 @@ export default function RootLayout({
       >
         {/* <ThemeProvider attribute="class" defaultTheme="light" enableSystem={false}> */}
           <FirebaseProvider />
+           
           <UserProvider>
             {children}
           </UserProvider>
+          <SpeedInsights />
         {/* </ThemeProvider> */}
       </body>
     </html>
