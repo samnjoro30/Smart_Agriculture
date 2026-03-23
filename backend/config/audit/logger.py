@@ -30,7 +30,7 @@ def setup_logging():
 
     # 🎨 Renderer (dev vs prod)
     if settings.ENV == "dev":
-        renderer = structlog.dev.ConsoleRenderer()
+        renderer = structlog.dev.ConsoleRenderer(colors=True)
     else:
         renderer = structlog.processors.JSONRenderer()
 

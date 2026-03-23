@@ -16,6 +16,8 @@ class Settings(BaseSettings):
     ENV: Literal["dev", "staging", "prod", "test"] = "dev"
     DEBUG: bool = False
 
+    SLOW_REQUEST_THRESHOLD: float = 0.5
+
     # Server
     HOST: str = "0.0.0.0"
     PORT: int = 8000

@@ -25,6 +25,10 @@ from config.audit.middleware.security import security_middleware
 from modules.auth.router import router as auth_farmer
 from modules.farmers.router import router as farm_router
 
+
+
+setup_logging()
+
 app = FastAPI(
     title="Smart farm API",
 )
@@ -33,7 +37,14 @@ app = FastAPI(
 limiter = Limiter(key_func=get_remote_address)
 app.state.limiter = limiter
 app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
+
 app.middleware("http")(audit_middleware)
+app.middleware("http")(error_middleware)
+app.middleware("http")(request_id_middleware)
+#app.middleware("http")(auth_context_middleware)
+app.middleware("http")(logging_middleware)
+app.middleware("http")(security_middleware)
+
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
@@ -58,7 +69,6 @@ app.add_middleware(
 app.include_router(auth_farmer)
 app.include_router(farm_router)
 
-setup_logging()
 
 @app.get("/ping")
 async def ping():
