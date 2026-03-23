@@ -12,6 +12,8 @@ from slowapi.util import get_remote_address
 from alembic import command
 from alembic.config import Config
 
+from config.audit.logger import setup_logging
+
 # from config.middleware import LoggingMiddleware
 # from config.lifespan import Lifespan
 
@@ -56,6 +58,7 @@ app.add_middleware(
 app.include_router(auth_farmer)
 app.include_router(farm_router)
 
+setup_logging()
 
 @app.get("/ping")
 async def ping():

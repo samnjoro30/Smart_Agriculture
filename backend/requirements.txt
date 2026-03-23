@@ -53,6 +53,7 @@ python-dotenv==1.1.0
 python-jose==3.5.0
 pytokens==0.3.0
 PyYAML==6.0.3
+redis==7.2.0
 requests==2.32.5
 rsa==4.9.1
 ruff==0.14.10
