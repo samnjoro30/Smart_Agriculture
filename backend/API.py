@@ -15,12 +15,12 @@ from alembic.config import Config
 from config.audit.logger import setup_logging
 
 from config.middleware import audit_middleware
+from config.audit.middleware.request_id import request_id_middleware
+#from config.audit.middleware.auth_context import auth_context_middleware
+from config.audit.middleware.error import error_middleware
+from config.audit.middleware.logging import logging_middleware
+from config.audit.middleware.security import security_middleware
 # from config.lifespan import Lifespan
-
-
-# from controller.farm import router as farm_router
-# from controller.farmAnalytic import router as farm_analytic_router
-# from controller.users import app as user_router
 
 from modules.auth.router import router as auth_farmer
 from modules.farmers.router import router as farm_router
