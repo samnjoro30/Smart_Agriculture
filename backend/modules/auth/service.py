@@ -25,12 +25,12 @@ from .repository import (
 )
 
 from config.security import create_access_token, create_refresh_token
-from config.logger import get_logger
+from config.audit.logger import get_logger
 
 from utils.hashing import hash_password, verify_password
 from utils.otp import generate_otp, otp_expiry
 
-logger = get_logger(__name__)
+logger = get_logger("AUTH")
 REFRESH_TOKEN_DAYS = 7
 
 

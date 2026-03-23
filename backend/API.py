@@ -12,13 +12,15 @@ from slowapi.util import get_remote_address
 from alembic import command
 from alembic.config import Config
 
-# from config.middleware import LoggingMiddleware
+from config.audit.logger import setup_logging
+
+from config.middleware import audit_middleware
+from config.audit.middleware.request_id import request_id_middleware
+#from config.audit.middleware.auth_context import auth_context_middleware
+from config.audit.middleware.error import error_middleware
+from config.audit.middleware.logging import logging_middleware
+from config.audit.middleware.security import security_middleware
 # from config.lifespan import Lifespan
-
-
-# from controller.farm import router as farm_router
-# from controller.farmAnalytic import router as farm_analytic_router
-# from controller.users import app as user_router
 
 from modules.auth.router import router as auth_farmer
 from modules.farmers.router import router as farm_router
@@ -31,7 +33,7 @@ app = FastAPI(
 limiter = Limiter(key_func=get_remote_address)
 app.state.limiter = limiter
 app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
-# app.middleware("http")(LoggingMiddleware)
+app.middleware("http")(audit_middleware)
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
@@ -56,6 +58,7 @@ app.add_middleware(
 app.include_router(auth_farmer)
 app.include_router(farm_router)
 
+setup_logging()
 
 @app.get("/ping")
 async def ping():

@@ -3,6 +3,9 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from middleware.auth import decode_jwt_token
 from .repository import get_userProfile, get_username_l
+from config.audit.logger import get_logger
+
+logger = get_logger("FARMER")
 
 
 async def get_username(db: AsyncSession, current_user):

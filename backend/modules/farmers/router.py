@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from config.logger import get_logger
+from config.audit.logger import get_logger
 from config.database import get_db
 
 from .service import farmUser, get_username
@@ -9,7 +9,7 @@ from config.security import get_current_user
 
 router = APIRouter(prefix="/farm", tags=["Farmers"])
 
-logger = get_logger(__name__)
+logger = get_logger("FARMER")
 
 
 @router.get("/farm-profile")

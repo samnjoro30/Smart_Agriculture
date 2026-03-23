@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends, HTTPException, Request, Response, Backgr
 from sqlalchemy.ext.asyncio import AsyncSession
 from fastapi.responses import JSONResponse
 from config.database import get_db
-from config.logger import get_logger
+from config.audit.logger import get_logger
 from datetime import datetime, timedelta
 from config.setting import get_settings
 from .schemas import (
@@ -28,7 +28,7 @@ from .service import (
 
 router = APIRouter(prefix="/auth", tags=["Auth"])
 
-logger = get_logger(__name__)
+logger = get_logger("AUTH")
 
 settings = get_settings()
 
