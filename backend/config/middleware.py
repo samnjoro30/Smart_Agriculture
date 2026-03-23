@@ -2,7 +2,7 @@ import time
 import uuid
 from fastapi import Request
 from starlette.responses import JSONResponse
-from config.logger import get_logger
+from config.audit.logger import get_logger
 
 logger = get_logger("AUDIT")
 

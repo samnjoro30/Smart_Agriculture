@@ -14,7 +14,7 @@ from alembic.config import Config
 
 from config.audit.logger import setup_logging
 
-# from config.middleware import LoggingMiddleware
+from config.middleware import audit_middleware
 # from config.lifespan import Lifespan
 
 
@@ -33,7 +33,7 @@ app = FastAPI(
 limiter = Limiter(key_func=get_remote_address)
 app.state.limiter = limiter
 app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
-# app.middleware("http")(LoggingMiddleware)
+app.middleware("http")(audit_middleware)
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
