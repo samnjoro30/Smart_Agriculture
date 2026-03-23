@@ -1,21 +1,73 @@
 import time
-from starlette.middleware.base import BaseHTTPMiddleware
+import uuid
+from fastapi import Request
+from starlette.responses import JSONResponse
 from config.logger import get_logger
 
-logger = get_logger("REQUEST")
+logger = get_logger("AUDIT")
 
 
-class LoggingMiddleware(BaseHTTPMiddleware):
-    async def dispatch(self, request, call_next):
-        start = time.time()
+async def audit_middleware(request: Request, call_next):
+    start_time = time.time()
 
+    request_id = str(uuid.uuid4())
+    request.state.request_id = request_id
+
+    # 🌍 Client IP
+    client_ip = request.client.host if request.client else "unknown"
+
+    try:
         response = await call_next(request)
 
-        duration = round(time.time() - start, 3)
+    except Exception as e:
+        duration = round(time.time() - start_time, 3)
 
-        logger.info(
-            f"{request.method} {request.url.path} "
-            f"{response.status_code} {duration}s"
+        logger.exception(
+            "Unhandled exception",
+            extra={
+                "request_id": request_id,
+                "method": request.method,
+                "path": request.url.path,
+                "ip": client_ip,
+                "duration": duration,
+            },
         )
 
-        return response
+        return JSONResponse(
+            status_code=500,
+            content={"detail": "Internal server error"},
+        )
+
+    duration = round(time.time() - start_time, 3)
+
+    # 🐢 Slow request detection
+    if duration > 1:
+        logger.warning(
+            "Slow request",
+            extra={
+                "request_id": request_id,
+                "method": request.method,
+                "path": request.url.path,
+                "status_code": response.status_code,
+                "duration": duration,
+                "ip": client_ip,
+            },
+        )
+    else:
+        logger.info(
+            "Request completed",
+            extra={
+                "request_id": request_id,
+                "method": request.method,
+                "path": request.url.path,
+                "status_code": response.status_code,
+                "duration": duration,
+                "ip": client_ip,
+            },
+        )
+
+    response.headers["X-Request-ID"] = request_id
+    response.headers["X-Content-Type-Options"] = "nosniff"
+    response.headers["X-Frame-Options"] = "DENY"
+
+    return response
