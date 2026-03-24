@@ -30,13 +30,11 @@ export default function FooterHome (){
             const res = await axiosInstance.post("/auth/newsletter/subscribe", formData);
             setMessage(res.data.message || 'Successfully subscribed to news letter')
             setFormData({ email: "" });
-            if (res.data.message == 'Subscribed Successfully'){
-                alert("subscribtion successful");
-            }
-        }catch(err){
-            const error = err instanceof Error ? err : new Error(String(err));
-            console.log("Error subscribing to newsletter", error);
-            setError("Error subscribing to newsletter, Try again later!")
+            
+        }catch(err: any){
+            const errorMessage = err.response?.data?.detail || "Error subscribing to newsletter, Try again later!";
+            setError(errorMessage);
+            console.log("Error:", err);
         }finally{
             setLoading(false);
         }

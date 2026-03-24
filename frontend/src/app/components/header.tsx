@@ -5,7 +5,7 @@ import Image from 'next/image'
 import { Sun, Moon, User, LogOut, ChevronDown, Globe } from 'lucide-react'
 import { useTheme } from "next-themes"
 import axiosInstance from '../API/axiosInstance';
-import { useUser } from '../lib/context/context';
+import { useUser } from '../lib/context/hook';
 
 export default function Header() {
 
@@ -15,7 +15,7 @@ export default function Header() {
   const [dropdownOpen, setDropdownOpen] = useState(false)
 
 
-  const { user } = useUser()
+  const { data: user, isLoading} = useUser()
   useEffect(() => {
 
     if (!user?.username){
@@ -24,18 +24,13 @@ export default function Header() {
     } 
   
     const parts = user.username.trim().split(" ")
-  
-    let letters = ""
-  
-    if (parts.length === 1) {
-      letters = parts[0].substring(0,2)
-    } else {
-      letters = parts[0][0] + parts[1][0]
-    }
-  
-    setUserLetters(letters.toUpperCase())
-  
-  }, [user])
+
+  let letters = parts.length === 1
+    ? parts[0].substring(0, 2)
+    : parts[0][0] + parts[1][0]
+
+  setUserLetters(letters.toUpperCase())
+}, [user])
 
   const handleLogout = async () => {
     try {

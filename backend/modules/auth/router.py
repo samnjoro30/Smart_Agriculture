@@ -149,8 +149,8 @@ async def logout(
 
 @router.post("/newsletter/subscribe")
 async def news_letter(payload: RegisterSubscribers, db: AsyncSession = Depends(get_db)):
-    await RegisterForNewsLetter(db, payload)
-     
-    return  {"message": "Subscribed to newsletter successfully"}
+    result = await RegisterForNewsLetter(db, payload)
+
+    return result
 
 # @router.post("/auth/resend-verificion-code")
