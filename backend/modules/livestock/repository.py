@@ -19,4 +19,8 @@ async def create_animal(animal_data: dict, db: AsyncSession):
     await db.flush()  # Ensure the new animal is assigned an ID
     return new_animal
 
-    
+async def get_animals_by_user(db: AsyncSession, user_id: int):
+    result = await db.execute(
+        select(Livestock).where(Livestock.user_id == user_id)
+    )
+    return result.scalars().all()
