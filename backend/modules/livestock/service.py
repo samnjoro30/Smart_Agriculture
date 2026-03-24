@@ -13,6 +13,7 @@ from .model import (
 from .repository import (
     create_animal,
     get_animal_by_tag,
+    get_animals_by_user,
 )
 
 from config.security import create_access_token, create_refresh_token
@@ -46,7 +47,7 @@ async def register_animals(db: AsyncSession, payload, current_user):
     animal = await create_animal(animal_dict, db)
 
     await db.commit()
-    
+
     logger.info(
         "Animal registered successfully",
         livestock_id=animal.id,
@@ -55,4 +56,14 @@ async def register_animals(db: AsyncSession, payload, current_user):
     )
 
     return animal
-    
+
+async def get_animals_listing(db: AsyncSession, current_user):
+    animal = await get_animals_by_user(db, current_user.id)
+    if not animal:
+        logger.warning(
+            "Attempted to access non-existent animal listing",
+            user_id=current_user.id
+        )
+        raise HTTPException(status_code=404, detail="No animals found for this user")
+
+    return animal

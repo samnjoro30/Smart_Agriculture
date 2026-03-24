@@ -10,6 +10,7 @@ from .schema import (
 )
 from .service import (
     register_animals,
+    get_animals_listing,
 )
 
 
@@ -28,5 +29,12 @@ async def register(
     animal = await register_animals(db, payload, current_user)
     logger.info("POST /livestock/register completed", status_code=201)
     return {"message": "Registered successfully"}
+
+@router.get("/animals-listing")
+async def get_all_animals(db: AsyncSession = Depends(get_db), current_user = Depends(get_current_user)):
+
+    listing = await get_animals_listing(db, current_user)
+
+    return {"listing": listing}
 
 

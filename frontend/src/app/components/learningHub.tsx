@@ -32,7 +32,7 @@ const learningTopics: LearningItem[] = [
 
 export default function LearningHub() {
   return (
-    <section className="relative py-5 bg-gradient-to-b from-green-50 via-white to-green-100 overflow-hidden">
+    <section className="relative py-5 `bg-gradient-to-b` from-green-50 via-white to-green-100 overflow-hidden">
 
       {/* Curved Top */}
       <div className="absolute top-0 left-0 w-full -translate-y-full">
