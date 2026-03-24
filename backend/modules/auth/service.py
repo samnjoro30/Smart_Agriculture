@@ -205,10 +205,10 @@ async def RegisterForNewsLetter(db: AsyncSession, payload):
     if existing_subscriber:
         raise HTTPException(status_code=409, detail="Email already subscribed")
     
-    subscriber = Create_news_letter_subscriber(db, payload.email)
+    subscriber = await Create_news_letter_subscriber(db, payload.email)
 
     await db.commit()
-    return subscriber
+    return {"message": "Subscribed successfully", "id": subscriber.id}
 
 
 # async def resendCode(request: codeResend, db):
