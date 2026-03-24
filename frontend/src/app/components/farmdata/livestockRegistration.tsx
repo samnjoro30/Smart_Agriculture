@@ -6,14 +6,49 @@ import {
   PawPrint, 
   Heart, 
   Calendar, 
-  Ruler, 
-  Weight,
   Tag,
   User,
   Droplet,
   Baby
 } from "lucide-react"
 import axiosInstance from '../../API/axiosInstance';
+
+function Input({ 
+  label, 
+  name, 
+  value, 
+  onChange, 
+  type = "text",
+  icon: Icon,
+  required = false,
+  placeholder = ""
+}: any) {
+  return (
+    <div className="group">
+      <label className="block text-sm font-semibold text-gray-700 mb-2">
+        {label}
+        {required && <span className="text-red-500 ml-1">*</span>}
+      </label>
+      <div className="relative">
+        {Icon && (
+          <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+            <Icon className="h-5 w-5 text-green-500" />
+          </div>
+        )}
+        <input
+          type={type}
+          name={name}
+          value={value}
+          onChange={onChange}
+          placeholder={placeholder}
+          className={`w-full border border-gray-300 rounded-lg px-3 py-2.5 text-gray-700 
+            focus:outline-none focus:ring-2 focus:ring-green-400 focus:border-transparent
+            transition-all duration-200 ${Icon ? 'pl-10' : ''}`}
+        />
+      </div>
+    </div>
+  )
+}
 
 export default function RegisterAnimal() {
   const [formData, setFormData] = useState({
@@ -22,24 +57,20 @@ export default function RegisterAnimal() {
     category: "cow",
     breed: "",
     age: "",
-    weight: "",
-    sex: "female",
     heatStatus: "no",
+    healthStatus: "",
     pregnant: "no",
     lastInsemination: ""
   })
 
-  const [isSubmitting, setIsSubmitting] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [message, setMessage] = useState<string | null>(null)
   const [loading, setLoading] = useState(false)
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value
-    })
-  }
+  const { name, value } = e.target
+  setFormData(prev => ({ ...prev, [name]: value }))
+}
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -55,8 +86,7 @@ export default function RegisterAnimal() {
             category: "cow",
             breed: "",
             age: "",
-            weight: "",
-            sex: "female",
+            healthStatus: "",
             heatStatus: "no",
             pregnant: "no",
             lastInsemination: ""
@@ -76,42 +106,7 @@ export default function RegisterAnimal() {
   }
 
   // Reusable Input Component
-  function Input({ 
-    label, 
-    name, 
-    value, 
-    onChange, 
-    type = "text",
-    icon: Icon,
-    required = false,
-    placeholder = ""
-  }: any) {
-    return (
-      <div className="group">
-        <label className="block text-sm font-semibold text-gray-700 mb-2">
-          {label}
-          {required && <span className="text-red-500 ml-1">*</span>}
-        </label>
-        <div className="relative">
-          {Icon && (
-            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-              <Icon className="h-5 w-5 text-green-500" />
-            </div>
-          )}
-          <input
-            type={type}
-            name={name}
-            value={value}
-            onChange={onChange}
-            placeholder={placeholder}
-            className={`w-full border border-gray-300 rounded-lg px-3 py-2.5 text-gray-700 
-              focus:outline-none focus:ring-2 focus:ring-green-400 focus:border-transparent
-              transition-all duration-200 ${Icon ? 'pl-10' : ''}`}
-          />
-        </div>
-      </div>
-    )
-  }
+  
 
   // Reusable Select Component
   function Select({ 
@@ -252,6 +247,16 @@ export default function RegisterAnimal() {
                 icon={Calendar}
                 placeholder="Age in months"
               />
+              <Input 
+                label="Health status" 
+                name="healthStatus" 
+                type="text" 
+                value={formData.healthStatus} 
+                onChange={handleChange}
+                // icon={Calendar}
+                placeholder="Good, Sick"
+              />
+
             </div>
           </div>
 
@@ -259,15 +264,6 @@ export default function RegisterAnimal() {
           <div className="bg-gray-50 rounded-xl p-5 transition-all hover:shadow-md">
             <SectionHeader title="Reproduction Information" icon={Heart} />
             <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-              <Select 
-                label="Sex" 
-                name="sex" 
-                value={formData.sex} 
-                onChange={handleChange}
-                options={["Female", "Male"]}
-                icon={User}
-                required
-              />
               <Select 
                 label="Heat Status" 
                 name="heatStatus" 
