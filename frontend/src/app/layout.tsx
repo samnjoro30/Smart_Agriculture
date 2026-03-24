@@ -5,7 +5,8 @@ import { Analytics } from "@vercel/analytics/next"
 //import { ThemeProvider } from "./lib/providers/theme";
 import "./globals.css";
 import { FirebaseProvider } from "./lib/firebaseProvider";
-import { UserProvider } from "./lib/context/context";
+import Providers from "./lib/providers/tan-stack";
+//import { UserProvider } from "./lib/context/context";
 
 const geistSans = Geist({ 
   variable: "--font-geist-sans",
@@ -33,15 +34,13 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        {/* <ThemeProvider attribute="class" defaultTheme="light" enableSystem={false}> */}
-          <FirebaseProvider />
-           
-          <UserProvider>
-              {children}
-          </UserProvider>
-          <SpeedInsights />
-          <Analytics />
-        {/* </ThemeProvider> */}
+
+        <Providers>
+          {children}
+        </Providers>
+        <FirebaseProvider />
+        <SpeedInsights />
+        <Analytics />
       </body>
     </html>
   );
