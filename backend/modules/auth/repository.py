@@ -91,3 +91,4 @@ async def Create_news_letter_subscriber(db: AsyncSession, email: str):
     await db.flush()
     await db.refresh(subscriber)
     return subscriber
+

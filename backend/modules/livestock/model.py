@@ -6,12 +6,22 @@ from sqlalchemy.orm import relationship
 from config.database import Base
 
 class Livestock(Base):
-    __tablename__ = 'cows'
+    __tablename__ = 'livestock'
 
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    tag = Column(String(150), unique=True, nullable=False)
     name = Column(String(200))
+    category = Column(String(100))
     breed = Column(String(200))
+    heatStatus = Column(Boolean, default=False)
+    pregnant = Column(Boolean, default=False)
+    lastInsemination = Column(DateTime)
     age = Column(Integer)
-    health_status = Column(String(200))
-    farmer_id = Column(UUID(as_uuid=True), ForeignKey('farmers.id', ondelete='CASCADE'))
+    healthStatus = Column(String(200))
+    user_id = Column(
+        UUID(as_uuid=True), 
+        ForeignKey('users.id', ondelete='CASCADE'),
+        nullable=False
+    )
+    createdAt = Column(DateTime, server_default=func.now())
 
