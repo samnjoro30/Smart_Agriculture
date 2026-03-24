@@ -4,6 +4,7 @@ import {useState} from 'react';
 import Tabs from './farmdata/tabs';
 import LivestockOverview from './farmdata/overviewLivestock';
 import RegisterAnimal from './farmdata/livestockRegistration';
+import AnimalsList from './farmdata/animalsList';
 //import axiosInstance from '../API/axiosInstance';
 
 
@@ -20,6 +21,7 @@ export default function Farm() {
             <div className="mt-2">
                 {activeTab === 'overview' && <LivestockOverview />}
                 {activeTab === 'register' && <RegisterAnimal />}
+                {activeTab === 'animals' && <AnimalsList />}
 
             </div>
           

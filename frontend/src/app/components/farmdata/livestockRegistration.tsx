@@ -105,9 +105,6 @@ export default function RegisterAnimal() {
     
   }
 
-  // Reusable Input Component
-  
-
   // Reusable Select Component
   function Select({ 
     label, 
@@ -167,7 +164,7 @@ export default function RegisterAnimal() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-green-50 to-emerald-50 py-4 px-2">
+    <div className="min-h-screen `bg-gradient-to-br` from-green-50 to-emerald-50 py-4 px-2">
         {message && (
             <div className="bg-green-100 text-green-700 px-4 py-2 rounded-lg">
                 {message}
