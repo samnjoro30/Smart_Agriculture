@@ -1,6 +1,7 @@
 "use client"
 
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import axiosInstance from "../../API/axiosInstance";
 
 interface Animal {
@@ -18,8 +19,12 @@ interface Animal {
 export default function AnimalsList() {
   const [animals, setAnimals] = useState<Animal[]>([]);
   const [loading, setLoading] = useState(true);
-  const [selectedAnimal, setSelectedAnimal] = useState<Animal | null>(null);
+
   const [search, setSearch] = useState("");
+  const [categoryFilter, setCategoryFilter] = useState("all");
+  const [healthFilter, setHealthFilter] = useState("all");
+
+  const router = useRouter();
 
   useEffect(() => {
     const fetchAnimals = async () => {
@@ -35,79 +40,128 @@ export default function AnimalsList() {
     fetchAnimals();
   }, []);
 
-  // Filter animals by search input
-  const filteredAnimals = animals.filter(
-    a =>
+  // 🔍 Filtering logic
+  const filteredAnimals = animals.filter(a => {
+    const matchesSearch =
       a.tag.toLowerCase().includes(search.toLowerCase()) ||
-      a.name.toLowerCase().includes(search.toLowerCase()) ||
-      a.category.toLowerCase().includes(search.toLowerCase())
-  );
+      (a.name || "").toLowerCase().includes(search.toLowerCase());
 
-  if (loading) return <p className="text-center text-gray-500 mt-10">Loading animals...</p>;
+    const matchesCategory =
+      categoryFilter === "all" || a.category === categoryFilter;
+
+    const matchesHealth =
+      healthFilter === "all" || a.healthStatus === healthFilter;
+
+    return matchesSearch && matchesCategory && matchesHealth;
+  });
+
+  if (loading) {
+    return <p className="text-center text-gray-500 mt-10">Loading animals...</p>;
+  }
 
   return (
-    <div className="max-w-6xl mx-auto p-4 space-y-6">
-      <h2 className="text-2xl font-bold text-green-700 text-center">Animals Listing</h2>
+    <div className="max-w-7xl mx-auto p-4 space-y-6">
 
-      {/* Search Bar */}
-      <div className="mb-4">
-        <input
-          type="text"
-          placeholder="Search by tag, name or category..."
-          value={search}
-          onChange={e => setSearch(e.target.value)}
-          className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-green-400"
-        />
+      {/* HEADER */}
+      <div className="flex flex-col md:flex-row md:justify-between md:items-center gap-4">
+        <h2 className="text-2xl font-bold text-green-700">
+          Livestock
+        </h2>
+
+        {/* CONTROLS */}
+        <div className="flex flex-col md:flex-row gap-3 w-full md:w-auto">
+
+          {/* Search */}
+          <input
+            type="text"
+            placeholder="Search animals..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            className="border text-gray-700 rounded-lg px-4 py-2 w-full md:w-64 focus:ring-2 focus:ring-green-400"
+          />
+
+          {/* Category Filter */}
+          <select
+            value={categoryFilter}
+            onChange={(e) => setCategoryFilter(e.target.value)}
+            className="border-green-400 text-gray-700 rounded-lg px-3 py-2"
+          >
+            <option value="all">All Categories</option>
+            <option value="cow">Cows</option>
+            <option value="bull">Bulls</option>
+            <option value="calf">Calves</option>
+          </select>
+
+          {/* Health Filter */}
+          <select
+            value={healthFilter}
+            onChange={(e) => setHealthFilter(e.target.value)}
+            className="border-gray-700 text-gray-700 rounded-lg px-3 py-2"
+          >
+            <option value="all">All Health</option>
+            <option value="healthy">Healthy</option>
+            <option value="sick">Sick</option>
+          </select>
+
+        </div>
       </div>
 
-      {/* Animals Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        {filteredAnimals.map(animal => (
+
+      {/* GRID */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+
+        {filteredAnimals.map((animal) => (
           <div
             key={animal.tag}
-            className="bg-green-50 p-4 rounded-xl shadow-sm cursor-pointer hover:shadow-md transition"
-            onClick={() => setSelectedAnimal(animal)}
+            onClick={() => router.push(`/livestock/${animal.tag}`)}
+            className="bg-green-200 border rounded-xl p-5 shadow-sm hover:shadow-md transition cursor-pointer"
           >
-            <h3 className="text-lg font-bold text-green-700">{animal.name || animal.tag}</h3>
-            <p className="text-gray-700"><strong>Tag:</strong> {animal.tag}</p>
-            <p className="text-gray-700"><strong>Category:</strong> {animal.category}</p>
-            <p className="text-gray-700"><strong>Breed:</strong> {animal.breed}</p>
-            <p className="text-gray-700"><strong>Age:</strong> {animal.age} months</p>
-            <p className="text-gray-700"><strong>Health:</strong> {animal.healthStatus || "Unknown"}</p>
+
+            {/* Header */}
+            <div className="flex justify-between items-center mb-2">
+              <h3 className="text-lg font-bold text-green-700">
+                {animal.name || animal.tag}
+              </h3>
+
+              <StatusBadge status={animal.healthStatus} />
+            </div>
+
+            {/* Details */}
+            <div className="text-sm text-gray-600 space-y-1">
+              <p><strong>Tag:</strong> {animal.tag}</p>
+              <p><strong>Breed:</strong> {animal.breed}</p>
+              <p><strong>Category:</strong> {animal.category}</p>
+              <p><strong>Age:</strong> {animal.age} months</p>
+            </div>
+
+            {/* Footer */}
+            <div className="mt-3 flex justify-between text-xs text-gray-500">
+              <span>Heat: {animal.heatStatus}</span>
+              <span>Pregnant: {animal.pregnant}</span>
+            </div>
+
           </div>
         ))}
+
       </div>
 
-      {/* Selected Animal Modal / Drawer */}
-      {selectedAnimal && (
-        <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center p-4 z-50">
-          <div className="bg-white rounded-xl p-6 max-w-md w-full shadow-lg relative">
-            <button
-              onClick={() => setSelectedAnimal(null)}
-              className="absolute top-3 right-3 text-gray-500 hover:text-gray-700 font-bold"
-            >
-              ✕
-            </button>
-            <h3 className="text-xl font-bold text-green-700 mb-4">{selectedAnimal.name || selectedAnimal.tag}</h3>
-            <ul className="space-y-2 text-gray-700">
-              <li><strong>Tag:</strong> {selectedAnimal.tag}</li>
-              <li><strong>Category:</strong> {selectedAnimal.category}</li>
-              <li><strong>Breed:</strong> {selectedAnimal.breed}</li>
-              <li><strong>Age:</strong> {selectedAnimal.age} months</li>
-              <li><strong>Health Status:</strong> {selectedAnimal.healthStatus}</li>
-              <li><strong>Heat Status:</strong> {selectedAnimal.heatStatus}</li>
-              <li><strong>Pregnant:</strong> {selectedAnimal.pregnant}</li>
-              <li><strong>Last Insemination:</strong> {selectedAnimal.lastInsemination || "N/A"}</li>
-            </ul>
-            <button
-              onClick={() => alert("Edit feature coming soon")}
-              className="mt-6 w-full bg-green-600 text-white py-2 rounded-lg hover:bg-green-700"
-            >
-              Edit Animal
-            </button>
-          </div>
-        </div>
-      )}
     </div>
+  );
+}
+
+
+/* 🔁 Status Badge */
+function StatusBadge({ status }: { status: string }) {
+  const color =
+    status === "healthy"
+      ? "bg-green-100 text-green-700"
+      : status === "sick"
+      ? "bg-red-100 text-red-700"
+      : "bg-gray-100 text-gray-600";
+
+  return (
+    <span className={`px-2 py-1 rounded-full text-xs font-medium ${color}`}>
+      {status || "Unknown"}
+    </span>
   );
 }
