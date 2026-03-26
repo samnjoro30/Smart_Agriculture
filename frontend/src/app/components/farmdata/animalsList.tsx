@@ -30,7 +30,7 @@ export default function AnimalsList() {
     const fetchAnimals = async () => {
       try {
         const res = await axiosInstance.get("/livestock/animals-listing", { withCredentials: true });
-        setAnimals(res.data.listing);
+        setAnimals(res.data?.listing);
       } catch (err) {
         console.error("Error fetching animals:", err);
       } finally {
@@ -127,17 +127,27 @@ export default function AnimalsList() {
             </div>
 
             {/* Details */}
-            <div className="text-sm text-gray-600 space-y-1">
-              <p><strong>Tag:</strong> {animal.tag}</p>
-              <p><strong>Breed:</strong> {animal.breed}</p>
-              <p><strong>Category:</strong> {animal.category}</p>
-              <p><strong>Age:</strong> {animal.age} months</p>
+            <div className="grid grid-cols-2 gap-y-3 gap-x-4 border-t border-gray-100 pt-3">
+              <div>
+                <p className="text-[10px] uppercase font-semibold text-gray-400">Breed</p>
+                <p className="text-sm font-medium text-gray-800">{animal.breed}</p>
+              </div>
+              <div>
+                <p className="text-[10px] uppercase font-semibold text-gray-400">Age</p>
+                <p className="text-sm font-medium text-gray-800">{animal.age} months</p>
+              </div>
             </div>
 
             {/* Footer */}
             <div className="mt-3 flex justify-between text-xs text-gray-500">
-              <span>Heat: {animal.heatStatus}</span>
-              <span>Pregnant: {animal.pregnant}</span>
+              { animal.pregnant ? (
+               <span className="text-green-600 text-xl font-bold ">Status: Pregnant</span>
+              ) : (
+                <>
+                  <span>Heat: {animal.heatStatus ? "Yes" : "No"}</span>
+                  <span>Pregnant: No</span>
+                </>
+              )}
             </div>
 
           </div>
