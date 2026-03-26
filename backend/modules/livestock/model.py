@@ -18,6 +18,10 @@ class Livestock(Base):
     lastInsemination = Column(DateTime)
     age = Column(Integer)
     healthStatus = Column(String(200))
+    inseminationType = Column(String(100))
+    birthDate = Column(DateTime)
+    motherTag = Column(String(150))
+    fatherTag = Column(String(150))
     user_id = Column(
         UUID(as_uuid=True), 
         ForeignKey('users.id', ondelete='CASCADE'),

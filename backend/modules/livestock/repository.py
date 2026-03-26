@@ -5,6 +5,7 @@ from sqlalchemy.sql import func, case
 from sqlalchemy import text, select, or_
 from sqlalchemy.ext.asyncio import AsyncSession
 from .model import Livestock
+from sqlalchemy.dialects.postgresql import UUID
 
 
 async def get_animal_by_tag(db: AsyncSession, tag: str):
@@ -19,13 +20,13 @@ async def create_animal(animal_data: dict, db: AsyncSession):
     await db.flush()  # Ensure the new animal is assigned an ID
     return new_animal
 
-async def get_animals_by_user(db: AsyncSession, user_id: int):
+async def get_animals_by_user(db: AsyncSession, user_id: UUID):
     result = await db.execute(
         select(Livestock).where(Livestock.user_id == user_id)
     )
     return result.scalars().all()
 
-async def get_animal_stats(db: AsyncSession, user_id: int):
+async def get_animal_stats(db: AsyncSession, user_id: UUID):
     query = (
         select(
             func.count(Livestock.id).label("totalAnimals"),
