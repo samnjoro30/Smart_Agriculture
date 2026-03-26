@@ -14,6 +14,7 @@ from .repository import (
     create_animal,
     get_animal_by_tag,
     get_animals_by_user,
+    get_animal_stats,
 )
 
 from config.security import create_access_token, create_refresh_token
@@ -31,20 +32,29 @@ async def register_animals(db: AsyncSession, payload, current_user):
             user_id=current_user.id
         )
         raise HTTPException(status_code=400, detail="Animal with this tag already exists")
-    
-    animal_dict ={
-        "tag": payload.tag,
-        "name": payload.name,
-        "category": payload.category,
-        "breed": payload.breed,
-        "heatStatus": payload.heatStatus,
-        "pregnant": payload.pregnant,
-        "lastInsemination": payload.lastInsemination,
-        "age": payload.age,
-        "healthStatus": payload.healthStatus,
-        "user_id": current_user.id,
-    }
-    animal = await create_animal(animal_dict, db)
+
+    animal_data = payload.model_dump()
+    animal_data["user_id"] = current_user.id
+    if payload.category.lower() == "calf":
+        animal_data["heatStatus"] = False
+        animal_data["pregnant"] = False
+        animal_data["lastInsemination"] = None
+    else: 
+        pass
+
+    # animal_dict ={
+    #     "tag": payload.tag,
+    #     "name": payload.name,
+    #     "category": payload.category,
+    #     "breed": payload.breed,
+    #     "heatStatus": payload.heatStatus,
+    #     "pregnant": payload.pregnant,
+    #     "lastInsemination": payload.lastInsemination,
+    #     "age": payload.age,
+    #     "healthStatus": payload.healthStatus,
+    #     "user_id": current_user.id,
+    # }
+    animal = await create_animal(animal_data, db)
 
     await db.commit()
 
@@ -67,3 +77,14 @@ async def get_animals_listing(db: AsyncSession, current_user):
         raise HTTPException(status_code=404, detail="No animals found for this user")
 
     return animal
+
+async def get_stats(db: AsyncSession, current_user):
+    stats = await get_animal_stats(db, current_user.id)
+    if not stats:
+        logger.warning(
+            "Attempted to access stats for user with no animals",
+            user_id=current_user.id
+        )
+        raise HTTPException(status_code=404, detail="No stats found for this user")
+    
+    return stats
