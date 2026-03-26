@@ -62,8 +62,17 @@ export default function Overview(){
             console.error("Failed to load user", err)
         }
     }
+    const fetchStats = async () => {
+        try{
+            const res = await axiosInstance.get("/livestock/stats")
+            setStats(res.data.stats)
+        }catch(err:any){
+            console.error("Failed to load stats", err)
+        }
+    }
     useEffect(() => {
         fetchUser()
+        fetchStats()
         // fetchStats()
         // fetchActivity()
 
