@@ -11,6 +11,7 @@ from .schema import (
 from .service import (
     register_animals,
     get_animals_listing,
+    get_stats,
 )
 
 
@@ -37,4 +38,15 @@ async def get_all_animals(db: AsyncSession = Depends(get_db), current_user = Dep
 
     return {"listing": listing}
 
+@router.get("/stats")
+async def get_stats_livestock(
+    db: AsyncSession = Depends(get_db), 
+    current_user = Depends(get_current_user)
+    ):
+
+    stats = await get_stats(db, current_user)
+
+    return {"stats": stats}
+
+    
 

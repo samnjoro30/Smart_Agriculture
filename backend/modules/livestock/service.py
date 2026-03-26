@@ -14,6 +14,7 @@ from .repository import (
     create_animal,
     get_animal_by_tag,
     get_animals_by_user,
+    get_animal_stats,
 )
 
 from config.security import create_access_token, create_refresh_token
@@ -67,3 +68,14 @@ async def get_animals_listing(db: AsyncSession, current_user):
         raise HTTPException(status_code=404, detail="No animals found for this user")
 
     return animal
+
+async def get_stats(db: AsyncSession, current_user):
+    stats = await get_animal_stats(db, current_user.id)
+    if not stats:
+        logger.warning(
+            "Attempted to access stats for user with no animals",
+            user_id=current_user.id
+        )
+        raise HTTPException(status_code=404, detail="No stats found for this user")
+    
+    return stats
