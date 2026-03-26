@@ -5,7 +5,7 @@ from fastapi import APIRouter, Depends, HTTPException, Request, Response
 from jose import JWTError, jwt
 from sqlalchemy.ext.asyncio import AsyncSession
 from starlette.status import HTTP_201_CREATED
-
+from  .tasks import make_naive
 from .model import ( 
     Livestock,
 )
@@ -33,27 +33,24 @@ async def register_animals(db: AsyncSession, payload, current_user):
         )
         raise HTTPException(status_code=400, detail="Animal with this tag already exists")
 
-    animal_data = payload.model_dump()
+    animal_data = payload.model_dump(exclude_unset=True)
     animal_data["user_id"] = current_user.id
     if payload.category.lower() == "calf":
-        animal_data["heatStatus"] = False
-        animal_data["pregnant"] = False
-        animal_data["lastInsemination"] = None
+        animal_data.update({
+            "heatStatus": False,
+            "pregnant": False,
+            "lastInsemination": None,
+            "inseminationType": None
+        })
     else: 
-        pass
+        animal_data.update({
+            "birthDate": None,
+            "motherTag": None,
+            "fatherTag": None
+        })
 
-    # animal_dict ={
-    #     "tag": payload.tag,
-    #     "name": payload.name,
-    #     "category": payload.category,
-    #     "breed": payload.breed,
-    #     "heatStatus": payload.heatStatus,
-    #     "pregnant": payload.pregnant,
-    #     "lastInsemination": payload.lastInsemination,
-    #     "age": payload.age,
-    #     "healthStatus": payload.healthStatus,
-    #     "user_id": current_user.id,
-    # }
+    animal_data["lastInsemination"] = make_naive(animal_data.get("lastInsemination"))
+    animal_data["birthDate"] = make_naive(animal_data.get("birthDate"))
     animal = await create_animal(animal_data, db)
 
     await db.commit()

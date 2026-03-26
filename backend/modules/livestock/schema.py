@@ -5,7 +5,7 @@ from typing import Optional
 
 class LivestockCreateRequest(BaseModel):
     tag: constr(min_length=1)
-    name: str
+    name: Optional[str] = None
     category: str
     breed: str
     age: int
@@ -20,6 +20,6 @@ class LivestockCreateRequest(BaseModel):
     motherTag: Optional[str] = None
     fatherTag: Optional[str] = None
 
-    class Config:
-        from_attributes = True
+    # class Config:
+    #     from_attributes = True
     
