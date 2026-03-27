@@ -15,6 +15,7 @@ from .repository import (
     get_animal_by_tag,
     get_animals_by_user,
     get_animal_stats,
+    get_animals_details_by_user,
 )
 
 from config.security import create_access_token, create_refresh_token
@@ -34,6 +35,10 @@ async def register_animals(db: AsyncSession, payload, current_user):
         raise HTTPException(status_code=400, detail="Animal with this tag already exists")
 
     animal_data = payload.model_dump(exclude_unset=True)
+    for field in ["motherTag", "fatherTag", "inseminationType"]:
+        if animal_data.get(field) == "":
+           animal_data[field] = None
+
     animal_data["user_id"] = current_user.id
     if payload.category.lower() == "calf":
         animal_data.update({
@@ -85,3 +90,23 @@ async def get_stats(db: AsyncSession, current_user):
         raise HTTPException(status_code=404, detail="No stats found for this user")
     
     return stats
+
+async def get_animal_by_tag_id(db: AsyncSession, tag: str, current_user):
+    animal = await get_animal_by_tag(db, tag)
+    if not animal:
+        logger.warning(
+            "Attempted to access non-existent animal by tag",
+            tag=tag,
+            user_id=current_user.id
+        )
+        raise HTTPException(status_code=404, detail="Animal not found")
+
+    if animal.user_id != current_user.id:
+        logger.warning(
+            "Attempted to access animal belonging to another user",
+            tag=tag,
+            user_id=current_user.id
+        )
+        raise HTTPException(status_code=403, detail="Forbidden: You do not have access to this animal")
+
+    return animal

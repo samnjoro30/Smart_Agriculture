@@ -44,3 +44,9 @@ async def get_animal_stats(db: AsyncSession, user_id: UUID):
 
     result = await db.execute(query)
     return result.mappings().first()
+
+async def get_animals_details_by_user(db: AsyncSession, user_id: UUID):
+    result = await db.execute(
+        select(Livestock).where(Livestock.user_id == user_id)
+    )
+    return result.scalars().all()
