@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
 import axiosInstance from "../../API/axiosInstance"
-import { ArrowLeft, Edit3, PlusCircle, Dna, Activity, Baby, Calendar } from "lucide-react";
+import { ArrowLeft, Edit3, PlusCircle, Dna, Activity, Baby, Calendar, Heart, User, Users } from "lucide-react";
 
 interface Animal {
   tag: string
@@ -99,47 +99,103 @@ export default function AnimalDetails({ id, onBack }: Props) {
       <div className="grid md:grid-cols-2 gap-4">
   
         {/* BASIC */}
-        <div className="bg-white p-5 rounded-xl shadow-sm border">
-          <h3 className="font-semibold text-green-700 mb-3 flex items-center gap-2">
-            <Activity size={18}/> Basic Info
-          </h3>
-  
-          <div className="grid grid-cols-2 gap-y-3 text-sm text-gray-700">
-            <span>Category</span><span>{animal.category}</span>
-            <span>Breed</span><span>{animal.breed}</span>
-            <span>Age</span><span>{animal.age} months</span>
+        <div className="bg-white p-5 rounded-2xl shadow-sm border border-gray-100">
+
+          <div className="flex items-center justify-between mb-5">
+            <h3 className="font-bold text-gray-800 flex items-center gap-2">
+              <div className="p-1.5 bg-blue-50 text-blue-600 rounded-lg">
+                <Activity size={18}/>
+              </div>
+              Basic Overview
+            </h3>
+            <span className="text-[10px] uppercase tracking-widest font-extrabold bg-gray-100 text-gray-500 px-2 py-1 rounded-md">
+              {animal.category}
+            </span>
           </div>
+
+          <div className="grid grid-cols-2 gap-4">
+
+            <div className="bg-gray-50 p-3 rounded-xl border border-gray-50">
+              <p className="text-[10px] text-gray-400 uppercase font-bold mb-1">Breed</p>
+              <p className="text-sm font-bold text-gray-800 truncate">
+                {animal.breed || "Crossbreed"}
+              </p>
+            </div>
+
+            <div className="bg-gray-50 p-3 rounded-xl border border-gray-50">
+              <p className="text-[10px] text-gray-400 uppercase font-bold mb-1">Current Age</p>
+              <p className="text-sm font-semibold text-gray-800">
+                {animal.age} <span className="text-[10px] text-gray-500 font-normal">months</span>
+              </p>
+            </div>
+
+          </div>
+
+          <div className="mt-4 pt-4 border-t border-gray-50 flex justify-between items-center">
+            <span className="text-xs text-gray-400">System ID</span>
+            <span className="text-xs font-mono text-gray-800 uppercase">
+              {animal.tag?.toString().slice(0, 8)}...
+            </span>
+          </div>
+
         </div>
   
         {/* REPRODUCTION */}
-        <div className="bg-white p-5 rounded-xl shadow-sm border">
-          <h3 className="font-semibold text-green-700 mb-3 flex items-center gap-2">
-            <Dna size={18}/>
+        <div className="bg-white p-5 rounded-2xl shadow-sm border border-gray-100">
+          <h3 className="font-bold text-gray-800 mb-4 flex items-center gap-2">
+            <div className="p-1.5 bg-green-50 rounded-lg text-green-600">
+              <Dna size={18}/>
+            </div>
             {animal.category === "calf" ? "Birth Info" : "Reproduction"}
           </h3>
-  
-          <div className="grid grid-cols-2 gap-y-3 text-sm text-gray-700">
-  
+
+          <div className="grid grid-cols-2 gap-y-4 gap-x-2 text-sm">
             {animal.category === "cow" ? (
               <>
-                <span>Heat</span><span>{animal.heatStatus}</span>
-                <span>Pregnant</span><span>{animal.pregnant}</span>
-                <span>Last Insemination</span>
-                <span>{animal.lastInsemination || "N/A"}</span>
+                <span className="text-gray-500 flex items-center">Heat Status</span>
+                <span className="text-right">
+                  <span className={`px-2 py-1 rounded-md font-bold text-[10px] uppercase tracking-wider ${animal.heatStatus ? 'bg-orange-100 text-orange-700 border border-orange-200' : 'bg-gray-100 text-gray-500'}`}>
+                    {animal.heatStatus ? "In Heat" : "Normal"}
+                  </span>
+                </span>
+
+                <span className="text-gray-500 flex items-center">Pregnancy</span>
+                  <span className="text-right">
+                    <span className={`px-2 py-1 rounded-md font-bold text-[10px] uppercase tracking-wider ${animal.pregnant ? 'bg-purple-100 text-purple-700 border border-purple-200' : 'bg-blue-50 text-blue-600'}`}>
+                      {animal.pregnant ? "Pregnant" : "Open"}
+                    </span>
+                  </span>
+
+                <span className="text-gray-500 flex items-center">Last Insemination</span>
+                <span className="text-right font-semibold text-gray-700">
+                    {animal.lastInsemination ? new Date(animal.lastInsemination).toLocaleDateString() : "N/A"}
+                </span>
               </>
-            ) : (
-              <>
-                <span>Mother</span><span>{animal.motherTag || "N/A"}</span>
-                <span>Father</span><span>{animal.fatherTag || "N/A"}</span>
-                <span>Birth Date</span><span>{animal.birthDate || "N/A"}</span>
-                <span>Type</span><span>{animal.inseminationType || "N/A"}</span>
-              </>
-            )}
-  
+              ) : (
+                <>
+                  <span className="text-gray-500">Mother</span>
+                  <span className="text-right font-bold text-blue-600 bg-blue-50 rounded px-2 py-0.5">
+                    {animal.motherTag || "N/A"}
+                  </span>
+                  <span className="text-gray-500">Father</span>
+                  <span className="text-right font-bold text-gray-700 bg-gray-50 rounded px-2 py-0.5">
+                    {animal.fatherTag || "N/A"}
+                  </span>
+
+                  <span className="text-gray-500">Birth Date</span>
+                  <span className="text-right font-medium text-gray-700">
+                    {animal.birthDate ? new Date(animal.birthDate).toLocaleDateString() : "N/A"}
+                  </span>
+
+                  <span className="text-gray-500">Insem. Type</span>
+                  <span className="text-right text-xs font-semibold uppercase text-gray-500">
+                    {animal.inseminationType || "Natural"}
+                  </span>
+                </>
+              )}
+            </div>
           </div>
         </div>
-  
-      </div>
   
       {/* 🔹 LINEAGE */}
       <div className="bg-green-50 p-5 rounded-xl shadow-sm">

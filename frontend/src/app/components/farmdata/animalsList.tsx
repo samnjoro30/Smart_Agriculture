@@ -65,9 +65,7 @@ export default function AnimalsList() {
     return matchesSearch && matchesCategory && matchesHealth;
   });
 
-  if (loading) {
-    return <p className="text-center text-gray-500 mt-10">Loading animals...</p>;
-  }
+  if (loading) return <div className="flex justify-center items-center h-64"><div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-600"></div></div>;
 
   return (
     <div className="max-w-7xl mx-auto p-4 space-y-6">
@@ -109,7 +107,7 @@ export default function AnimalsList() {
             className="border-gray-700 text-gray-700 rounded-lg px-3 py-2"
           >
             <option value="all">All Health</option>
-            <option value="healthy">Healthy</option>
+            <option value="healthy">Good</option>
             <option value="sick">Sick</option>
           </select>
 

@@ -5,6 +5,7 @@ import Tabs from './farmdata/tabs';
 import LivestockOverview from './farmdata/overviewLivestock';
 import RegisterAnimal from './farmdata/livestockRegistration';
 import AnimalsList from './farmdata/animalsList';
+//import FeedStockPage from './FeedStockPage/Feed';
 //import axiosInstance from '../API/axiosInstance';
 
 
@@ -22,6 +23,7 @@ export default function Farm() {
                 {activeTab === 'overview' && <LivestockOverview />}
                 {activeTab === 'register' && <RegisterAnimal />}
                 {activeTab === 'animals' && <AnimalsList />}
+                {/* {activeTab === 'Feed stock' && <FeedStockPage />} */}
 
             </div>
           
