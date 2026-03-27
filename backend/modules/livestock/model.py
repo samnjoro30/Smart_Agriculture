@@ -15,11 +15,11 @@ class Livestock(Base):
     breed = Column(String(200))
     heatStatus = Column(Boolean, default=False)
     pregnant = Column(Boolean, default=False)
-    lastInsemination = Column(DateTime)
+    lastInsemination = Column(DateTime(timezone=True))
     age = Column(Integer)
     healthStatus = Column(String(200))
     inseminationType = Column(String(100))
-    birthDate = Column(DateTime)
+    birthDate = Column(DateTime(timezone=True))
     motherTag = Column(String(150))
     fatherTag = Column(String(150))
     user_id = Column(

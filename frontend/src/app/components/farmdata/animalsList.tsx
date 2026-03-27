@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import axiosInstance from "../../API/axiosInstance";
+import AnimalDetails from "./animalDetail";
 
 interface Animal {
   tag: string;
@@ -23,6 +24,7 @@ export default function AnimalsList() {
   const [search, setSearch] = useState("");
   const [categoryFilter, setCategoryFilter] = useState("all");
   const [healthFilter, setHealthFilter] = useState("all");
+  const [selectedAnimalId, setSelectedAnimalId] = useState<string | null>(null);
 
   const router = useRouter();
 
@@ -30,7 +32,7 @@ export default function AnimalsList() {
     const fetchAnimals = async () => {
       try {
         const res = await axiosInstance.get("/livestock/animals-listing", { withCredentials: true });
-        setAnimals(res.data.listing);
+        setAnimals(res.data?.listing);
       } catch (err) {
         console.error("Error fetching animals:", err);
       } finally {
@@ -40,7 +42,15 @@ export default function AnimalsList() {
     fetchAnimals();
   }, []);
 
-  // 🔍 Filtering logic
+  if (selectedAnimalId) {
+    return (
+      <AnimalDetails 
+        id={selectedAnimalId} 
+        onBack={() => setSelectedAnimalId(null)} 
+      />
+    );
+  }
+ // 🔍 Filtering logic
   const filteredAnimals = animals.filter(a => {
     const matchesSearch =
       a.tag.toLowerCase().includes(search.toLowerCase()) ||
@@ -49,15 +59,14 @@ export default function AnimalsList() {
     const matchesCategory =
       categoryFilter === "all" || a.category === categoryFilter;
 
+      
     const matchesHealth =
       healthFilter === "all" || a.healthStatus === healthFilter;
 
     return matchesSearch && matchesCategory && matchesHealth;
   });
 
-  if (loading) {
-    return <p className="text-center text-gray-500 mt-10">Loading animals...</p>;
-  }
+  if (loading) return <div className="flex justify-center items-center h-64"><div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-600"></div></div>;
 
   return (
     <div className="max-w-7xl mx-auto p-4 space-y-6">
@@ -99,7 +108,7 @@ export default function AnimalsList() {
             className="border-gray-700 text-gray-700 rounded-lg px-3 py-2"
           >
             <option value="all">All Health</option>
-            <option value="healthy">Healthy</option>
+            <option value="healthy">Good</option>
             <option value="sick">Sick</option>
           </select>
 
@@ -113,7 +122,7 @@ export default function AnimalsList() {
         {filteredAnimals.map((animal) => (
           <div
             key={animal.tag}
-            onClick={() => router.push(`/livestock/${animal.tag}`)}
+            onClick={() => setSelectedAnimalId(animal.tag)}
             className="bg-green-200 border rounded-xl p-5 shadow-sm hover:shadow-md transition cursor-pointer"
           >
 
@@ -127,17 +136,27 @@ export default function AnimalsList() {
             </div>
 
             {/* Details */}
-            <div className="text-sm text-gray-600 space-y-1">
-              <p><strong>Tag:</strong> {animal.tag}</p>
-              <p><strong>Breed:</strong> {animal.breed}</p>
-              <p><strong>Category:</strong> {animal.category}</p>
-              <p><strong>Age:</strong> {animal.age} months</p>
+            <div className="grid grid-cols-2 gap-y-3 gap-x-4 border-t border-gray-100 pt-3">
+              <div>
+                <p className="text-[10px] uppercase font-semibold text-gray-400">Breed</p>
+                <p className="text-sm font-medium text-gray-800">{animal.breed}</p>
+              </div>
+              <div>
+                <p className="text-[10px] uppercase font-semibold text-gray-400">Age</p>
+                <p className="text-sm font-medium text-gray-800">{animal.age} months</p>
+              </div>
             </div>
 
             {/* Footer */}
             <div className="mt-3 flex justify-between text-xs text-gray-500">
-              <span>Heat: {animal.heatStatus}</span>
-              <span>Pregnant: {animal.pregnant}</span>
+              { animal.pregnant ? (
+               <span className="text-green-600 text-xl font-bold ">Status: Pregnant</span>
+              ) : (
+                <>
+                  <span>Heat: {animal.heatStatus ? "Yes" : "No"}</span>
+                  <span>Pregnant: No</span>
+                </>
+              )}
             </div>
 
           </div>

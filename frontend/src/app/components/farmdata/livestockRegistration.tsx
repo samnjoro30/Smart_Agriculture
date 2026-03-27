@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { 
   Save, 
   PawPrint, 
@@ -11,6 +11,7 @@ import {
   Droplet,
   Baby
 } from "lucide-react"
+import {useRouter} from "next/navigation"
 import axiosInstance from '../../API/axiosInstance';
 
 function Input({ 
@@ -60,40 +61,101 @@ export default function RegisterAnimal() {
     heatStatus: "no",
     healthStatus: "",
     pregnant: "no",
-    lastInsemination: ""
+    lastInsemination: "",
+    inseminationType: "",
+    birthDate: '',
+    motherTag: "",
+    fatherTag: '',
   })
 
   const [error, setError] = useState<string | null>(null)
   const [message, setMessage] = useState<string | null>(null)
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState<boolean>(false)
+  const [cows, setCows] = useState<any[]>([])
+
+  const router = useRouter()
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-  const { name, value } = e.target
-  setFormData(prev => ({ ...prev, [name]: value }))
-}
+    const { name, value } = e.target
+    setFormData(prev => {
+      let updated = { ...prev, [name]: value }
+      if (name === "pregnant" && value === "yes") {
+        updated.heatStatus = "no"
+      }
+
+      if (name === "heatStatus" && value === "in heat") {
+        updated.pregnant = "no"
+      }
+
+      return updated
+    })
+  }  
+  const validateForm = () => {
+    if(formData.category === "cow"){
+      if(formData.pregnant === "yes" && !formData.lastInsemination){
+        setError("Please provide last insemination date for pregnant cows.")
+        return false
+      }
+      if(formData.pregnant === "yes" && formData.heatStatus === "in heat"){
+        setError("A cow cannot be pregnat and be on heat.")
+        return false
+      }
+    }
+    if (formData.category === "calf") {
+      if (!formData.motherTag) {
+        setError("Please select the mother cow for the calf.")
+        return false
+      }
+    }
+    return null
+  }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
+    const validateError = validateForm()
+    if (validateError){
+      setError(validateError);
+      return
+    }
     setLoading(true)
     setMessage(null)
     setError(null)
+
     try{
-        const res = await axiosInstance.post("/livestock/register", formData);
-        setMessage(res.data.message)
-        setFormData({
-            tag: "",
-            name: '',
-            category: "cow",
-            breed: "",
-            age: "",
-            healthStatus: "",
-            heatStatus: "no",
-            pregnant: "no",
-            lastInsemination: ""
-          })
+      const payload = {
+        tag: formData.tag,
+        name: formData.name || null,
+        category: formData.category,
+        breed: formData.breed,
+        age: formData.age ? Number(formData.age) : 0,
+        healthStatus: formData.healthStatus,
+  
+        // cow fields
+        heatStatus: formData.heatStatus === "in heat",
+        pregnant: formData.pregnant === "yes",
+        lastInsemination: formData.lastInsemination
+        ? new Date(formData.lastInsemination).toISOString() 
+        : null,
+        inseminationType: formData.inseminationType || null,
+  
+        // calf fields
+        birthDate: formData.birthDate 
+        ? new Date(formData.birthDate).toISOString()  
+        : null,
+        motherTag: formData.motherTag || null,
+        fatherTag: formData.fatherTag || null,
+      }
+
+      console.log("Selected motherTag:", formData.motherTag)
+      const res = await axiosInstance.post("/livestock/register", payload);
+      const newAnimal = res.data.animal
+      setMessage("animal registered successfully")
+      router.push(`/dashboard/animals/${newAnimal.tag}`)
+        
     }catch(err:any){
         if (err.response) {
             setError(err.response.data?.message || "Something went wrong")
+            console.log(err.response.data)
         } else if (err.request) {
             setError("Network error. Check your connection.")
         } else {
@@ -104,6 +166,44 @@ export default function RegisterAnimal() {
     }
     
   }
+  useEffect(() => {
+    const fetchCows = async () => {
+      try {
+        const res = await axiosInstance.get("/livestock/animals-listing")
+        
+        // filter only cows (female ideally later)
+        const cowList = res.data.listing.filter(
+          (animal: any) => animal.category === "cow"
+        )
+  
+        setCows(cowList)
+  
+      } catch (err) {
+        console.error("Error fetching cows", err)
+      }
+    }
+  
+    fetchCows()
+  }, [])
+
+  useEffect(() => {
+    if (formData.category === "calf") {
+      setFormData(prev => ({
+        ...prev,
+        heatStatus: "no",
+        pregnant: "no",
+        lastInsemination: "",
+        inseminationType: "",
+      }))
+    } else {
+      setFormData(prev => ({
+        ...prev,
+        motherTag: "",
+        fatherTag: "",
+        birthDate: ""
+      }))
+    }
+  }, [formData.category])
 
   // Reusable Select Component
   function Select({ 
@@ -113,7 +213,8 @@ export default function RegisterAnimal() {
     onChange, 
     options,
     icon: Icon,
-    required = false
+    required = false,
+    disabledOptions = [], ...props 
   }: any) {
     return (
       <div>
@@ -136,7 +237,11 @@ export default function RegisterAnimal() {
               appearance-none cursor-pointer transition-all duration-200 ${Icon ? 'pl-10' : ''}`}
           >
             {options.map((opt: string, i: number) => (
-              <option key={i} value={opt.toLowerCase()}>
+              <option 
+                key={i} 
+                value={opt.toLowerCase()} 
+                disabled={disabledOptions.includes(opt.toLowerCase())}
+              >
                 {opt.charAt(0).toUpperCase() + opt.slice(1)}
               </option>
             ))}
@@ -259,32 +364,79 @@ export default function RegisterAnimal() {
 
           {/* REPRODUCTION INFORMATION */}
           <div className="bg-gray-50 rounded-xl p-5 transition-all hover:shadow-md">
-            <SectionHeader title="Reproduction Information" icon={Heart} />
+            <SectionHeader  title={formData.category === "calf" ? "calf Information" : "Reproduction Information"} icon={Heart} />
             <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-              <Select 
-                label="Heat Status" 
-                name="heatStatus" 
-                value={formData.heatStatus} 
-                onChange={handleChange}
-                options={["No", "In Heat"]}
-                icon={Droplet}
-              />
-              <Select 
-                label="Pregnant" 
-                name="pregnant" 
-                value={formData.pregnant} 
-                onChange={handleChange}
-                options={["No", "Yes"]}
-                icon={Baby}
-              />
-              <Input 
-                label="Last Insemination Date" 
-                name="lastInsemination" 
-                type="date" 
-                value={formData.lastInsemination} 
-                onChange={handleChange}
-                icon={Calendar}
-              />
+              {formData.category === "cow" ? (
+                <>
+                <Select 
+                  label="Heat Status" 
+                  name="heatStatus" 
+                  value={formData.heatStatus} 
+                  onChange={handleChange}
+                  options={["No", "In Heat"]}
+                  disabledOptions={formData.pregnant === "yes" ? ["In Heat"] : []}
+                  icon={Droplet}
+                />
+        
+                <Select 
+                  label="Pregnant" 
+                  name="pregnant" 
+                  value={formData.pregnant} 
+                  onChange={handleChange}
+                  options={["No", "Yes"]}
+                  icon={Baby}
+                />
+        
+                <Input 
+                  label="Last Insemination Date" 
+                  name="lastInsemination" 
+                  type="date" 
+                  value={formData.lastInsemination} 
+                  onChange={handleChange}
+                  icon={Calendar}
+                />
+                <Select
+                  label="inseminationType"
+                  name="inseminationType"
+                  value={formData.inseminationType}
+                  onChange={handleChange}
+                  options={["Natural", "Artificial"]}
+                  icon={Droplet}
+                />
+              </>
+              ):(
+                <>
+                  <Select 
+                    label="Select Mother" 
+                    name="motherTag" 
+                    value={formData.motherTag || ''} 
+                    onChange={handleChange}
+                    options={cows.map(cow => cow.tag)}
+                    icon={Tag}
+                    required
+                    placeholder="Enter mother tag"
+                    
+                  />
+
+                  <Input 
+                    label="fatherTag" 
+                    name="fatherTag" 
+                    type="text" 
+                    value={formData.fatherTag} 
+                    onChange={handleChange}
+                    icon={Tag}
+                    placeholder="Enter father tag (optional)"
+                  />
+                  <Input 
+                    label="Birth Date DD/MM/YYYY" 
+                    name="birthDate" 
+                    type="Date" 
+                    value={formData.birthDate} 
+                    onChange={handleChange}
+                  />
+                </>
+              )}
+             
             </div>
           </div>
 

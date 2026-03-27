@@ -10,6 +10,7 @@ const tabs = [
   { id: "animals", label: "All Animals" },
   { id: "register", label: "Register Animal" },
   { id: "categories", label: "Categories" },
+  { id: "Feed stock", label: "Feed stock" },
   { id: "reports", label: "Reports" },
 ]
 

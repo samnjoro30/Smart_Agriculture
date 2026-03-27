@@ -11,6 +11,7 @@ from .schema import (
 from .service import (
     register_animals,
     get_animals_listing,
+    get_animal_by_tag_id,
     get_stats,
 )
 
@@ -48,5 +49,17 @@ async def get_stats_livestock(
 
     return {"stats": stats}
 
-    
+@router.get("/animal/{tag}")
+async def get_animal_by_tag_by(
+    tag: str, 
+    db: AsyncSession = Depends(get_db), 
+    current_user = Depends(get_current_user)
+    ):
+
+    animal = await get_animal_by_tag_id(db, tag, current_user)
+
+    if not animal:
+        raise HTTPException(status_code=404, detail="Animal not found")
+
+    return {"animal": animal}
 

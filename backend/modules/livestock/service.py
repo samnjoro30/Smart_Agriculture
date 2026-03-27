@@ -5,7 +5,7 @@ from fastapi import APIRouter, Depends, HTTPException, Request, Response
 from jose import JWTError, jwt
 from sqlalchemy.ext.asyncio import AsyncSession
 from starlette.status import HTTP_201_CREATED
-
+from  .tasks import make_naive
 from .model import ( 
     Livestock,
 )
@@ -15,6 +15,7 @@ from .repository import (
     get_animal_by_tag,
     get_animals_by_user,
     get_animal_stats,
+    get_animals_details_by_user,
 )
 
 from config.security import create_access_token, create_refresh_token
@@ -33,27 +34,28 @@ async def register_animals(db: AsyncSession, payload, current_user):
         )
         raise HTTPException(status_code=400, detail="Animal with this tag already exists")
 
-    animal_data = payload.model_dump()
+    animal_data = payload.model_dump(exclude_unset=True)
+    for field in ["motherTag", "fatherTag", "inseminationType"]:
+        if animal_data.get(field) == "":
+           animal_data[field] = None
+
     animal_data["user_id"] = current_user.id
     if payload.category.lower() == "calf":
-        animal_data["heatStatus"] = False
-        animal_data["pregnant"] = False
-        animal_data["lastInsemination"] = None
+        animal_data.update({
+            "heatStatus": False,
+            "pregnant": False,
+            "lastInsemination": None,
+            "inseminationType": None
+        })
     else: 
-        pass
+        animal_data.update({
+            "birthDate": None,
+            "motherTag": None,
+            "fatherTag": None
+        })
 
-    # animal_dict ={
-    #     "tag": payload.tag,
-    #     "name": payload.name,
-    #     "category": payload.category,
-    #     "breed": payload.breed,
-    #     "heatStatus": payload.heatStatus,
-    #     "pregnant": payload.pregnant,
-    #     "lastInsemination": payload.lastInsemination,
-    #     "age": payload.age,
-    #     "healthStatus": payload.healthStatus,
-    #     "user_id": current_user.id,
-    # }
+    animal_data["lastInsemination"] = make_naive(animal_data.get("lastInsemination"))
+    animal_data["birthDate"] = make_naive(animal_data.get("birthDate"))
     animal = await create_animal(animal_data, db)
 
     await db.commit()
@@ -88,3 +90,23 @@ async def get_stats(db: AsyncSession, current_user):
         raise HTTPException(status_code=404, detail="No stats found for this user")
     
     return stats
+
+async def get_animal_by_tag_id(db: AsyncSession, tag: str, current_user):
+    animal = await get_animal_by_tag(db, tag)
+    if not animal:
+        logger.warning(
+            "Attempted to access non-existent animal by tag",
+            tag=tag,
+            user_id=current_user.id
+        )
+        raise HTTPException(status_code=404, detail="Animal not found")
+
+    if animal.user_id != current_user.id:
+        logger.warning(
+            "Attempted to access animal belonging to another user",
+            tag=tag,
+            user_id=current_user.id
+        )
+        raise HTTPException(status_code=403, detail="Forbidden: You do not have access to this animal")
+
+    return animal
