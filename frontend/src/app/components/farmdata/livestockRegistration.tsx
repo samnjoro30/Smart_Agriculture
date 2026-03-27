@@ -106,23 +106,11 @@ export default function RegisterAnimal() {
         motherTag: formData.motherTag || null,
         fatherTag: formData.fatherTag || null,
       }
-        const res = await axiosInstance.post("/livestock/register", payload);
-        setMessage(res.data.message)
-        // setFormData({
-        //     tag: "",
-        //     name: '',
-        //     category: "cow",
-        //     breed: "",
-        //     age: "",
-        //     healthStatus: "",
-        //     heatStatus: "no",
-        //     pregnant: "no",
-        //     lastInsemination: "",
-        //     inseminationType: "",
-        //     motherTag: "",
-        //     fatherTag: '',
-        //     birthDate: '',
-        //   })
+
+      console.log("Selected motherTag:", formData.motherTag)
+      const res = await axiosInstance.post("/livestock/register", payload);
+      setMessage(res.data.message)
+        
     }catch(err:any){
         if (err.response) {
             setError(err.response.data?.message || "Something went wrong")
@@ -374,12 +362,13 @@ export default function RegisterAnimal() {
                   <Select 
                     label="Select Mother" 
                     name="motherTag" 
-                    value={formData.motherTag} 
+                    value={formData.motherTag || ''} 
                     onChange={handleChange}
                     options={cows.map(cow => cow.tag)}
                     icon={Tag}
                     required
                     placeholder="Enter mother tag"
+                    
                   />
 
                   <Input 

@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import axiosInstance from "../../API/axiosInstance";
+import AnimalDetails from "./animalDetail";
 
 interface Animal {
   tag: string;
@@ -23,6 +24,7 @@ export default function AnimalsList() {
   const [search, setSearch] = useState("");
   const [categoryFilter, setCategoryFilter] = useState("all");
   const [healthFilter, setHealthFilter] = useState("all");
+  const [selectedAnimalId, setSelectedAnimalId] = useState<string | null>(null);
 
   const router = useRouter();
 
@@ -40,7 +42,15 @@ export default function AnimalsList() {
     fetchAnimals();
   }, []);
 
-  // 🔍 Filtering logic
+  if (selectedAnimalId) {
+    return (
+      <AnimalDetails 
+        id={selectedAnimalId} 
+        onBack={() => setSelectedAnimalId(null)} 
+      />
+    );
+  }
+ // 🔍 Filtering logic
   const filteredAnimals = animals.filter(a => {
     const matchesSearch =
       a.tag.toLowerCase().includes(search.toLowerCase()) ||
@@ -113,7 +123,7 @@ export default function AnimalsList() {
         {filteredAnimals.map((animal) => (
           <div
             key={animal.tag}
-            onClick={() => router.push(`/livestock/${animal.tag}`)}
+            onClick={() => setSelectedAnimalId(animal.tag)}
             className="bg-green-200 border rounded-xl p-5 shadow-sm hover:shadow-md transition cursor-pointer"
           >
 
