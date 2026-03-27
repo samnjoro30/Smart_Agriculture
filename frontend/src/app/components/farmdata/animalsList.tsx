@@ -59,6 +59,7 @@ export default function AnimalsList() {
     const matchesCategory =
       categoryFilter === "all" || a.category === categoryFilter;
 
+      
     const matchesHealth =
       healthFilter === "all" || a.healthStatus === healthFilter;
 

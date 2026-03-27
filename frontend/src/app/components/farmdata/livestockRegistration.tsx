@@ -11,6 +11,7 @@ import {
   Droplet,
   Baby
 } from "lucide-react"
+import {useRouter} from "next/navigation"
 import axiosInstance from '../../API/axiosInstance';
 
 function Input({ 
@@ -71,6 +72,8 @@ export default function RegisterAnimal() {
   const [message, setMessage] = useState<string | null>(null)
   const [loading, setLoading] = useState<boolean>(false)
   const [cows, setCows] = useState<any[]>([])
+
+  const router = useRouter()
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target
@@ -145,7 +148,9 @@ export default function RegisterAnimal() {
 
       console.log("Selected motherTag:", formData.motherTag)
       const res = await axiosInstance.post("/livestock/register", payload);
-      setMessage(res.data.message)
+      const newAnimal = res.data.animal
+      setMessage("animal registered successfully")
+      router.push(`/dashboard/animals/${newAnimal.tag}`)
         
     }catch(err:any){
         if (err.response) {

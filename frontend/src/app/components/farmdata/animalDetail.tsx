@@ -117,7 +117,7 @@ export default function AnimalDetails({ id, onBack }: Props) {
 
             <div className="bg-gray-50 p-3 rounded-xl border border-gray-50">
               <p className="text-[10px] text-gray-400 uppercase font-bold mb-1">Breed</p>
-              <p className="text-sm font-bold text-gray-800 truncate">
+              <p className="text-sm font-semibold text-gray-800 truncate">
                 {animal.breed || "Crossbreed"}
               </p>
             </div>
