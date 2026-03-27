@@ -73,15 +73,51 @@ export default function RegisterAnimal() {
   const [cows, setCows] = useState<any[]>([])
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-  const { name, value } = e.target
-  setFormData(prev => ({ ...prev, [name]: value }))
-}
+    const { name, value } = e.target
+    setFormData(prev => {
+      let updated = { ...prev, [name]: value }
+      if (name === "pregnant" && value === "yes") {
+        updated.heatStatus = "no"
+      }
+
+      if (name === "heatStatus" && value === "in heat") {
+        updated.pregnant = "no"
+      }
+
+      return updated
+    })
+  }  
+  const validateForm = () => {
+    if(formData.category === "cow"){
+      if(formData.pregnant === "yes" && !formData.lastInsemination){
+        setError("Please provide last insemination date for pregnant cows.")
+        return false
+      }
+      if(formData.pregnant === "yes" && formData.heatStatus === "in heat"){
+        setError("A cow cannot be pregnat and be on heat.")
+        return false
+      }
+    }
+    if (formData.category === "calf") {
+      if (!formData.motherTag) {
+        setError("Please select the mother cow for the calf.")
+        return false
+      }
+    }
+    return null
+  }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
+    const validateError = validateForm()
+    if (validateError){
+      setError(validateError);
+      return
+    }
     setLoading(true)
     setMessage(null)
     setError(null)
+
     try{
       const payload = {
         tag: formData.tag,
@@ -172,7 +208,8 @@ export default function RegisterAnimal() {
     onChange, 
     options,
     icon: Icon,
-    required = false
+    required = false,
+    disabledOptions = [], ...props 
   }: any) {
     return (
       <div>
@@ -195,7 +232,11 @@ export default function RegisterAnimal() {
               appearance-none cursor-pointer transition-all duration-200 ${Icon ? 'pl-10' : ''}`}
           >
             {options.map((opt: string, i: number) => (
-              <option key={i} value={opt.toLowerCase()}>
+              <option 
+                key={i} 
+                value={opt.toLowerCase()} 
+                disabled={disabledOptions.includes(opt.toLowerCase())}
+              >
                 {opt.charAt(0).toUpperCase() + opt.slice(1)}
               </option>
             ))}
@@ -328,6 +369,7 @@ export default function RegisterAnimal() {
                   value={formData.heatStatus} 
                   onChange={handleChange}
                   options={["No", "In Heat"]}
+                  disabledOptions={formData.pregnant === "yes" ? ["In Heat"] : []}
                   icon={Droplet}
                 />
         
