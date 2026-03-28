@@ -2,7 +2,7 @@ import axios from 'axios';
 
 
 const axiosInstance = axios.create({
-    baseURL: "https://smart-agriculture-21dt.onrender.com", // "http://localhost:8000", // , //process.env.BACKEND_URL,
+    baseURL:  "https://smart-agriculture-21dt.onrender.com", // "http://localhost:8000", // , //process.env.BACKEND_URL,
     withCredentials: true,
 });
 
@@ -35,7 +35,9 @@ axiosInstance.interceptors.response.use(
           return axiosInstance(originalRequest);
         } catch (refreshError) {
           console.error("Refresh token expired or invalid. Redirecting to login...");
+          window.location.href = "/auth/login";
           return Promise.reject(refreshError);
+
         }
       }
   
