@@ -35,7 +35,9 @@ axiosInstance.interceptors.response.use(
           return axiosInstance(originalRequest);
         } catch (refreshError) {
           console.error("Refresh token expired or invalid. Redirecting to login...");
+          window.location.href = "/auth/login";
           return Promise.reject(refreshError);
+
         }
       }
   
