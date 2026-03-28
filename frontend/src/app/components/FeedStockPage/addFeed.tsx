@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, ChangeEvent, FormEvent } from "react"
-import { Save } from "lucide-react"
+import { Save, Package, Tag, User, Hash, Ruler, Banknote } from "lucide-react"
 import { Feed } from "../../types/feed"
 
 type Props = {
@@ -21,7 +21,7 @@ export default function AddFeedForm({ onAdd }: Props) {
   const [formData, setFormData] = useState<FormState>({
     name: "",
     category: "",
-    quantity: "",
+    quantity: '',
     unit: "kg",
     costPerUnit: "",
     supplier: ""
@@ -62,72 +62,120 @@ export default function AddFeedForm({ onAdd }: Props) {
   }
 
   return (
-    <form
-      onSubmit={handleSubmit}
-      className="bg-white p-5 rounded-2xl shadow space-y-4"
-    >
-      <h2 className="text-lg font-semibold">Add Feed</h2>
-
-      <div className="grid md:grid-cols-3 gap-4">
-        <input
-          name="name"
-          placeholder="Feed name"
-          value={formData.name}
-          onChange={handleChange}
-          className="input"
-        />
-
-        <select
-          name="category"
-          value={formData.category}
-          onChange={handleChange}
-          className="input"
-        >
-          <option value="">Category</option>
-          <option value="Roughage">Roughage</option>
-          <option value="Concentrate">Concentrate</option>
-          <option value="Supplement">Supplement</option>
-        </select>
-
-        <input
-          name="supplier"
-          placeholder="Supplier"
-          value={formData.supplier}
-          onChange={handleChange}
-          className="input"
-        />
-
-        <input
-          name="quantity"
-          type="number"
-          placeholder="Quantity"
-          value={formData.quantity}
-          onChange={handleChange}
-          className="input"
-        />
-
-        <input
-          name="unit"
-          placeholder="Unit (kg, bags)"
-          value={formData.unit}
-          onChange={handleChange}
-          className="input"
-        />
-
-        <input
-          name="costPerUnit"
-          type="number"
-          placeholder="Cost per unit"
-          value={formData.costPerUnit}
-          onChange={handleChange}
-          className="input"
-        />
+    <form onSubmit={handleSubmit} className="bg-gradient-to-br from-green-100 to-emerald-50 p-6 rounded-3xl shadow-sm border border-green-200 space-y-6">
+      {/* Header Section */}
+      <div className="flex items-center gap-3 border-b border-gray-50 pb-4">
+        <div className="p-2 bg-green-50 text-green-600 rounded-xl">
+          <Package size={22} />
+        </div>
+        <div>
+          <h2 className="text-xl font-bold text-gray-800">Add Stock Feed</h2>
+          <p className="text-xs text-gray-400">Inventory Management</p>
+        </div>
       </div>
 
-      <button className="flex items-center gap-2 bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-xl">
-        <Save size={18} />
-        Save Feed
-      </button>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+       {/* Feed Name */}
+        <div className="space-y-1.5">
+          <label className="text-xs font-bold text-gray-500 uppercase ml-1">Feed Name</label>
+          <div className="relative">
+            <Tag className="absolute left-3 top-1/2 -translate-y-1/2 text-green-400" size={16} />
+            <input
+               name="name"
+               placeholder="e.g. Dairy Meal"
+               value={formData.name}
+               onChange={handleChange}
+               className="w-full pl-10 pr-4 py-3 bg-gray-100 text-gray-700 border-none rounded-2xl focus:ring-2 focus:ring-green-500 transition-all text-sm font-medium"
+              />
+            </div>
+          </div>
+
+    {/* Category Select */}
+          <div className="space-y-1.5">
+            <label className="text-xs font-bold text-gray-500 uppercase ml-1">Category</label>
+            <select
+              name="category"
+              value={formData.category}
+              onChange={handleChange}
+              className="w-full px-4 py-3 bg-gray-100 text-gray-700 border-none rounded-2xl focus:ring-2 focus:ring-green-500 transition-all text-sm font-medium appearance-none"
+            >
+
+              <option value="">Select Category</option>
+              <option value="Roughage">Roughage (Hay, Silage)</option>
+              <option value="Concentrate">Concentrate</option>
+              <option value="Supplement">Supplement</option>
+            </select>
+          </div>
+
+    {/* Supplier */}
+          <div className="space-y-1.5">
+            <label className="text-xs font-bold text-gray-500 uppercase ml-1">Supplier</label>
+            <div className="relative">
+              <User className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={16} />
+              <input
+                name="supplier"
+                placeholder="Company Name"
+                value={formData.supplier}
+                onChange={handleChange}
+                className="w-full text-gray-700 pl-10 pr-4 py-3 bg-gray-100 border-none rounded-2xl focus:ring-2 focus:ring-green-500 transition-all text-sm font-medium"
+              />
+            </div>
+          </div>
+
+    {/* Quantity Group */}
+          <div className="space-y-1.5">
+            <label className="text-xs font-bold text-gray-500 uppercase ml-1">Quantity</label>
+            <div className="flex gap-2">
+              <div className="relative flex-1">
+                <Hash className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={16} />
+                <input
+                  name="quantity"
+                  type="number"
+                  placeholder="0.00"
+                  value={formData.quantity}
+                  onChange={handleChange}
+                  className="w-full pl-10 pr-4 py-3 bg-gray-100 text-gray-700 border-none rounded-2xl focus:ring-2 focus:ring-green-500 transition-all text-sm font-medium"
+                />
+              </div>
+              <div className="relative w-1/3">
+                <Ruler className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={16} />
+                <input
+                  name="unit"
+                  placeholder="kg"
+                  value={formData.unit}
+                  onChange={handleChange}
+                  className="w-full pl-10 pr-4 py-3 bg-gray-100 text-gray-700 border-none rounded-2xl focus:ring-2 focus:ring-green-500 transition-all text-sm font-bold text-center"
+                />
+              </div>
+            </div>
+          </div>
+
+           {/* Cost Per Unit */}
+          <div className="space-y-1.5 md:col-span-2 lg:col-span-1">
+            <label className="text-xs font-bold text-gray-500 uppercase ml-1">Cost Per Unit (KES)</label>
+            <div className="relative">
+              <Banknote className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={16} />
+                <input
+                  name="costPerUnit"
+                  type="number"
+                  placeholder="0.00"
+                  value={formData.costPerUnit}
+                  onChange={handleChange}
+                  className="w-full pl-10 pr-4 py-3 bg-gray-100 text-gray-700 border-none rounded-2xl focus:ring-2 focus:ring-green-500 transition-all text-sm font-medium"
+                />
+            </div>
+          </div>
+        </div>
+
+        <div className="flex items-center justify-between pt-4 border-t border-gray-50">
+          <p className="text-xs text-gray-400 italic font-medium">
+            Total Cost: <span className="text-green-600 font-bold">KES {(Number(formData.quantity )* Number(formData.costPerUnit) || 0).toLocaleString()}</span>
+          </p>
+          <button className="flex items-center justify-center gap-2 bg-green-600 hover:bg-green-700 active:scale-95 text-white font-bold px-8 py-3 rounded-2xl shadow-lg shadow-green-200 transition-all">
+            <Save size={18} />
+            Confirm Entry
+          </button>
+        </div>
     </form>
   )
 }
