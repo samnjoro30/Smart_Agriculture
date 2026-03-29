@@ -62,7 +62,7 @@ export default function AddFeedForm({ onAdd }: Props) {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="bg-gradient-to-br from-green-100 to-emerald-50 p-6 rounded-3xl shadow-sm border border-green-200 space-y-6">
+    <form onSubmit={handleSubmit} className="bg-gradient-to-br from-green-200 to-emerald-100 p-2 rounded-3xl shadow-sm border border-green-200 space-y-4">
       {/* Header Section */}
       <div className="flex items-center gap-3 border-b border-gray-50 pb-4">
         <div className="p-2 bg-green-50 text-green-600 rounded-xl">
@@ -77,7 +77,7 @@ export default function AddFeedForm({ onAdd }: Props) {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
        {/* Feed Name */}
         <div className="space-y-1.5">
-          <label className="text-xs font-bold text-gray-500 uppercase ml-1">Feed Name</label>
+          <label className="text-xs font-bold text-gray-500 uppercase ml-1">Feed Name:</label>
           <div className="relative">
             <Tag className="absolute left-3 top-1/2 -translate-y-1/2 text-green-400" size={16} />
             <input
@@ -85,14 +85,14 @@ export default function AddFeedForm({ onAdd }: Props) {
                placeholder="e.g. Dairy Meal"
                value={formData.name}
                onChange={handleChange}
-               className="w-full pl-10 pr-4 py-3 bg-gray-100 text-gray-700 border-none rounded-2xl focus:ring-2 focus:ring-green-500 transition-all text-sm font-medium"
+               className="w-full pl-10 pr-4 py-3 bg-gray-200 text-gray-700 border-none rounded-2xl focus:ring-2 focus:ring-green-500 transition-all text-sm font-medium"
               />
             </div>
           </div>
 
     {/* Category Select */}
           <div className="space-y-1.5">
-            <label className="text-xs font-bold text-gray-500 uppercase ml-1">Category</label>
+            <label className="text-xs font-bold text-gray-500 uppercase ml-1">Category:</label>
             <select
               name="category"
               value={formData.category}
@@ -111,7 +111,7 @@ export default function AddFeedForm({ onAdd }: Props) {
           <div className="space-y-1.5">
             <label className="text-xs font-bold text-gray-500 uppercase ml-1">Supplier</label>
             <div className="relative">
-              <User className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={16} />
+              <User className="absolute left-3 top-1/2 -translate-y-1/2 text-green-400" size={16} />
               <input
                 name="supplier"
                 placeholder="Company Name"
@@ -127,7 +127,7 @@ export default function AddFeedForm({ onAdd }: Props) {
             <label className="text-xs font-bold text-gray-500 uppercase ml-1">Quantity</label>
             <div className="flex gap-2">
               <div className="relative flex-1">
-                <Hash className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={16} />
+                <Hash className="absolute left-3 top-1/2 -translate-y-1/2 text-green-400" size={16} />
                 <input
                   name="quantity"
                   type="number"
@@ -138,7 +138,7 @@ export default function AddFeedForm({ onAdd }: Props) {
                 />
               </div>
               <div className="relative w-1/3">
-                <Ruler className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={16} />
+                <Ruler className="absolute left-3 top-1/2 -translate-y-1/2 text-green-400" size={16} />
                 <input
                   name="unit"
                   placeholder="kg"
@@ -154,7 +154,7 @@ export default function AddFeedForm({ onAdd }: Props) {
           <div className="space-y-1.5 md:col-span-2 lg:col-span-1">
             <label className="text-xs font-bold text-gray-500 uppercase ml-1">Cost Per Unit (KES)</label>
             <div className="relative">
-              <Banknote className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={16} />
+              <Banknote className="absolute left-3 top-1/2 -translate-y-1/2 text-green-400" size={16} />
                 <input
                   name="costPerUnit"
                   type="number"
