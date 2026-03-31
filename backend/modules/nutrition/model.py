@@ -13,6 +13,8 @@ class Feeds(Base):
     category = Column(String(100))
     quantity = Column(Integer)
     unit = Column(String(50))
+    costPerUnit = Column(Float)
+    supplier = Column(String(100))
     user_id = Column(
         UUID(as_uuid=True), 
         ForeignKey('users.id', ondelete='CASCADE'),
