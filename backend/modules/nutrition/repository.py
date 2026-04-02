@@ -4,8 +4,8 @@ from uuid import UUID
 from .model import Feeds
 
 # CREATE
-async def create_feed(db: AsyncSession, feed_data: dict, user_id: UUID):
-    new_feed = Feeds(user_id=user_id, **feed_data)
+async def create_feed(feed_data: dict, db: AsyncSession):
+    new_feed = Feeds(**feed_data)
     db.add(new_feed)
     await db.flush()
     return new_feed
