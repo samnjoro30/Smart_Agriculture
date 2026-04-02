@@ -1,7 +1,8 @@
 "use client"
 
 import { useState, ChangeEvent, FormEvent } from "react"
-import { Save, Package, Tag, User, Hash, Ruler, Banknote } from "lucide-react"
+import { Save, Package, Tag, User, Hash, Ruler, Banknote } from "lucide-react";
+import axiosInstance from "../../API/axiosInstance";
 import { Feed } from "../../types/feed"
 
 type Props = {
@@ -26,6 +27,8 @@ export default function AddFeedForm({ onAdd }: Props) {
     costPerUnit: "",
     supplier: ""
   })
+  const [message, setMessage] = useState<string | null>(null)
+  const [loading, setLoading] = useState<boolean>(false)
 
   const handleChange = (
     e: ChangeEvent<HTMLInputElement | HTMLSelectElement>
@@ -34,8 +37,22 @@ export default function AddFeedForm({ onAdd }: Props) {
     setFormData((prev) => ({ ...prev, [name]: value }))
   }
 
-  const handleSubmit = (e: FormEvent) => {
-    e.preventDefault()
+  const handleSubmit =  async(e: FormEvent) => {
+    e.preventDefault();
+    setMessage(null);
+    setLoading(true)
+    try{
+      const res = await axiosInstance.post("/nutrition/feeds-register", formData);
+
+      setMessage(res.data.message || "Feed added successfully!")
+      setTimeout(() => setMessage(null), 3000)
+    }catch(err){
+      console.error("Failed to add feed", err)
+      setMessage("Failed to add feed. Please try again.")
+      setTimeout(() => setMessage(null), 3000)
+    }finally{
+      setLoading(false) 
+    }
 
     const quantity = Number(formData.quantity)
     const costPerUnit = Number(formData.costPerUnit)
@@ -171,11 +188,32 @@ export default function AddFeedForm({ onAdd }: Props) {
           <p className="text-xs text-gray-400 italic font-medium">
             Total Cost: <span className="text-green-600 font-bold">KES {(Number(formData.quantity )* Number(formData.costPerUnit) || 0).toLocaleString()}</span>
           </p>
-          <button className="flex items-center justify-center gap-2 bg-green-600 hover:bg-green-700 active:scale-95 text-white font-bold px-8 py-3 rounded-2xl shadow-lg shadow-green-200 transition-all">
-            <Save size={18} />
-            Confirm Entry
+          <button 
+            className={`w-full flex justify-center items-center py-2 px-4 bg-green-600 hover:bg-green-700 text-white font-semibold rounded-md transition duration-300 ${
+              loading ? "opacity-70 cursor-not-allowed" : ""
+            }`}
+            type="submit"
+            disabled={loading}
+          >
+            { loading ? (
+              <>
+              <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+              </svg>
+              Saving ...
+            </>
+
+            ) : 
+            <>
+              <Save size={18} />
+              Confirm Entry
+            </>
+            }
+           
           </button>
         </div>
+        {message && (<p style={{ color: 'green'}}>{message}</p>)}
     </form>
   )
 }
