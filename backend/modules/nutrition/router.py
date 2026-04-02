@@ -7,8 +7,7 @@ from datetime import datetime, timedelta
 from config.setting import get_settings
 from config.security import get_current_user
 
-from .schemas import (
-    FeedBase,
+from .schema import (
     FeedCreate,
     FeedUpdate,
     FeedOut,
@@ -17,7 +16,6 @@ from .schemas import (
 from .service import (
     create_feed_service,
     get_all_feeds_service,
-    get_feed_by_id_service,
     update_feed_service,
     delete_feed_service,
 )
@@ -30,9 +28,9 @@ settings = get_settings()
 
 @router.post("/feeds-register")
 async def create_feed(
+    payload: FeedCreate,
     db: AsyncSession = Depends(get_db),
     current_user = Depends(get_current_user),
-    payload: FeedBase
     ):
 
     feeds = await create_feed_service(db, payload, current_user)

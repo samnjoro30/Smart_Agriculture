@@ -27,5 +27,5 @@ class FeedOut(FeedBase):
     user_id: UUID
     createdAt: datetime
 
-    class Config:
-        from_attributes = True  # replaces orm_mode in Pydantic v2
+    # class Config:
+    #     from_attributes = True  # replaces orm_mode in Pydantic v2

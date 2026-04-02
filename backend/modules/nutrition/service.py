@@ -9,25 +9,40 @@ from starlette.status import HTTP_201_CREATED
 from config.audit.logger import get_logger
 
 
-from .models import (
+from .model import (
     Feeds,
 )
 
 from .repository import (
         create_feed,
         get_all_feeds,
-        get_feed_by_id,
         update_feed,
         delete_feed,
 )
 
-logger = het_logger("NUTRITION")
+logger = get_logger("NUTRITION")
 
-async def create_feed_service(db: AsyncSession, feed_data: dict, user_id):
+async def create_feed_service(db: AsyncSession, payload, current_user):
+
+    if payload.get("quantity", 0) < 0:
+        raise ValueError("Quantity cannot be negative")
 
 
-async def get_all_feeds_service(db: AsyncSession, user_id):
+    feed_data = payload.model_dump(exclude_unset=True)
+    feed_data["user_id"] = current_user.id
+    
+    feed = await create_feed(feed_data, db)
+    
+    return feed
 
-async def update_feed_service(db: AsyncSession, feed_id, user_id, data):
 
-async def delete_feed_service(db: AsyncSession, feed_id, user_id):
+
+async def get_all_feeds_service(db: AsyncSession):
+    pass
+   
+
+async def update_feed_service(db: AsyncSession):
+    pass
+
+async def delete_feed_service(db: AsyncSession):
+    pass
