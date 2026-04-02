@@ -24,7 +24,7 @@ logger = get_logger("NUTRITION")
 
 async def create_feed_service(db: AsyncSession, payload, current_user):
 
-    if payload.get("quantity", 0) < 0:
+    if payload.quantity< 0:
         raise ValueError("Quantity cannot be negative")
 
 
@@ -32,6 +32,8 @@ async def create_feed_service(db: AsyncSession, payload, current_user):
     feed_data["user_id"] = current_user.id
     
     feed = await create_feed(feed_data, db)
+
+    await db.commit()
     
     return feed
 
