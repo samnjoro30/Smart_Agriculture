@@ -36,7 +36,7 @@ async def create_feed(
     feeds = await create_feed_service(db, payload, current_user)
     logger.info("POST /nutrition/feeds-register completed", status_code=201)
     return {
-        "message": "Create feed endpoint"
+        "message": "Create feed successfully",
     }
 
 @router.get("/feeds-listing")
