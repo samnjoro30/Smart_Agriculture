@@ -25,3 +25,4 @@ async def error_middleware(request: Request, call_next):
             status_code=500,
             content={"detail": "Internal server error"},
         )
+        
