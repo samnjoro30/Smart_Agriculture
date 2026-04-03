@@ -1,4 +1,4 @@
-import { livestockData } from "../components/farmdata/overviewAPICalls";
+import { livestockData } from "../types/animalOverview";
 
 // simulate delay
 const delay = (ms: number) => new Promise(res => setTimeout(res, ms))
