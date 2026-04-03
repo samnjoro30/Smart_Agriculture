@@ -1,16 +1,17 @@
 import os
 import threading
 import time
+import httpx
+import asyncio
 
 import requests
 from fastapi import FastAPI, Request, Response
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.middleware.gzip import GZipMiddleware
+
 from slowapi import Limiter, _rate_limit_exceeded_handler
 from slowapi.errors import RateLimitExceeded
 from slowapi.util import get_remote_address
-
-from alembic import command
-from alembic.config import Config
 
 from config.audit.logger import setup_logging
 
@@ -60,12 +61,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-
-# app.include_router(auth_router)
-#app.include_router(user_router)
-# app.include_router(farm_router)
-# app.include_router(farm_analytic_router)
-# app.include_router(admin_auth_router)
+app.add_middleware(GZipMiddleware, minimum_size=1000)
 
 app.include_router(auth_farmer)
 app.include_router(farm_router)
@@ -80,28 +76,28 @@ async def ping():
 
 @app.middleware("http")
 async def add_process_time_header(request: Request, call_next):
-    start_time = time.time()
+    start_time = time.perf_counter()
     response = await call_next(request)
-    process_time = time.time() - start_time
+    process_time = time.perf_counter() - start_time
     response.headers["X-Process-Time"] = str(process_time)
     return response
 
 
 @app.on_event("startup")
 async def startup():
-    if os.getenv("RUN_MIGRATIONS") == "false":
-        alembic_cfg = Config("alembic.ini")
-        command.upgrade(alembic_cfg, "head")
 
-    def keep_alive():
-        while True:
-            try:
-                requests.get(
-                    "https://smart-agriculture-21dt.onrender.com/ping", timeout=5
-                )
-                print("Self-ping successful")
-            except Exception as e:
-                print("Self-ping failed:", e)
-            time.sleep(600)  # every 10 minutes
+    async def keep_alive():
+        async with httpx.AsyncClient(timeout=5.0) as client:
 
-    threading.Thread(target=keep_alive, daemon=True).start()
+            while True:
+                try:
+                    await client.get(
+                        "https://smart-agriculture-21dt.onrender.com/ping", timeout=5
+                    )
+                    print("Self-ping successful")
+                except Exception as e:
+                    print("Self-ping failed:", e)
+                
+                await asyncio.sleep(600) 
+
+    asyncio.create_task(keep_alive())
