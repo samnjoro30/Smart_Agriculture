@@ -2,9 +2,9 @@
 
 import {useState} from 'react';
 import Tabs from './farmdata/tabs';
-import LivestockOverview from './farmdata/overviewLivestock';
-import RegisterAnimal from './farmdata/livestockRegistration';
-import AnimalsList from './farmdata/animalsList';
+import LivestockOverview from './livestock/overviewAnimals';
+import RegisterAnimal from './livestock/RegisterAnimals';
+import AnimalsList from './livestock/ListAnimals';
 import FeedStockPage from './FeedStockPage/Feed';
 //import axiosInstance from '../API/axiosInstance';
 

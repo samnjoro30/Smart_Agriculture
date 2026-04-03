@@ -17,6 +17,7 @@ from config.audit.logger import setup_logging
 
 from config.middleware import audit_middleware
 from config.audit.middleware.request_id import request_id_middleware
+from config.audit.middleware.performance import performance_middleware
 #from config.audit.middleware.auth_context import auth_context_middleware
 from config.audit.middleware.error import error_middleware
 from config.audit.middleware.logging import logging_middleware
@@ -35,18 +36,6 @@ app = FastAPI(
     title="Smart farm API",
 )
 
-# limiting number of request from ip
-limiter = Limiter(key_func=get_remote_address)
-app.state.limiter = limiter
-app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
-
-app.middleware("http")(audit_middleware)
-app.middleware("http")(error_middleware)
-app.middleware("http")(request_id_middleware)
-#app.middleware("http")(auth_context_middleware)
-app.middleware("http")(logging_middleware)
-app.middleware("http")(security_middleware)
-
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
@@ -62,6 +51,19 @@ app.add_middleware(
 )
 
 app.add_middleware(GZipMiddleware, minimum_size=1000)
+# limiting number of request from ip
+limiter = Limiter(key_func=get_remote_address)
+app.state.limiter = limiter
+app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
+
+app.middleware("http")(performance_middleware)
+#app.middleware("http")(audit_middleware)
+app.middleware("http")(error_middleware)
+app.middleware("http")(request_id_middleware)
+#app.middleware("http")(auth_context_middleware)
+app.middleware("http")(logging_middleware)
+app.middleware("http")(security_middleware)
+
 
 app.include_router(auth_farmer)
 app.include_router(farm_router)
@@ -77,6 +79,7 @@ async def ping():
 @app.middleware("http")
 async def add_process_time_header(request: Request, call_next):
     start_time = time.perf_counter()
+
     response = await call_next(request)
     process_time = time.perf_counter() - start_time
     response.headers["X-Process-Time"] = str(process_time)
@@ -85,6 +88,9 @@ async def add_process_time_header(request: Request, call_next):
 
 @app.on_event("startup")
 async def startup():
+    async def warm_db():
+        async with engine.begin() as conn:
+            await conn.execute(text("SELECT 1"))
 
     async def keep_alive():
         async with httpx.AsyncClient(timeout=5.0) as client:

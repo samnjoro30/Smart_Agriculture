@@ -189,7 +189,7 @@ export default function AddFeedForm({ onAdd }: Props) {
             Total Cost: <span className="text-green-600 font-bold">KES {(Number(formData.quantity )* Number(formData.costPerUnit) || 0).toLocaleString()}</span>
           </p>
           <button 
-            className={`w-full flex justify-center items-center py-2 px-4 bg-green-600 hover:bg-green-700 text-white font-semibold rounded-md transition duration-300 ${
+            className={`w-3xs flex justify-center items-center py-2 px-4 bg-green-600 hover:bg-green-700 text-white font-semibold rounded-md transition duration-300 ${
               loading ? "opacity-70 cursor-not-allowed" : ""
             }`}
             type="submit"

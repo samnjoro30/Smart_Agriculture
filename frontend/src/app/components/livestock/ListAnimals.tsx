@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import axiosInstance from "../../API/axiosInstance";
-import AnimalDetails from "./animalDetail";
+import AnimalDetails from "./DetailAnimal";
 
 interface Animal {
   tag: string;

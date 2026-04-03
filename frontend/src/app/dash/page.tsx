@@ -3,7 +3,8 @@
 import {useState, useEffect} from 'react';
 import Header from '../components/header';
 import Footer from '../components/footer';
-import Sidebar from '../components/sidebar';
+//import Sidebar from '../components/sidebar';
+import Sidebar from '../components/layout';
 
 interface BeforeInstallPromptEvent extends Event{
     prompt: () => Promise<void>;
