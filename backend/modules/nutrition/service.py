@@ -27,7 +27,6 @@ async def create_feed_service(db: AsyncSession, payload, current_user):
     if payload.quantity< 0:
         raise ValueError("Quantity cannot be negative")
 
-
     feed_data = payload.model_dump(exclude_unset=True)
     feed_data["user_id"] = current_user.id
     
