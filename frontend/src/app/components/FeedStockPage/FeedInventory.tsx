@@ -1,12 +1,13 @@
-"use client"
+'use client';
 
-import { Feed } from "../../types/feed"
-import { Trash2 } from "lucide-react"
+import { Trash2 } from 'lucide-react';
+
+import { Feed } from '../../types/feed';
 
 type Props = {
-  feeds: Feed[]
-  onDelete: (id: number) => void
-}
+  feeds: Feed[];
+  onDelete: (id: number) => void;
+};
 
 export default function FeedInventoryList({ feeds, onDelete }: Props) {
   return (
@@ -30,44 +31,47 @@ export default function FeedInventoryList({ feeds, onDelete }: Props) {
           </thead>
 
           <tbody>
-  {feeds.map((feed) => {
-    const total = feed.quantity * feed.costPerUnit
-    const isLow = feed.quantity < 10
+            {feeds.map((feed) => {
+              const total = feed.quantity * feed.costPerUnit;
+              const isLow = feed.quantity < 10;
 
-    return (
-      <tr key={feed.id} className="border-b hover:bg-gray-50 transition">
-        <td className="font-medium">{feed.name}</td>
+              return (
+                <tr
+                  key={feed.id}
+                  className="border-b hover:bg-gray-50 transition"
+                >
+                  <td className="font-medium">{feed.name}</td>
 
-        <td>
-          <span className="text-xs px-2 py-1 bg-gray-100 rounded-full">
-            {feed.category}
-          </span>
-        </td>
+                  <td>
+                    <span className="text-xs px-2 py-1 bg-gray-100 rounded-full">
+                      {feed.category}
+                    </span>
+                  </td>
 
-        <td className={isLow ? "text-red-500 font-semibold" : ""}>
-          {feed.quantity}
-        </td>
+                  <td className={isLow ? 'text-red-500 font-semibold' : ''}>
+                    {feed.quantity}
+                  </td>
 
-        <td>{feed.unit}</td>
+                  <td>{feed.unit}</td>
 
-        <td>KES {feed.costPerUnit}</td>
+                  <td>KES {feed.costPerUnit}</td>
 
-        <td className="font-semibold">KES {total}</td>
+                  <td className="font-semibold">KES {total}</td>
 
-        <td>
-          <button
-            onClick={() => onDelete(feed.id)}
-            className="p-1 hover:bg-red-50 rounded"
-          >
-            <Trash2 size={16} className="text-red-500" />
-          </button>
-        </td>
-      </tr>
-    )
-  })}
-</tbody>
+                  <td>
+                    <button
+                      onClick={() => onDelete(feed.id)}
+                      className="p-1 hover:bg-red-50 rounded"
+                    >
+                      <Trash2 size={16} className="text-red-500" />
+                    </button>
+                  </td>
+                </tr>
+              );
+            })}
+          </tbody>
         </table>
       )}
     </div>
-  )
+  );
 }

@@ -1,14 +1,11 @@
-
-
-export default function Package (){
-
-    return(
+export default function Package() {
+  return (
+    <div>
+      <div>
         <div>
-            <div>
-                <div>
-                    <h3></h3>
-                </div>
-            </div>
+          <h3></h3>
         </div>
-    )
+      </div>
+    </div>
+  );
 }

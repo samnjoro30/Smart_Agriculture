@@ -1,49 +1,43 @@
-"use client"
+'use client';
 
-import { useEffect, useState } from "react"
-import { livestockService } from "../../services/livestock";
+import { useEffect, useState } from 'react';
+
+import { livestockService } from '../../services/livestock';
 
 export default function LivestockOverview() {
-
-  const [stats, setStats] = useState<any>(null)
-  const [alerts, setAlerts] = useState<string[]>([])
-  const [events, setEvents] = useState<string[]>([])
-  const [loading, setLoading] = useState(true)
+  const [stats, setStats] = useState<any>(null);
+  const [alerts, setAlerts] = useState<string[]>([]);
+  const [events, setEvents] = useState<string[]>([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-
     const fetchData = async () => {
       try {
-
         const [statsData, alertsData, eventsData] = await Promise.all([
           livestockService.getStats(),
           livestockService.getAlerts(),
-          livestockService.getEvents()
-        ])
+          livestockService.getEvents(),
+        ]);
 
-        setStats(statsData)
-        setAlerts(alertsData)
-        setEvents(eventsData)
-
+        setStats(statsData);
+        setAlerts(alertsData);
+        setEvents(eventsData);
       } catch (err) {
-        console.error(err)
+        console.error(err);
       } finally {
-        setLoading(false)
+        setLoading(false);
       }
-    }
+    };
 
-    fetchData()
-
-  }, [])
-
+    fetchData();
+  }, []);
 
   if (loading) {
-    return <p className="text-gray-500">Loading livestock data...</p>
+    return <p className="text-gray-500">Loading livestock data...</p>;
   }
 
   return (
     <div className="space-y-6">
-
       {/* Stats */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         <Card title="Total Animals" value={stats.total} />
@@ -54,7 +48,6 @@ export default function LivestockOverview() {
 
       {/* Alerts + Events */}
       <div className="grid md:grid-cols-2 gap-4">
-
         <Box title="Heat Alerts">
           {alerts.map((a, i) => (
             <p key={i}>⚠️ {a}</p>
@@ -66,13 +59,10 @@ export default function LivestockOverview() {
             <p key={i}>📅 {e}</p>
           ))}
         </Box>
-
       </div>
-
     </div>
-  )
+  );
 }
-
 
 /* Reusable */
 function Card({ title, value }: any) {
@@ -81,7 +71,7 @@ function Card({ title, value }: any) {
       <p className="text-2xl font-bold text-green-600">{value}</p>
       <p className="text-sm text-gray-600">{title}</p>
     </div>
-  )
+  );
 }
 
 function Box({ title, children }: any) {
@@ -90,5 +80,5 @@ function Box({ title, children }: any) {
       <h3 className="text-green-700 font-semibold mb-2">{title}</h3>
       {children}
     </div>
-  )
+  );
 }

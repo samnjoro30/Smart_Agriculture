@@ -1,39 +1,39 @@
-"use client"
+'use client';
 
-import { FaBookOpen, FaStethoscope, FaLeaf, FaFlask } from "react-icons/fa"
+import { FaBookOpen, FaFlask, FaLeaf, FaStethoscope } from 'react-icons/fa';
+
 import Link from 'next/link';
 
 type LearningItem = {
-  title: string
-  description: string
-  icon: React.ReactNode
-}
+  title: string;
+  description: string;
+  icon: React.ReactNode;
+};
 
 const learningTopics: LearningItem[] = [
   {
-    title: "How to Cure Mastitis",
+    title: 'How to Cure Mastitis',
     description:
-      "Early detection, antibiotic protocols, hygiene practices, and milking routines to prevent and treat mastitis effectively.",
+      'Early detection, antibiotic protocols, hygiene practices, and milking routines to prevent and treat mastitis effectively.',
     icon: <FaStethoscope size={32} className="text-green-700" />,
   },
   {
-    title: "Salt & Mineral Nutrition Intake",
+    title: 'Salt & Mineral Nutrition Intake',
     description:
-      "Understand proper sodium and mineral balance for better milk yield and livestock health.",
+      'Understand proper sodium and mineral balance for better milk yield and livestock health.',
     icon: <FaLeaf size={32} className="text-green-700" />,
   },
   {
-    title: "Feed Optimization",
+    title: 'Feed Optimization',
     description:
-      "Maximize productivity using balanced feed ratios and AI-supported nutrition planning.",
+      'Maximize productivity using balanced feed ratios and AI-supported nutrition planning.',
     icon: <FaFlask size={32} className="text-green-700" />,
   },
-]
+];
 
 export default function LearningHub() {
   return (
     <section className="relative py-5 `bg-gradient-to-b` from-green-50 via-white to-green-100 overflow-hidden">
-
       {/* Curved Top */}
       <div className="absolute top-0 left-0 w-full -translate-y-full">
         <svg viewBox="0 0 1440 200" className="w-full">
@@ -45,16 +45,13 @@ export default function LearningHub() {
       </div>
 
       <div className="max-w-6xl mx-auto px-6">
-
         {/* <h2 className="text-4xl md:text-5xl font-bold text-green-800 text-center mb-16">
           Smart Farming Learning Hub
         </h2> */}
 
         <div className="grid lg:grid-cols-3 gap-10">
-
           {/* Featured Card */}
           <div className="lg:col-span-2 bg-green-700 text-white rounded-3xl p-10 shadow-2xl relative overflow-hidden">
-
             <div className="flex items-center gap-4 mb-6">
               <FaBookOpen size={36} />
               <h3 className="text-2xl font-bold">
@@ -69,7 +66,9 @@ export default function LearningHub() {
             </p>
 
             <button className="bg-white text-green-700 px-6 py-3 rounded-full font-semibold hover:bg-green-100 transition">
-              <Link href="/auth/register">Explore Learning Center by registering now </Link>
+              <Link href="/auth/register">
+                Explore Learning Center by registering now{' '}
+              </Link>
             </button>
 
             {/* Decorative circle */}
@@ -87,13 +86,10 @@ export default function LearningHub() {
                 <h4 className="text-lg font-semibold text-green-800 mb-2">
                   {topic.title}
                 </h4>
-                <p className="text-gray-600 text-sm">
-                  {topic.description}
-                </p>
+                <p className="text-gray-600 text-sm">{topic.description}</p>
               </div>
             ))}
           </div>
-
         </div>
       </div>
 
@@ -106,7 +102,6 @@ export default function LearningHub() {
           />
         </svg>
       </div>
-
     </section>
-  )
+  );
 }

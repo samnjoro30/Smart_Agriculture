@@ -1,28 +1,31 @@
-"use client"
+'use client';
 
-import { useState, useEffect } from "react"
-import { 
-  Save, 
-  PawPrint, 
-  Heart, 
-  Calendar, 
+import { useEffect, useState } from 'react';
+
+import { useRouter } from 'next/navigation';
+
+import {
+  Baby,
+  Calendar,
+  Droplet,
+  Heart,
+  PawPrint,
+  Save,
   Tag,
   User,
-  Droplet,
-  Baby
-} from "lucide-react"
-import {useRouter} from "next/navigation"
+} from 'lucide-react';
+
 import axiosInstance from '../../API/axiosInstance';
 
-function Input({ 
-  label, 
-  name, 
-  value, 
-  onChange, 
-  type = "text",
+function Input({
+  label,
+  name,
+  value,
+  onChange,
+  type = 'text',
   icon: Icon,
   required = false,
-  placeholder = ""
+  placeholder = '',
 }: any) {
   return (
     <div className="group">
@@ -48,80 +51,82 @@ function Input({
         />
       </div>
     </div>
-  )
+  );
 }
 
 export default function RegisterAnimal() {
   const [formData, setFormData] = useState({
-    tag: "",
+    tag: '',
     name: '',
-    category: "cow",
-    breed: "",
-    age: "",
-    heatStatus: "no",
-    healthStatus: "",
-    pregnant: "no",
-    lastInsemination: "",
-    inseminationType: "",
+    category: 'cow',
+    breed: '',
+    age: '',
+    heatStatus: 'no',
+    healthStatus: '',
+    pregnant: 'no',
+    lastInsemination: '',
+    inseminationType: '',
     birthDate: '',
-    motherTag: "",
+    motherTag: '',
     fatherTag: '',
-  })
+  });
 
-  const [error, setError] = useState<string | null>(null)
-  const [message, setMessage] = useState<string | null>(null)
-  const [loading, setLoading] = useState<boolean>(false)
-  const [cows, setCows] = useState<any[]>([])
+  const [error, setError] = useState<string | null>(null);
+  const [message, setMessage] = useState<string | null>(null);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [cows, setCows] = useState<any[]>([]);
 
-  const router = useRouter()
+  const router = useRouter();
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-    const { name, value } = e.target
-    setFormData(prev => {
-      let updated = { ...prev, [name]: value }
-      if (name === "pregnant" && value === "yes") {
-        updated.heatStatus = "no"
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ) => {
+    const { name, value } = e.target;
+    setFormData((prev) => {
+      let updated = { ...prev, [name]: value };
+      if (name === 'pregnant' && value === 'yes') {
+        updated.heatStatus = 'no';
       }
 
-      if (name === "heatStatus" && value === "in heat") {
-        updated.pregnant = "no"
+      if (name === 'heatStatus' && value === 'in heat') {
+        updated.pregnant = 'no';
       }
 
-      return updated
-    })
-  }  
+      return updated;
+    });
+  };
   const validateForm = () => {
-    if(formData.category === "cow"){
-      if(formData.pregnant === "yes" && !formData.lastInsemination){
-        setError("Please provide last insemination date for pregnant cows.")
-        return false
+    if (formData.category === 'cow') {
+      if (formData.pregnant === 'yes' && !formData.lastInsemination) {
+        setError('Please provide last insemination date for pregnant cows.');
+        return false;
       }
-      if(formData.pregnant === "yes" && formData.heatStatus === "in heat"){
-        setError("A cow cannot be pregnat and be on heat.")
-        return false
+      if (formData.pregnant === 'yes' && formData.heatStatus === 'in heat') {
+        setError('A cow cannot be pregnat and be on heat.');
+        return false;
       }
     }
-    if (formData.category === "calf") {
+    if (formData.category === 'calf') {
       if (!formData.motherTag) {
-        setError("Please select the mother cow for the calf.")
-        return false
+        setError('Please select the mother cow for the calf.');
+        return false;
       }
     }
-    return null
-  }
+    return null;
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    const validateError = validateForm()
-    if (validateError){
+    e.preventDefault();
+    const validateError = validateForm();
+    if (validateError) {
       setError(validateError);
-      return
+      return;
     }
-    setLoading(true)
-    setMessage(null)
-    setError(null)
+    setLoading(true);
+    setMessage(null);
+    setError(null);
 
-    try{
+    try {
       const payload = {
         tag: formData.tag,
         name: formData.name || null,
@@ -129,92 +134,90 @@ export default function RegisterAnimal() {
         breed: formData.breed,
         age: formData.age ? Number(formData.age) : 0,
         healthStatus: formData.healthStatus,
-  
+
         // cow fields
-        heatStatus: formData.heatStatus === "in heat",
-        pregnant: formData.pregnant === "yes",
+        heatStatus: formData.heatStatus === 'in heat',
+        pregnant: formData.pregnant === 'yes',
         lastInsemination: formData.lastInsemination
-        ? new Date(formData.lastInsemination).toISOString() 
-        : null,
+          ? new Date(formData.lastInsemination).toISOString()
+          : null,
         inseminationType: formData.inseminationType || null,
-  
+
         // calf fields
-        birthDate: formData.birthDate 
-        ? new Date(formData.birthDate).toISOString()  
-        : null,
+        birthDate: formData.birthDate
+          ? new Date(formData.birthDate).toISOString()
+          : null,
         motherTag: formData.motherTag || null,
         fatherTag: formData.fatherTag || null,
-      }
+      };
 
-      console.log("Selected motherTag:", formData.motherTag)
-      const res = await axiosInstance.post("/livestock/register", payload);
-      const newAnimal = res.data.animal
-      setMessage("animal registered successfully")
-      router.push(`/dashboard/animals/${newAnimal.tag}`)
-        
-    }catch(err:any){
-        if (err.response) {
-            setError(err.response.data?.message || "Something went wrong")
-            console.log(err.response.data)
-        } else if (err.request) {
-            setError("Network error. Check your connection.")
-        } else {
-            setError("Unexpected error occurred")
-        }
-    }finally{
-        setLoading(false)
+      console.log('Selected motherTag:', formData.motherTag);
+      const res = await axiosInstance.post('/livestock/register', payload);
+      const newAnimal = res.data.animal;
+      setMessage('animal registered successfully');
+      router.push(`/dashboard/animals/${newAnimal.tag}`);
+    } catch (err: any) {
+      if (err.response) {
+        setError(err.response.data?.message || 'Something went wrong');
+        console.log(err.response.data);
+      } else if (err.request) {
+        setError('Network error. Check your connection.');
+      } else {
+        setError('Unexpected error occurred');
+      }
+    } finally {
+      setLoading(false);
     }
-    
-  }
+  };
   useEffect(() => {
     const fetchCows = async () => {
       try {
-        const res = await axiosInstance.get("/livestock/animals-listing")
-        
+        const res = await axiosInstance.get('/livestock/animals-listing');
+
         // filter only cows (female ideally later)
         const cowList = res.data.listing.filter(
-          (animal: any) => animal.category === "cow"
-        )
-  
-        setCows(cowList)
-  
+          (animal: any) => animal.category === 'cow'
+        );
+
+        setCows(cowList);
       } catch (err) {
-        console.error("Error fetching cows", err)
+        console.error('Error fetching cows', err);
       }
-    }
-  
-    fetchCows()
-  }, [])
+    };
+
+    fetchCows();
+  }, []);
 
   useEffect(() => {
-    if (formData.category === "calf") {
-      setFormData(prev => ({
+    if (formData.category === 'calf') {
+      setFormData((prev) => ({
         ...prev,
-        heatStatus: "no",
-        pregnant: "no",
-        lastInsemination: "",
-        inseminationType: "",
-      }))
+        heatStatus: 'no',
+        pregnant: 'no',
+        lastInsemination: '',
+        inseminationType: '',
+      }));
     } else {
-      setFormData(prev => ({
+      setFormData((prev) => ({
         ...prev,
-        motherTag: "",
-        fatherTag: "",
-        birthDate: ""
-      }))
+        motherTag: '',
+        fatherTag: '',
+        birthDate: '',
+      }));
     }
-  }, [formData.category])
+  }, [formData.category]);
 
   // Reusable Select Component
-  function Select({ 
-    label, 
-    name, 
-    value, 
-    onChange, 
+  function Select({
+    label,
+    name,
+    value,
+    onChange,
     options,
     icon: Icon,
     required = false,
-    disabledOptions = [], ...props 
+    disabledOptions = [],
+    ...props
   }: any) {
     return (
       <div>
@@ -237,9 +240,9 @@ export default function RegisterAnimal() {
               appearance-none cursor-pointer transition-all duration-200 ${Icon ? 'pl-10' : ''}`}
           >
             {options.map((opt: string, i: number) => (
-              <option 
-                key={i} 
-                value={opt.toLowerCase()} 
+              <option
+                key={i}
+                value={opt.toLowerCase()}
                 disabled={disabledOptions.includes(opt.toLowerCase())}
               >
                 {opt.charAt(0).toUpperCase() + opt.slice(1)}
@@ -247,17 +250,27 @@ export default function RegisterAnimal() {
             ))}
           </select>
           <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
-            <svg className="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+            <svg
+              className="h-5 w-5 text-gray-400"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M19 9l-7 7-7-7"
+              />
             </svg>
           </div>
         </div>
       </div>
-    )
+    );
   }
 
   // Section Header Component
-  function SectionHeader({ title, icon: Icon, color = "green" }: any) {
+  function SectionHeader({ title, icon: Icon, color = 'green' }: any) {
     return (
       <div className="flex items-center space-x-3 mb-5 pb-2 border-b-2 border-green-200">
         <div className={`p-2 bg-${color}-100 rounded-lg`}>
@@ -265,26 +278,26 @@ export default function RegisterAnimal() {
         </div>
         <h3 className="text-lg font-semibold text-gray-800">{title}</h3>
       </div>
-    )
+    );
   }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-green-50 to-emerald-50 py-4 px-2">
-        {message && (
-            <div className="bg-green-100 text-green-700 px-4 py-2 rounded-lg">
-                {message}
-            </div>
-        )}
+      {message && (
+        <div className="bg-green-100 text-green-700 px-4 py-2 rounded-lg">
+          {message}
+        </div>
+      )}
 
-        {error && (
-            <div className="bg-red-100 text-red-700 px-4 py-2 rounded-lg">
-                {error}
-            </div>
-        )}
-        <form 
-           onSubmit={handleSubmit}
-           className="max-w-5xl mx-auto bg-white rounded-2xl shadow-xl overflow-hidden"
-        >
+      {error && (
+        <div className="bg-red-100 text-red-700 px-4 py-2 rounded-lg">
+          {error}
+        </div>
+      )}
+      <form
+        onSubmit={handleSubmit}
+        className="max-w-5xl mx-auto bg-white rounded-2xl shadow-xl overflow-hidden"
+      >
         <div className="bg-gradient-to-r from-green-600 to-emerald-600 px-3 py-4">
           <div className="flex items-center justify-between">
             <div>
@@ -306,137 +319,143 @@ export default function RegisterAnimal() {
           <div className="bg-gray-50 rounded-xl p-5 transition-all hover:shadow-md">
             <SectionHeader title="Basic Information" icon={User} />
             <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-              <Input 
-                label="Tag ID" 
-                name="tag" 
-                value={formData.tag} 
+              <Input
+                label="Tag ID"
+                name="tag"
+                value={formData.tag}
                 onChange={handleChange}
                 icon={Tag}
                 required
                 placeholder="e.g., COW-001"
               />
-              <Input 
-                label="Name (Optional)" 
-                name="name" 
-                value={formData.name} 
+              <Input
+                label="Name (Optional)"
+                name="name"
+                value={formData.name}
                 onChange={handleChange}
                 icon={User}
                 placeholder="Give your animal a name"
               />
-              <Select 
-                label="Category" 
-                name="category" 
-                value={formData.category} 
+              <Select
+                label="Category"
+                name="category"
+                value={formData.category}
                 onChange={handleChange}
-                options={["Cow", "Calf"]}
+                options={['Cow', 'Calf']}
                 icon={Baby}
                 required
               />
-              <Input 
-                label="Breed" 
-                name="breed" 
-                value={formData.breed} 
+              <Input
+                label="Breed"
+                name="breed"
+                value={formData.breed}
                 onChange={handleChange}
                 placeholder="e.g., Holstein, Jersey"
                 required
               />
-              <Input 
-                label="Age (months)" 
-                name="age" 
-                type="number" 
-                value={formData.age} 
+              <Input
+                label="Age (months)"
+                name="age"
+                type="number"
+                value={formData.age}
                 onChange={handleChange}
                 icon={Calendar}
                 placeholder="Age in months"
               />
-              <Input 
-                label="Health status" 
-                name="healthStatus" 
-                type="text" 
-                value={formData.healthStatus} 
+              <Input
+                label="Health status"
+                name="healthStatus"
+                type="text"
+                value={formData.healthStatus}
                 onChange={handleChange}
                 // icon={Calendar}
                 placeholder="Good, Sick"
               />
-
             </div>
           </div>
 
           {/* REPRODUCTION INFORMATION */}
           <div className="bg-gray-50 rounded-xl p-5 transition-all hover:shadow-md">
-            <SectionHeader  title={formData.category === "calf" ? "calf Information" : "Reproduction Information"} icon={Heart} />
+            <SectionHeader
+              title={
+                formData.category === 'calf'
+                  ? 'calf Information'
+                  : 'Reproduction Information'
+              }
+              icon={Heart}
+            />
             <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-              {formData.category === "cow" ? (
+              {formData.category === 'cow' ? (
                 <>
-                <Select 
-                  label="Heat Status" 
-                  name="heatStatus" 
-                  value={formData.heatStatus} 
-                  onChange={handleChange}
-                  options={["No", "In Heat"]}
-                  disabledOptions={formData.pregnant === "yes" ? ["In Heat"] : []}
-                  icon={Droplet}
-                />
-        
-                <Select 
-                  label="Pregnant" 
-                  name="pregnant" 
-                  value={formData.pregnant} 
-                  onChange={handleChange}
-                  options={["No", "Yes"]}
-                  icon={Baby}
-                />
-        
-                <Input 
-                  label="Last Insemination Date" 
-                  name="lastInsemination" 
-                  type="date" 
-                  value={formData.lastInsemination} 
-                  onChange={handleChange}
-                  icon={Calendar}
-                />
-                <Select
-                  label="inseminationType"
-                  name="inseminationType"
-                  value={formData.inseminationType}
-                  onChange={handleChange}
-                  options={["Natural", "Artificial"]}
-                  icon={Droplet}
-                />
-              </>
-              ):(
-                <>
-                  <Select 
-                    label="Select Mother" 
-                    name="motherTag" 
-                    value={formData.motherTag || ''} 
+                  <Select
+                    label="Heat Status"
+                    name="heatStatus"
+                    value={formData.heatStatus}
                     onChange={handleChange}
-                    options={cows.map(cow => cow.tag)}
+                    options={['No', 'In Heat']}
+                    disabledOptions={
+                      formData.pregnant === 'yes' ? ['In Heat'] : []
+                    }
+                    icon={Droplet}
+                  />
+
+                  <Select
+                    label="Pregnant"
+                    name="pregnant"
+                    value={formData.pregnant}
+                    onChange={handleChange}
+                    options={['No', 'Yes']}
+                    icon={Baby}
+                  />
+
+                  <Input
+                    label="Last Insemination Date"
+                    name="lastInsemination"
+                    type="date"
+                    value={formData.lastInsemination}
+                    onChange={handleChange}
+                    icon={Calendar}
+                  />
+                  <Select
+                    label="inseminationType"
+                    name="inseminationType"
+                    value={formData.inseminationType}
+                    onChange={handleChange}
+                    options={['Natural', 'Artificial']}
+                    icon={Droplet}
+                  />
+                </>
+              ) : (
+                <>
+                  <Select
+                    label="Select Mother"
+                    name="motherTag"
+                    value={formData.motherTag || ''}
+                    onChange={handleChange}
+                    options={cows.map((cow) => cow.tag)}
                     icon={Tag}
                     required
                     placeholder="Enter mother tag"
-                    
                   />
 
-                  <Input 
-                    label="fatherTag" 
-                    name="fatherTag" 
-                    type="text" 
-                    value={formData.fatherTag} 
+                  <Input
+                    label="fatherTag"
+                    name="fatherTag"
+                    type="text"
+                    value={formData.fatherTag}
                     onChange={handleChange}
                     icon={Tag}
                     placeholder="Enter father tag (optional)"
                   />
-                  <Input 
-                    label="Birth Date DD/MM/YYYY" 
-                    name="birthDate" 
-                    type="Date" 
-                    value={formData.birthDate} 
+                  <Input
+                    label="Birth Date DD/MM/YYYY"
+                    name="birthDate"
+                    type="Date"
+                    value={formData.birthDate}
                     onChange={handleChange}
                   />
                 </>
               )}
-             
             </div>
           </div>
 
@@ -451,10 +470,10 @@ export default function RegisterAnimal() {
               flex items-center justify-center space-x-2 shadow-lg"
           >
             <Save className="h-5 w-5" />
-            <span>{loading ? "Registering..." : "Register Animal"}</span>
+            <span>{loading ? 'Registering...' : 'Register Animal'}</span>
           </button>
         </div>
       </form>
     </div>
-  )
+  );
 }

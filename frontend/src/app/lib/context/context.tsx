@@ -1,56 +1,53 @@
-"use client"
+'use client';
 
-import { createContext, useContext, useEffect, useState } from "react"
-import axiosInstance from "../../API/axiosInstance"
+import { createContext, useContext, useEffect, useState } from 'react';
+
+import axiosInstance from '../../API/axiosInstance';
 
 type User = {
-  username: string
-  email?: string
-}
+  username: string;
+  email?: string;
+};
 
 type UserContextType = {
-  user: User | null
-  loading: boolean
-}
+  user: User | null;
+  loading: boolean;
+};
 
 const UserContext = createContext<UserContextType>({
   user: null,
   loading: true,
-})
+});
 
 export const UserProvider = ({ children }: { children: React.ReactNode }) => {
-
-  const [user, setUser] = useState<User | null>(null)
-  const [loading, setLoading] = useState(true)
+  const [user, setUser] = useState<User | null>(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-
     const fetchUser = async () => {
       try {
-        const res = await axiosInstance.get("/farm/username", {
+        const res = await axiosInstance.get('/farm/username', {
           withCredentials: true,
-        })
-        setUser(res.data)
+        });
+        setUser(res.data);
       } catch (err: any) {
-        if (err.response?.status ===401){
+        if (err.response?.status === 401) {
           setUser(null);
-        }else{
-          console.error("failed to load user", err);
+        } else {
+          console.error('failed to load user', err);
         }
       } finally {
-        setLoading(false)
+        setLoading(false);
       }
-    }
-    fetchUser()
-
-  }, [])
+    };
+    fetchUser();
+  }, []);
 
   return (
     <UserContext.Provider value={{ user, loading }}>
       {children}
     </UserContext.Provider>
-  )
-}
+  );
+};
 
-export const useUser = () => useContext(UserContext)
-
+export const useUser = () => useContext(UserContext);
