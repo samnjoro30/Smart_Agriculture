@@ -1,27 +1,30 @@
-import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import type { Metadata } from 'next';
+import { Geist, Geist_Mono } from 'next/font/google';
+
+import { Analytics } from '@vercel/analytics/next';
 import { SpeedInsights } from '@vercel/speed-insights/next';
-import { Analytics } from "@vercel/analytics/next"
+
 //import { ThemeProvider } from "./lib/providers/theme";
-import "./globals.css";
-import { FirebaseProvider } from "./lib/firebaseProvider";
-import Providers from "./lib/providers/tan-stack";
+import './globals.css';
+import { FirebaseProvider } from './lib/firebaseProvider';
+import Providers from './lib/providers/tan-stack';
+
 //import { UserProvider } from "./lib/context/context";
 
-const geistSans = Geist({ 
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
+const geistSans = Geist({
+  variable: '--font-geist-sans',
+  subsets: ['latin'],
 });
 
 const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
+  variable: '--font-geist-mono',
+  subsets: ['latin'],
 });
 
 export const metadata: Metadata = {
-  title: "Smart Agriculture | AI Smart Farm",
-  description: "Enhancing agriculture production by use of technology",
-  manifest: "/manifest.json",
+  title: 'Smart Agriculture | AI Smart Farm',
+  description: 'Enhancing agriculture production by use of technology',
+  manifest: '/manifest.json',
 };
 
 export default function RootLayout({
@@ -30,14 +33,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" suppressHydrationWarning >
+    <html lang="en" suppressHydrationWarning>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-
-        <Providers>
-          {children}
-        </Providers>
+        <Providers>{children}</Providers>
         <FirebaseProvider />
         <SpeedInsights />
         <Analytics />

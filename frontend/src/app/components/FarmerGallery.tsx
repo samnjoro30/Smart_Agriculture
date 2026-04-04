@@ -1,75 +1,75 @@
-"use client"
+'use client';
 
-import Image from "next/image"
-import { useKeenSlider } from "keen-slider/react"
-import "keen-slider/keen-slider.min.css"
+import Image from 'next/image';
+
+import 'keen-slider/keen-slider.min.css';
+import { useKeenSlider } from 'keen-slider/react';
 
 export default function GalleryFarmer() {
   const farmersImages = [
-    { id: 1, name: "Cow Snoofing", image: "/c.jpg" },
-    { id: 2, name: "Milk Production", image: "/milking.jpg" },
-    { id: 3, name: "Goat", image: "/gaot.jpg" },
-    { id: 4, name: "Calf", image: "/_.jpeg" },
-    { id: 5, name: "Shelter for Cows", image: "/cowsInShelter.jpg" },
-    { id: 6, name: "Milk", image: "/milk.jpeg" },
-  ]
+    { id: 1, name: 'Cow Snoofing', image: '/c.jpg' },
+    { id: 2, name: 'Milk Production', image: '/milking.jpg' },
+    { id: 3, name: 'Goat', image: '/gaot.jpg' },
+    { id: 4, name: 'Calf', image: '/_.jpeg' },
+    { id: 5, name: 'Shelter for Cows', image: '/cowsInShelter.jpg' },
+    { id: 6, name: 'Milk', image: '/milk.jpeg' },
+  ];
 
   function Auto(slider: any) {
-    let timeout: NodeJS.Timeout
-    let mouseOver = false
+    let timeout: NodeJS.Timeout;
+    let mouseOver = false;
 
     function clearNextTimeout() {
-      clearTimeout(timeout)
+      clearTimeout(timeout);
     }
 
     function nextTimeout() {
-      clearTimeout(timeout)
-      if (mouseOver) return
+      clearTimeout(timeout);
+      if (mouseOver) return;
       timeout = setTimeout(() => {
-        slider.next()
-      }, 2500)
+        slider.next();
+      }, 2500);
     }
 
-    slider.on("created", () => {
-      slider.container.addEventListener("mouseover", () => {
-        mouseOver = true
-        clearNextTimeout()
-      })
-      slider.container.addEventListener("mouseout", () => {
-        mouseOver = false
-        nextTimeout()
-      })
-      nextTimeout()
-    })
+    slider.on('created', () => {
+      slider.container.addEventListener('mouseover', () => {
+        mouseOver = true;
+        clearNextTimeout();
+      });
+      slider.container.addEventListener('mouseout', () => {
+        mouseOver = false;
+        nextTimeout();
+      });
+      nextTimeout();
+    });
 
-    slider.on("dragStarted", clearNextTimeout)
-    slider.on("animationEnded", nextTimeout)
-    slider.on("updated", nextTimeout)
+    slider.on('dragStarted', clearNextTimeout);
+    slider.on('animationEnded', nextTimeout);
+    slider.on('updated', nextTimeout);
   }
 
   const [sliderRef] = useKeenSlider<HTMLDivElement>(
     {
       loop: true,
-      mode: "free-snap",
+      mode: 'free-snap',
       slides: {
         perView: 1.2,
         spacing: 20,
       },
       breakpoints: {
-        "(min-width: 768px)": {
+        '(min-width: 768px)': {
           slides: { perView: 2.3, spacing: 25 },
         },
-        "(min-width: 1024px)": {
+        '(min-width: 1024px)': {
           slides: { perView: 3.2, spacing: 30 },
         },
       },
     },
     [Auto]
-  )
+  );
 
   return (
     <section className="relative py-5 bg-gradient-to-b from-green-100 via-green-50 to-green-100 overflow-hidden">
-
       {/* 🌊 Top Wave */}
       <div className="absolute top-0 left-0 w-full -translate-y-full">
         <svg viewBox="0 0 1440 200" className="w-full">
@@ -86,12 +86,8 @@ export default function GalleryFarmer() {
 
       <div ref={sliderRef} className="keen-slider px-6">
         {farmersImages.map((item) => (
-          <div
-            key={item.id}
-            className="keen-slider__slide"
-          >
+          <div key={item.id} className="keen-slider__slide">
             <div className="relative group bg-white/70 backdrop-blur-md rounded-3xl shadow-xl overflow-hidden transition-all duration-500 hover:scale-105 hover:shadow-2xl">
-
               <Image
                 src={item.image}
                 alt={item.name}
@@ -103,11 +99,8 @@ export default function GalleryFarmer() {
 
               {/* Overlay */}
               <div className="absolute bottom-0 w-full bg-gradient-to-t from-green-900/70 to-transparent p-4">
-                <p className="text-white font-semibold text-lg">
-                  {item.name}
-                </p>
+                <p className="text-white font-semibold text-lg">{item.name}</p>
               </div>
-
             </div>
           </div>
         ))}
@@ -122,7 +115,6 @@ export default function GalleryFarmer() {
           />
         </svg>
       </div>
-
     </section>
-  )
+  );
 }

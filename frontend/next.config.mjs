@@ -1,5 +1,4 @@
-
-import nextPWA from "next-pwa";
+import nextPWA from 'next-pwa';
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
@@ -7,11 +6,11 @@ const nextConfig = {
     unoptimized: true,
   },
   reactStrictMode: true,
-  turbopack: {}
+  turbopack: {},
 };
 
 export default nextPWA({
-  dest: "public",
+  dest: 'public',
   register: true,
   skipWaiting: true,
 })(nextConfig);

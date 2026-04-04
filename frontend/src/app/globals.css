@@ -1,11 +1,11 @@
-@import "tailwindcss"; 
+@import 'tailwindcss';
 /* @plugin "daisyui";  */
-@import "keen-slider/keen-slider.min.css";
+@import 'keen-slider/keen-slider.min.css';
 
 :root {
   --background: #ffffff;
-  --foreground:   #ffffde;
-  --pageformatcolor:#f0fdf4;
+  --foreground: #ffffde;
+  --pageformatcolor: #f0fdf4;
 }
 /* @tailwindcss base;
 @tailwindcss components;
@@ -37,4 +37,17 @@ html.dark {
   --background: #87bf8c;
   --foreground: #ecfdf5;
   --pageformatcolor: #8ecaa5;
+}
+
+@keyframes slide-up {
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+.animate-slide-up {
+  animation: slide-up 0.3s ease-out;
 }

@@ -1,7 +1,14 @@
-"use client";
+'use client';
 
-import { ReactNode } from "react";
-import { FaHeartbeat, FaSeedling, FaChartLine, FaWallet, FaClipboardList, FaBabyCarriage } from "react-icons/fa";
+import { ReactNode } from 'react';
+import {
+  FaBabyCarriage,
+  FaChartLine,
+  FaClipboardList,
+  FaHeartbeat,
+  FaSeedling,
+  FaWallet,
+} from 'react-icons/fa';
 
 type ServiceItem = {
   title: string;
@@ -11,39 +18,39 @@ type ServiceItem = {
 
 const services: ServiceItem[] = [
   {
-    title: "Reproduction & Heat Tracking",
+    title: 'Reproduction & Heat Tracking',
     description:
-      "Track breeding cycles with up to 99% accuracy, ensuring optimal timing and better breed management.",
+      'Track breeding cycles with up to 99% accuracy, ensuring optimal timing and better breed management.',
     icon: <FaBabyCarriage size={48} className="text-green-700" />,
   },
   {
-    title: "Health & Welfare",
+    title: 'Health & Welfare',
     description:
-      "Recommendations for controlling pesticide use and fighting animal diseases to maintain healthy livestock.",
+      'Recommendations for controlling pesticide use and fighting animal diseases to maintain healthy livestock.',
     icon: <FaHeartbeat size={48} className="text-green-700" />,
   },
   {
-    title: "Precision Nutrition",
+    title: 'Precision Nutrition',
     description:
-      "Optimize feed and nutrition for higher productivity and better animal health outcomes.",
+      'Optimize feed and nutrition for higher productivity and better animal health outcomes.',
     icon: <FaSeedling size={48} className="text-green-700" />,
   },
   {
-    title: "Production & Quality Control",
+    title: 'Production & Quality Control',
     description:
-      "Monitor real-time farm production and implement quality control for higher yields.",
+      'Monitor real-time farm production and implement quality control for higher yields.',
     icon: <FaChartLine size={48} className="text-green-700" />,
   },
   {
-    title: "Financial Analytics",
+    title: 'Financial Analytics',
     description:
-      "Get insights into farm financials for better planning, budgeting, and profit optimization.",
+      'Get insights into farm financials for better planning, budgeting, and profit optimization.',
     icon: <FaWallet size={48} className="text-green-700" />,
   },
   {
-    title: "Inventory Management",
+    title: 'Inventory Management',
     description:
-      "Well-structured inventory management to simplify farm operations and planning.",
+      'Well-structured inventory management to simplify farm operations and planning.',
     icon: <FaClipboardList size={48} className="text-green-700" />,
   },
 ];
