@@ -2,7 +2,16 @@ from fastapi import APIRouter, Depends, HTTPException, Request
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from middleware.auth import decode_jwt_token
-from .repository import get_userProfile, get_username_l
+from utils.hashing import hash_password, verify_password
+from .repository import (
+    get_userProfile, 
+    get_username_l,
+    check_user_by_email,
+    UpdateEmail,
+    UpdatePhoneNumber,
+    UpdateFarmname,
+    UpdatePassword,
+)
 from config.audit.logger import get_logger
 
 logger = get_logger("FARMER")
@@ -24,52 +33,61 @@ async def farmUser(db: AsyncSession, current_user):
 
     return results
 
-# @app.put("/users/update-email")
-# async def update_email(
-#     request: ChangeEmail, db: AsyncSession = Depends(get_db), req: Request = None
-# ):
-#     email = get_current_user(req)
-#     user = await get_user_by_email(email, db)
+async def update_email(
+    db: AsyncSession, 
+    payload,
+    current_user
+):
+    existing_user = await check_user_by_email(db, payload.email)
+    if existing_user:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Email already in use"
+        )
 
-#     if await check_user_by_email(request.email, db):
-#         raise HTTPException(status_code=400, detail="Email already in use")
+    await UpdateEmail(db, current_user.id, payload.email)
 
-#     await UpdateEmail(user.id, request.email, db)
-#     return {"message": "Email updated successfully"}
-
-
-# @app.put("/users/update-phonenumber")
-# async def update_phone(
-#     request: ChangePhonenumber, db: AsyncSession = Depends(get_db), req: Request = None
-# ):
-#     email = get_current_user(req)
-#     user = await get_user_by_email(email, db)
-
-#     await UpdatePhoneNumber(user.id, request.phonenumber, db)
-#     return {"message": "Phone number updated successfully"}
+    return {"message": "Email updated successfully"}
 
 
-# @app.put("/users/update-farmname")
-# async def update_farm(
-#     request: ChangeFarmname, db: AsyncSession = Depends(get_db), req: Request = None
-# ):
-#     email = get_current_user(req)
-#     user = await get_user_by_email(email, db)
 
-#     await UpdateFarmname(user.id, request.farmname, db)
-#     return {"message": "Farm name updated successfully"}
+async def update_phone(
+    db: AsyncSession, 
+    payload,
+    current_user
+):
+    await UpdatePhoneNumber(db, current_user.id, payload.phonenumber)
+
+    return {"message": "Phone number updated successfully"}
 
 
-# @app.put("/users/update-password")
-# async def update_password(
-#     request: ChangePassword, db: AsyncSession = Depends(get_db), req: Request = None
-# ):
-#     email = get_current_user(req)
-#     user = await get_user_by_email(email, db)
 
-#     if not verify_password(request.old_password, user.password):
-#         raise HTTPException(status_code=400, detail="Old password is incorrect")
+async def update_farmname(
+    db: AsyncSession, 
+    payload,
+    current_user
+):
+    await UpdateFarmname(db, current_user.id, payload.farmname)
 
-#     new_hashed_pw = hash_password(request.new_password)
-#     await UpdatePassword(user.id, new_hashed_pw, db)
-#     return {"message": "Password updated successfully"}
+    return {"message": "Farm name updated successfully"}
+
+async def update_password(
+    db: AsyncSession, 
+    payload,
+    current_user
+):
+    user = await get_userProfile(db, current_user.email)
+
+    # Verify old password
+    if not verify_password(payload.old_password, user.password):
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Incorrect old password"
+        )
+
+    # Hash new password
+    new_hashed_password = hash_password(payload.new_password)
+
+    await UpdatePassword(db, user.id, new_hashed_password)
+
+    return {"message": "Password updated successfully"}
