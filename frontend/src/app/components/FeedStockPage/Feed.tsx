@@ -25,7 +25,7 @@ export default function FeedStockPage() {
   return (
     <div className="p-3 space-y-6">
       <AddFeedForm onAdd={addFeed} />
-      <FeedSummaryCards feeds={feeds} />
+      <FeedSummaryCards />
       <FeedInventoryList feeds={feeds} onDelete={deleteFeed} />
     </div>
   );
