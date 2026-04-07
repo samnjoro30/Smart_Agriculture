@@ -29,8 +29,10 @@ from config.audit.logger import get_logger
 
 from utils.hashing import hash_password, verify_password
 from utils.otp import generate_otp, otp_expiry
+from config.setting import get_settings
 
 logger = get_logger("AUTH")
+settings = get_settings()
 REFRESH_TOKEN_DAYS = 7
 
 
@@ -108,28 +110,26 @@ async def refresh_access_token(
 
     stored_token = await get_refresh_token(db, old_refresh_token)
 
-    if not stored_token:
+    if not stored_token or stored_token.is_revoked:
         raise HTTPException(status_code=401, detail="Invalid refresh token")
-
-    if stored_token.is_revoked:
-        raise HTTPException(status_code=401, detail="Token already revoked")
-
+    
     if stored_token.expires_at < datetime.utcnow():
+        await db.delete(stored_token)
+        await db.commit()
         raise HTTPException(status_code=401, detail="Refresh token expired")
 
     user = stored_token.user
     
-    await db.delete(stored_token)
-    #await revoke_refresh_token(db, stored_token)
-
     new_refresh_token = create_refresh_token({"sub": str(user.id)})
     new_access_token = create_access_token({"sub": str(user.id)})
+
+    await db.delete(stored_token)
 
     await store_refresh_token(
         db=db,
         user_id=user.id,
         token=new_refresh_token,
-        expires_at=datetime.utcnow() + timedelta(days=REFRESH_TOKEN_DAYS),
+        expires_at=datetime.utcnow() + timedelta(days=settings.REFRESH_EXPIRE_DAY),
     )
 
     await db.commit()
