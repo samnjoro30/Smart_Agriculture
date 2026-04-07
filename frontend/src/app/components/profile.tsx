@@ -93,12 +93,12 @@ export default function ProfileSetting() {
   return (
     <div className="max-w-5xl mx-auto p-2 space-y-3">
       {/* Header */}
-      <div className="relative overflow-hidden bg-gradient-to-r from-green-700 to-green-500 p-5 md:p-6 rounded-[1.5rem] shadow-md shadow-green-100/50">
+      {/* <div className="relative overflow-hidden bg-gradient-to-r from-green-700 to-green-500 p-5 md:p-6 rounded-[1.5rem] shadow-md shadow-green-100/50">
         <div className="absolute top-0 right-0 w-32 h-full bg-white/1 skew-x-[-20deg] translate-x-10"></div>
 
         <div className="relative z-10 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           {/* Left Side: Name & Status */}
-          <div className="flex items-center gap-3">
+      {/* <div className="flex items-center gap-3">
             <div className="hidden sm:flex h-10 w-10 bg-white/20 backdrop-blur-md rounded-xl items-center justify-center text-white">
               <Leaf size={20} />
             </div>
@@ -112,30 +112,30 @@ export default function ProfileSetting() {
                   Digital Farm ID
                 </span>
               </div>
-            </div>
-          </div>
+            </div> */}
+      {/* </div> */}
 
-          {/* Right Side: Decorative Farm Name Badge */}
-          <div className="flex">
-            <div className="bg-white/10 backdrop-blur-md border border-white/20 px-4 py-2 rounded-2xl flex items-center gap-2 group hover:bg-white/20 transition-all cursor-default">
-              <div className="bg-green-400/30 p-1.5 rounded-lg">
-                <MapPin size={14} className="text-white" />
-              </div>
-              <div className="flex flex-col">
-                <span className="text-[9px] font-black text-green-200 uppercase leading-none mb-0.5">
-                  Established Farm
-                </span>
-                <span className="text-sm font-extrabold text-white tracking-wide">
-                  {profile?.farmname}
-                </span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+      {/* Right Side: Decorative Farm Name Badge */}
+      {/* //   <div className="flex">
+        //     <div className="bg-white/10 backdrop-blur-md border border-white/20 px-4 py-2 rounded-2xl flex items-center gap-2 group hover:bg-white/20 transition-all cursor-default">
+        //       <div className="bg-green-400/30 p-1.5 rounded-lg">
+        //         <MapPin size={14} className="text-white" />
+        //       </div>
+        //       <div className="flex flex-col">
+        //         <span className="text-[9px] font-black text-green-200 uppercase leading-none mb-0.5">
+        //           Established Farm
+        //         </span>
+        //         <span className="text-sm font-extrabold text-white tracking-wide">
+        //           {profile?.farmname}
+        //         </span>
+        //       </div>
+        //     </div>
+        //   </div>
+        // </div> */}
+      {/* // </div>  */}
 
       {/* setting area */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-stretch">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 items-stretch">
         <div className="bg-white rounded-[2rem] shadow-sm border border-gray-100 overflow-hidden flex flex-col">
           {/* Header Area */}
           <div className="h-16 bg-gradient-to-r from-green-600 to-green-500 relative shrink-0">

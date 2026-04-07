@@ -11,6 +11,7 @@ from .schema import (
     FeedCreate,
     FeedUpdate,
     FeedOut,
+    FeedStockResponse, 
 )
 
 from .service import (
@@ -39,7 +40,7 @@ async def create_feed(
         "message": "Create feed successfully",
     }
 
-@router.get("/feeds-listing")
+@router.get("/feeds-listing", response_model=FeedStockResponse)
 async def get_all_feeds(
     db: AsyncSession = Depends(get_db),
     current_user = Depends(get_current_user)
@@ -50,3 +51,13 @@ async def get_all_feeds(
     return {
         "feeds": feeds
     }
+
+@router.get("/feeds-stock")
+async def get_feeds_stock(
+    db: AsyncSession = Depends(get_db),
+    current_user = Depends(get_current_user)
+    ):
+
+    feeds_stock = await get_all_feeds_service(db, current_user)
+
+    return feeds_stock

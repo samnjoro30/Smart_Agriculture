@@ -4,8 +4,21 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from config.audit.logger import get_logger
 from config.database import get_db
 
-from .service import farmUser, get_username
+from .service import (
+    farmUser, 
+    get_username, 
+    update_email,
+    update_phone,
+    update_farmname,
+    update_password,
+)
 from config.security import get_current_user
+from .schemas import (
+    ChangeEmail,
+    ChangeFarmname,
+    ChangePhonenumber,
+    ChangePassword,
+)
 
 router = APIRouter(prefix="/farm", tags=["Farmers"])
 
@@ -29,25 +42,37 @@ async def get_username_letters(
    username = await get_username(db, current_user)
    return { "username": username}
 
+@router.put("/update-email")
+async def update_farmer_email(
+    payload: ChangeEmail,
+    db: AsyncSession = Depends(get_db),
+    current_user = Depends(get_current_user)
+):
+    return await update_email(db, payload, current_user)
+    
 
-@router.get("/farm/stats")
-async def get_farm_stats():
-    return {"message": "This is the farm stats endpoint"}   
-@router.get("/farm/recent-activity")
-async def get_recent_activity():
-    return {"message": "working on the endpoint endpoint"}
+@router.put("/update-farmname")
+async def update_farmer_farmname(
+    payload: ChangeFarmname,
+    db: AsyncSession = Depends(get_db),
+    current_user = Depends(get_current_user)
+):
+   return await update_farmname(db, payload, current_user)
+
+@router.put("/update-password")
+async def update_farmer_password(
+    payload: ChangePassword,
+    db: AsyncSession = Depends(get_db),
+    current_user = Depends(get_current_user)
+):
+   return await update_password(db, payload, current_user)
+    
 
 
-# @router.put("/update-email")
-# async def update_farmer_email():
-#     return {"message": "This is the update farmer email endpoint"}
-
-
-# @router.put("/update-password")
-# async def update_farmer_password():
-#     return {"message": "This is the update farmer password endpoint"}
-
-
-# @router.put("/update-phonenumber")
-# async def update_farmer_phonenumber():
-#     return {"message": "This is the update farmer phone number endpoint"}
+@router.put("/update-phonenumber")
+async def update_farmer_phonenumber(
+    payload:  ChangePhonenumber,
+    db: AsyncSession = Depends(get_db),
+    current_user = Depends(get_current_user)
+):
+    return await update_phone(db, payload, current_user)

@@ -1,8 +1,9 @@
 from datetime import datetime
 
-from sqlalchemy import text, select
+from sqlalchemy import text, select, update
 from sqlalchemy.ext.asyncio import AsyncSession
 from modules.auth.models import Users
+from sqlalchemy.dialects.postgresql import UUID
 
 async def get_userProfile(db: AsyncSession, email: str):
     result = await db.execute(
@@ -26,37 +27,41 @@ async def get_username_l(db: AsyncSession, email:str):
     )
     return result.scalar()
 
-# async def check_user_by_email(db: AsyncSession, email: str):
-#     query = text(
-#         """
-#        SELECT email FROM users WHERE email = :email
-#    """
-#     )
-#     results = await db.execute(query, {"email": email})
-#     row = results.fetchone()
-#     if row:
-#         return {"email": email}
+async def check_user_by_email(db: AsyncSession, email: str):
 
+    result = await db.execute(
+        select(Users).where(Users.email == email)
+    )
+    return result.scalar_one_or_none()
 
-# async def UpdateEmail(user_id: int, new_email: str, db: AsyncSession):
-#     query = text("UPDATE users SET email = :email WHERE id = :id")
-#     await db.execute(query, {"email": new_email, "id": user_id})
-#     await db.commit()
+async def UpdateEmail(db: AsyncSession, user_id: UUID, new_email: str):
+    await db.execute(
+        update(Users)
+        .where(Users.id == user_id)
+        .values(email=new_email)
+    )
+    await db.commit()
 
+async def UpdatePhoneNumber(db: AsyncSession, user_id: UUID, new_phone: str):
+    await db.execute(
+        update(Users)
+        .where(Users.id == user_id)
+        .values(phonenumber=new_phone)
+    )
+    await db.commit()
 
-# async def UpdatePhoneNumber(user_id: int, new_phone: str, db: AsyncSession):
-#     query = text("UPDATE users SET phonenumber = :phone WHERE id = :id")
-#     await db.execute(query, {"phone": new_phone, "id": user_id})
-#     await db.commit()
+async def UpdateFarmname(db: AsyncSession, user_id: UUID, new_farmname: str):
+    await db.execute(
+        update(Users)
+        .where(Users.id == user_id)
+        .values(farmname=new_farmname)
+    )
+    await db.commit()
 
-
-# async def UpdateFarmname(user_id: int, new_farmname: str, db: AsyncSession):
-#     query = text("UPDATE users SET farmname = :farmname WHERE id = :id")
-#     await db.execute(query, {"farmname": new_farmname, "id": user_id})
-#     await db.commit()
-
-
-# async def UpdatePassword(user_id: int, new_password: str, db: AsyncSession):
-#     query = text("UPDATE users SET password = :password WHERE id = :id")
-#     await db.execute(query, {"password": new_password, "id": user_id})
-#     await db.commit()
+async def UpdatePassword(db: AsyncSession, user_id: UUID, new_password: str):
+    await db.execute(
+        update(Users)
+        .where(Users.id == user_id)
+        .values(password=new_password)
+    )
+    await db.commit()

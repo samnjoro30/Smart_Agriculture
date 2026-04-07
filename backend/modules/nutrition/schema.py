@@ -1,5 +1,5 @@
 from pydantic import BaseModel
-from typing import Optional
+from typing import Optional, List
 from uuid import UUID
 from datetime import datetime
 
@@ -21,6 +21,12 @@ class FeedUpdate(BaseModel):
     unit: Optional[str]
     costPerUnit: Optional[float]
     supplier: Optional[str]
+
+class FeedStockResponse(BaseModel):
+    totalValue: float
+    totalItems: int
+    lowStock: int
+    feeds: List[FeedCreate]
 
 class FeedOut(FeedBase):
     id: UUID

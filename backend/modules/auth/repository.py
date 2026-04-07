@@ -1,6 +1,6 @@
 #from db.postgre_db import AsyncSession
 from datetime import datetime
-
+from sqlalchemy.orm import selectinload
 from sqlalchemy import text, select, or_
 from sqlalchemy.ext.asyncio import AsyncSession
 from .models import RefreshToken, Users, NewsSubscribers
@@ -48,20 +48,14 @@ async def store_refresh_token(
     db.add(refresh)
     await db.flush()
     return refresh
-    # query = text(
-    #     """
-    #     INSERT INTO refresh_token (username, token, expires_at)
-    #     VALUES (:username, :token, :expires_at )
-    # """
-    # )
-    # await db.execute(
-    #     query, {"username": username, "token": token, "expires_at": expires_at}
-    # )
-    # await db.commit()
-
 
 async def get_refresh_token(db: AsyncSession, token: str):
-    result = await db.execute(select(RefreshToken).where(RefreshToken.token == token).with_for_update())
+    result = await db.execute(
+        select(RefreshToken)
+        .options(selectinload(RefreshToken.user))
+        .where(RefreshToken.token == token)
+        .with_for_update()
+    )
     return result.scalars().first()
 
 
