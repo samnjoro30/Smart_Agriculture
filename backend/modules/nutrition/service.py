@@ -18,7 +18,8 @@ from .repository import (
         get_all_feeds,
         update_feed,
         delete_feed,
-)
+        get_feeds_summary,
+    )
 
 logger = get_logger("NUTRITION")
 
@@ -36,10 +37,16 @@ async def create_feed_service(db: AsyncSession, payload, current_user):
     
     return feed
 
+async def get_all_feeds_service(db: AsyncSession, current_user):
+    feeds = await get_all_feeds(db, current_user.id)
+    summary = await get_feeds_summary(db, current_user.id)
 
-
-async def get_all_feeds_service(db: AsyncSession):
-    pass
+    return {
+        "totalValue": summary["total_value"],
+        "totalItems": summary["total_items"],
+        "lowStock": summary["low_stock_items"],
+        "feeds": feeds
+    }
    
 
 async def update_feed_service(db: AsyncSession):

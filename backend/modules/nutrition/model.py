@@ -21,3 +21,29 @@ class Feeds(Base):
         nullable=False
     )
     createdAt = Column(DateTime, server_default=func.now())
+
+class FeedUsage(Base):
+    __tablename__ = "feed_usage"
+
+    id = Column(UUID(as_uuid=True), primary_key=True)
+    feed_id = Column(
+        UUID(as_uuid=True), 
+        ForeignKey("feeds.id"),
+        nullable=False,
+        )
+    quantity_used = Column(Float)
+    used_at = Column(DateTime, default=func.now())
+    livestock_id = Column(UUID, nullable=True) 
+
+class FeedPurchase(Base):
+    __tablename__ = "feed_purchases"
+
+    id = Column(UUID, primary_key=True)
+    feed_id = Column(
+        UUID(as_uuid=True), 
+        ForeignKey("feeds.id"), 
+        nullable=False
+    )    
+    quantity = Column(Float)
+    total_cost = Column(Float)
+    purchased_at = Column(DateTime)
