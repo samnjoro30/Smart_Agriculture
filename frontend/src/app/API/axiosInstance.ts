@@ -1,9 +1,24 @@
 import axios from 'axios';
 
+let isRefreshing = false;
+interface FailedRequest {
+  resolve: (token: string | null) => void;
+  reject: (error: any) => void;
+}
+
+let failedQueue: FailedRequest[] = [];
+
 const axiosInstance = axios.create({
-  baseURL: "https://smart-agriculture-21dt.onrender.com", // "http://localhost:8000", // , //process.env.BACKEND_URL,
+  baseURL:  "https://smart-agriculture-21dt.onrender.com", // "http://localhost:8000", // , //process.env.BACKEND_URL,
   withCredentials: true,
 });
+
+const processQueue = (error: any, token = null) => {
+  failedQueue.forEach((prom: FailedRequest) => {
+    if (error) prom.reject(error);
+    else prom.resolve(token);
+  });
+};
 
 axiosInstance.interceptors.request.use(
   (config) => {

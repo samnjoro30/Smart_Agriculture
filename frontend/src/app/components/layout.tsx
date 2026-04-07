@@ -7,6 +7,7 @@ import dynamic from 'next/dynamic';
 import {
   AlertCircle,
   BarChart3,
+  Beef,
   Bell,
   Brain,
   Headphones,
@@ -105,61 +106,129 @@ export default function Sidebar() {
     <>
       <div className="flex h-[calc(100vh-100px)]">
         {/* ── Desktop sidebar (unchanged) ── */}
-        <aside className="hidden md:flex flex-col ml-0.5 w-16 md:w-64 bg-green-700 shadow-md rounded-lg p-1 md:p-4 mb-0.5 overflow-y-auto">
-          <h2 className="text-gray-200 font-semibold mb-2 border-b border-green-300">
-            Dashboard
-          </h2>
-          <div className="flex flex-col space-y-2">
-            {[
-              { id: 'overview', label: 'Overview', icon: LayoutDashboard },
-              { id: 'notifications', label: 'Notifications', icon: Bell },
-            ].map(({ id, label, icon: Icon }) => (
-              <button
-                key={id}
-                onClick={() => setActive(id)}
-                className={`flex items-center gap-2 text-left px-3 py-2 rounded-md hover:bg-green-500 transition-colors ${active === id ? 'bg-green-500 text-white font-semibold' : 'text-gray-200'}`}
-              >
-                <Icon size={18} />
-                <span className="hidden md:inline">{label}</span>
-              </button>
-            ))}
+        <aside
+          className="hidden md:flex flex-col w-72 
+          bg-green-600 text-gray-200 font-bold
+            rounded-2xl mt-0.2 ml-0.5 p-4 
+            shadow-xl border border-white/10 overflow-y-auto"
+        >
+          {/* ── Header ── */}
+          <div className="mb-6">
+            <h1 className="text-lg font-bold tracking-wide flex items-center gap-2">
+              <Beef size={20} className="text-green-400" />
+              🐄Farm Dashboard
+            </h1>
+            <p className="text-xs text-gray-700">Livestock Management</p>
           </div>
 
+          {/* ── MAIN SECTION ── */}
+          <div>
+            <p className="text-[11px] uppercase tracking-widest text-gray-800 mb-2">
+              Main
+            </p>
+
+            <div className="space-y-1.5">
+              {[
+                { id: 'overview', label: 'Overview', icon: LayoutDashboard },
+                { id: 'notifications', label: 'Notifications', icon: Bell },
+              ].map(({ id, label, icon: Icon }) => {
+                const isActive = active === id;
+
+                return (
+                  <button
+                    key={id}
+                    onClick={() => setActive(id)}
+                    className={`group flex items-center gap-3 w-full px-3 py-2.5 rounded-xl transition-all duration-200
+
+                      ${
+                        isActive
+                          ? 'bg-white/10 text-white shadow-inner'
+                          : 'hover:bg-white/5 text-white'
+                      }`}
+                  >
+                    {/* Active Indicator */}
+                    <span
+                      className={`w-1.5 h-6 rounded-full transition-all
+                        ${
+                          isActive
+                            ? 'bg-green-400'
+                            : 'bg-transparent group-hover:bg-white/20'
+                        }`}
+                    />
+
+                    <Icon size={18} />
+                    <span className="text-sm">{label}</span>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* ── PRODUCT SECTION ── */}
           <div className="mt-6">
-            <h2 className="text-gray-200 font-semibold mb-2 border-b border-green-300">
-              Product
-            </h2>
-            <div className="flex flex-col space-y-2">
+            <p className="text-[11px] uppercase tracking-widest text-gray-500 mb-2">
+              Farm Tools
+            </p>
+
+            <div className="space-y-1.5">
               {[
                 { id: 'farmer', label: 'Farm Inputs', icon: Package },
                 { id: 'AI Insights', label: 'AI Insights', icon: Brain },
                 { id: 'Analytics', label: 'Farm Analytics', icon: BarChart3 },
                 { id: 'alerts', label: 'Alerts', icon: AlertCircle },
                 { id: 'profile', label: 'Farmer Profile', icon: User },
-              ].map(({ id, label, icon: Icon }) => (
-                <button
-                  key={id}
-                  onClick={() => setActive(id)}
-                  className={`flex items-center gap-2 text-left px-3 py-2 rounded-md hover:bg-green-500 transition-colors ${active === id ? 'bg-green-500 text-white font-semibold' : 'text-gray-200'}`}
-                >
-                  <Icon size={18} />
-                  <span className="hidden md:inline">{label}</span>
-                </button>
-              ))}
+              ].map(({ id, label, icon: Icon }) => {
+                const isActive = active === id;
+
+                return (
+                  <button
+                    key={id}
+                    onClick={() => setActive(id)}
+                    className={`group flex items-center gap-3 w-full px-3 py-2.5 rounded-xl transition-all duration-200
+                      ${
+                      isActive
+                      ? 'bg-white/10 text-white shadow-inner'
+                      : 'hover:bg-white/5 text-gray-300'
+                    }`}
+                  >
+                    {/* Active Indicator */}
+                    <span
+                      className={`w-1.5 h-6 rounded-full transition-all
+                        ${
+                        isActive
+                        ? 'bg-green-400'
+                        : 'bg-transparent group-hover:bg-white/20'
+                      }`}
+                    />
+
+                    <Icon size={18} />
+                    <span className="text-sm">{label}</span>
+                  </button>
+                );
+              })}
             </div>
           </div>
 
-          <div className="mt-auto border-t border-green-300 pt-3">
-            <button
-              onClick={() => setActive('Contact')}
-              className={`flex items-center gap-2 px-3 py-2 rounded-md hover:bg-green-500 transition-colors w-full ${active === 'Contact' ? 'bg-green-500 text-white font-semibold' : 'text-gray-200'}`}
-            >
-              <Headphones size={18} />
-              <span className="hidden md:inline">Contact Support</span>
-            </button>
+          {/* ── SUPPORT CARD ── */}
+          <div className="mt-auto pt-6">
+            <div className="bg-white/5 border border-white/10 rounded-xl p-3">
+              <p className="text-xs text-gray-700 mb-2">Support</p>
+
+              <button
+                onClick={() => setActive('Contact')}
+                className={`flex items-center gap-2 text-sm w-full px-2 py-2 rounded-lg transition
+                  ${
+                  active === 'Contact'
+                  ? 'bg-white/10 text-white'
+                  : 'text-gray-300 hover:bg-white/5'
+                }`}
+              >
+                <Headphones size={16} />
+                Contact Support
+              </button>
+            </div>
           </div>
         </aside>
-
         {/* ── Main content ── */}
         <main className="flex-1 overflow-y-auto bg-green-50 pb-16 md:pb-0">
           {render()}
