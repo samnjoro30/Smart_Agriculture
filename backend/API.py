@@ -8,6 +8,7 @@ import requests
 from fastapi import FastAPI, Request, Response
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.middleware.gzip import GZipMiddleware
+from config.redis.client import init_redis, close_redis
 
 from slowapi import Limiter, _rate_limit_exceeded_handler
 from slowapi.errors import RateLimitExceeded
@@ -88,6 +89,7 @@ async def add_process_time_header(request: Request, call_next):
 
 @app.on_event("startup")
 async def startup():
+    await init_redis()
     async def warm_db():
         async with engine.begin() as conn:
             await conn.execute(text("SELECT 1"))
@@ -107,3 +109,7 @@ async def startup():
                 await asyncio.sleep(600) 
 
     asyncio.create_task(keep_alive())
+
+@app.on_event("shutdown")
+async def shutdown():
+    await close_redis()

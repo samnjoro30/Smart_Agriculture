@@ -15,6 +15,8 @@ class Settings(BaseSettings):
     APP_NAME: str = "Smart Farm"
     ENV: Literal["dev", "staging", "prod", "test"] = "dev"
     DEBUG: bool = False
+    REDIS_URL_CACHE: Optional[str] = None
+    REDIS_URL_BROKER: Optional[str] = None
 
     SLOW_REQUEST_THRESHOLD: float = 0.5
 
