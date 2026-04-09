@@ -1,6 +1,6 @@
 from celery.schedules import crontab
 
-app.conf.beat_schedule = {
+BEAT_SCHEDULE = {
     'calculate-ages-every-midnight': {
         'task': 'update_livestock_ages',
         'schedule': crontab(hour=0, minute=0), # Runs daily at midnight
