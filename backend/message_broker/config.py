@@ -12,9 +12,17 @@ REDIS_CONFIG = {
 
 def init_celery(app_name: str):
     """Factory to create a Celery app instance."""
-    app = Celery(app_name)
+    app = Celery(
+        app_name,
+        broker=CELERY_CONFIG["broker_url"],
+        backend=CELERY_CONFIG["result_backend"],
+    )
 
-    app.conf.update(CELERY_CONFIG)
+    app.conf.update(CELERY_CONFIG["task_routes"] == {
+    "modules.livestock.tasks.*": {"queue": "livestock_service"},
+    "modules.nutrition.tasks.*": {"queue": "nutrition_service"},
+    "modules.auth.tasks.*": {"queue": "identity_service"},
+    })
     
     return app
 
