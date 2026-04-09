@@ -1,11 +1,13 @@
 from celery import Celery
-from .config import CELERY_BROKER_URL, CELERY_RESULT_BACKEND
+from .celery_config import CELERY_CONFIG
+from .beat import BEAT_SCHEDULE
+
 
 celery_app = Celery(
-    "smartfarm",
-    broker=CELERY_BROKER_URL,
-    backend=CELERY_RESULT_BACKEND,
+    "smartfarm_worker"
 )
+celery_app.conf.beat_schedule = BEAT_SCHEDULE
+celery_app.conf.update(CELERY_CONFIG)
 
 # Optional: auto-discover tasks in modules
 celery_app.autodiscover_tasks([
