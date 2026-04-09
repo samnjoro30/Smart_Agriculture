@@ -9,14 +9,15 @@ class Livestock(Base):
     __tablename__ = 'livestock'
 
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
-    tag = Column(String(150), unique=True, nullable=False)
+    tag = Column(String(150), unique=True, nullable=True)
     name = Column(String(200))
     category = Column(String(100))
     breed = Column(String(200))
     heatStatus = Column(Boolean, default=False)
     pregnant = Column(Boolean, default=False)
     lastInsemination = Column(DateTime(timezone=True))
-    age = Column(Integer)
+    #nextHeatDate = Column(DateTime(timezone=True), nullable=True)
+    age = Column(Integer, nullable=True)
     healthStatus = Column(String(200))
     inseminationType = Column(String(100))
     birthDate = Column(DateTime(timezone=True))
