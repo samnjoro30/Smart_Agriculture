@@ -8,7 +8,7 @@ class LivestockCreateRequest(BaseModel):
     name: Optional[str] = None
     category: str
     breed: str
-    age: int
+    age: Optional[int] = None
     healthStatus: str
 
     heatStatus: Optional[bool] = False
@@ -16,7 +16,7 @@ class LivestockCreateRequest(BaseModel):
     lastInsemination: Optional[datetime] = None
     inseminationType: Optional[str] = None
 
-    birthDate: Optional[datetime] = None
+    birthDate: datetime
     motherTag: Optional[str] = None
     fatherTag: Optional[str] = None
 

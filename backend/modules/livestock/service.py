@@ -47,6 +47,7 @@ async def register_animals(db: AsyncSession, payload, current_user):
            animal_data[field] = None
 
     animal_data["user_id"] = current_user.id
+   
     if payload.category.lower() == "calf":
         animal_data.update({
             "heatStatus": False,
@@ -56,7 +57,6 @@ async def register_animals(db: AsyncSession, payload, current_user):
         })
     else: 
         animal_data.update({
-            "birthDate": None,
             "motherTag": None,
             "fatherTag": None
         })
@@ -139,3 +139,7 @@ async def update_livestock_ages_service(db: AsyncSession):
     await db.commit()
      
     return updated_count
+
+async def group_animals_Age_group():
+    pass
+
