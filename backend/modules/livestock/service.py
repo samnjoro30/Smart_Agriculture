@@ -5,7 +5,7 @@ from fastapi import APIRouter, Depends, HTTPException, Request, Response
 from jose import JWTError, jwt
 from sqlalchemy.ext.asyncio import AsyncSession
 from starlette.status import HTTP_201_CREATED
-from  .tasks import make_naive
+#from  .tasks import make_naive
 from .model import ( 
     Livestock,
 )
@@ -16,6 +16,8 @@ from .repository import (
     get_animals_by_user,
     get_animal_stats,
     get_animals_details_by_user,
+    get_animals_with_birthdate,
+    update_animal_age,
 )
 
 from config.security import create_access_token, create_refresh_token
@@ -23,6 +25,11 @@ from config.audit.logger import get_logger
 
 
 logger = get_logger("LIVESTOCK")
+
+def make_naive(dt: datetime | None):
+    if dt and dt.tzinfo is not None:
+        return dt.replace(tzinfo=None)
+    return dt
 
 async def register_animals(db: AsyncSession, payload, current_user):
     existing_animal = await get_animal_by_tag(db, payload.tag)
@@ -110,3 +117,25 @@ async def get_animal_by_tag_id(db: AsyncSession, tag: str, current_user):
         raise HTTPException(status_code=403, detail="Forbidden: You do not have access to this animal")
 
     return animal
+
+async def update_livestock_ages_service(db: AsyncSession):
+    current_date = datetime.utcnow()
+
+    animals = await get_animals_with_birthdate(db)
+
+    updated_count = 0
+
+    for animal in animals:
+        if animal.birthDate:
+            birth_date = make_naive(animal.birthDate)
+            delta_days = (current_date - birth_date).days
+
+            new_age_months = int(delta_days / 30.44)
+
+            if animal.age != delta_days:
+                await update_animal_age(db, animal, delta_days)
+                updated_count += 1
+
+    await db.commit()
+     
+    return updated_count

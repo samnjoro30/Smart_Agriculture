@@ -14,15 +14,23 @@ def init_celery(app_name: str):
     """Factory to create a Celery app instance."""
     app = Celery(
         app_name,
-        broker=CELERY_CONFIG["broker_url"],
-        backend=CELERY_CONFIG["result_backend"],
+        broker="redis://127.0.0.1:6379/0",
+        backend="redis://127.0.0.1:6379/0",
     )
 
-    app.conf.update(CELERY_CONFIG["task_routes"] == {
-    "modules.livestock.tasks.*": {"queue": "livestock_service"},
-    "modules.nutrition.tasks.*": {"queue": "nutrition_service"},
-    "modules.auth.tasks.*": {"queue": "identity_service"},
-    })
+    app.conf.task_routes = {
+        "modules.livestock.tasks.*": {"queue": "livestock_service"},
+        "modules.nutrition.tasks.*": {"queue": "nutrition_service"},
+        "modules.auth.tasks.*": {"queue": "identity_service"},
+    }
+
+    app.conf.update(CELERY_CONFIG)
+
+    # app.conf.update(CELERY_CONFIG["task_routes"] == {
+    # "modules.livestock.tasks.*": {"queue": "livestock_service"},
+    # "modules.nutrition.tasks.*": {"queue": "nutrition_service"},
+    # "modules.auth.tasks.*": {"queue": "identity_service"},
+    # })
     
     return app
 

@@ -4,6 +4,7 @@ from config.database import get_db
 from config.audit.logger import get_logger
 from config.setting import get_settings
 from config.security import get_current_user
+from .tasks import update_livestock_ages
 
 from .schema import (
     LivestockCreateRequest,
@@ -13,6 +14,7 @@ from .service import (
     get_animals_listing,
     get_animal_by_tag_id,
     get_stats,
+    update_livestock_ages_service,
 )
 
 
@@ -21,6 +23,12 @@ router = APIRouter(prefix="/livestock", tags=["Livestock"])
 logger = get_logger("LIVESTOCK")
 
 settings = get_settings()
+
+@router.post("/test-age-update")
+async def trigger_age_update():
+    # .delay() sends the task to the Message Broker (Redis)
+    task = update_livestock_ages.delay()
+    return {"task_id": task.id, "status": "Task sent to worker!"}
 
 @router.post("/register")
 async def register(
