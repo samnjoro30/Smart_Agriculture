@@ -133,7 +133,7 @@ async def update_livestock_ages_service(db: AsyncSession):
             new_age_months = int(delta_days / 30.44)
 
             if animal.age != delta_days:
-                await update_animal_age(db, animal, delta_days)
+                await update_animal_age(db, animal, new_age_months)
                 updated_count += 1
 
     await db.commit()
