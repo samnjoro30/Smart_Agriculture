@@ -50,3 +50,13 @@ async def get_animals_details_by_user(db: AsyncSession, user_id: UUID):
         select(Livestock).where(Livestock.user_id == user_id)
     )
     return result.scalars().all()
+
+async def get_animals_with_birthdate(db: AsyncSession):
+    result = await db.execute(
+        select(Livestock).where(Livestock.birthDate.isnot(None))
+    )
+    return result.scalars().all()
+
+async def update_animal_age(db: AsyncSession, animal: Livestock, new_age: int):
+    animal.age = new_age
+    db.add(animal)

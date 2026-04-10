@@ -5,7 +5,7 @@ import httpx
 import asyncio
 
 import requests
-from fastapi import FastAPI, Request, Response
+from fastapi import FastAPI, Request, Response, APIRouter
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.middleware.gzip import GZipMiddleware
 from config.redis.client import init_redis, close_redis
@@ -40,11 +40,12 @@ app = FastAPI(
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
-        "http://localhost:3000",
-        "https://smart-agriculture-git-main-samnjoro30s-projects.vercel.app",
-        "https://smart-agriculture-pied.vercel.app",
-        "https://smart-farming-agriculture.web.app",
-        "https://smart-farming-agriculture.firebaseapp.com",
+        "*"
+        # "http://localhost:3000",
+        # "https://smart-agriculture-git-main-samnjoro30s-projects.vercel.app",
+        # "https://smart-agriculture-pied.vercel.app",
+        # "https://smart-farming-agriculture.web.app",
+        # "https://smart-farming-agriculture.firebaseapp.com",
     ],
     allow_credentials=True,
     allow_methods=["*"],

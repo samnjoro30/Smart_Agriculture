@@ -3,7 +3,7 @@ import time
 from dotenv import load_dotenv
 from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
 from sqlalchemy.orm import declarative_base, sessionmaker
-from sqlalchemy import event
+from sqlalchemy import event, create_engine
 from config.audit.context import query_count
 
 from .setting import get_settings
@@ -39,6 +39,19 @@ AsyncSessionLocal = sessionmaker(
     expire_on_commit=False,
     class_=AsyncSession,
 )
+
+# sync_engine = create_engine(
+#     SYNC_NEONB,
+#     pool_pre_ping=True,
+#     pool_recycle=1800
+# )
+
+# # 3. Standard SessionLocal for Worker
+# SessionLocal = sessionmaker(
+#     autocommit=False,
+#     autoflush=False,
+#     bind=sync_engine
+# )
 
 Base = declarative_base()
 

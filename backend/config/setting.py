@@ -15,8 +15,17 @@ class Settings(BaseSettings):
     APP_NAME: str = "Smart Farm"
     ENV: Literal["dev", "staging", "prod", "test"] = "dev"
     DEBUG: bool = False
+
     REDIS_URL_CACHE: Optional[str] = None
     REDIS_URL_BROKER: Optional[str] = None
+
+    REDIS_URL: str | None = None
+    REDIS_CACHE_TTL: int = 300
+
+    # celery worker
+    CELERY_BROKER_URL: Optional[str] = REDIS_URL_CACHE
+    CELERY_RESULT_BACKEND: Optional[str] = REDIS_URL_CACHE
+   
 
     SLOW_REQUEST_THRESHOLD: float = 0.5
 
@@ -60,9 +69,8 @@ class Settings(BaseSettings):
     def cookie_secure(self) -> bool:
         return True
 
-    # Redis
-    REDIS_URL: str | None = None
-    REDIS_CACHE_TTL: int = 300
+    
+    
 
     # logs
     LOG_LEVEL: Literal["DEBUG", "INFO", "WARNING", "ERROR"] = "INFO"
