@@ -14,8 +14,8 @@ def init_celery(app_name: str):
     """Factory to create a Celery app instance."""
     app = Celery(
         app_name,
-        broker="redis://127.0.0.1:6379/0",
-        backend="redis://127.0.0.1:6379/0",
+        broker=CELERY_CONFIG['broker_url'],
+        backend=CELERY_CONFIG['result_backend'],
     )
 
     app.conf.task_routes = {
