@@ -29,6 +29,8 @@ class Settings(BaseSettings):
     #notification apis
     AFRICASTALKING_USERNAME: Optional[str] = None
     AFRICASTALKING_API_KEY: Optional[str] = None
+
+    FIREBASE_CREDENTIALS_PATH: Optional[str] = None
    
 
     SLOW_REQUEST_THRESHOLD: float = 0.5

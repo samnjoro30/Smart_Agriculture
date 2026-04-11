@@ -2,13 +2,13 @@ from .repository import get_user_preferences
 from .service import filter_channels
 from .utils import get_recipient
 from .tasks import send_notification_task
-from config.security import current_user
+from config.security import get_current_user
 from .model import Notification
 
 
 async def notify(
     db,
-    user: current_user,
+    user: get_current_user,
     title: str,
     message: str,
     channels: list[str],
