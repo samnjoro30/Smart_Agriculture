@@ -25,6 +25,10 @@ class Settings(BaseSettings):
     # celery worker
     CELERY_BROKER_URL: Optional[str] = REDIS_URL_CACHE
     CELERY_RESULT_BACKEND: Optional[str] = REDIS_URL_CACHE
+
+    #notification apis
+    AFRICASTALKING_USERNAME: Optional[str] = None
+    AFRICASTALKING_API_KEY: Optional[str] = None
    
 
     SLOW_REQUEST_THRESHOLD: float = 0.5
