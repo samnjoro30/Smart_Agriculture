@@ -30,6 +30,7 @@ from config.audit.logger import get_logger
 from utils.hashing import hash_password, verify_password
 from utils.otp import generate_otp, otp_expiry
 from config.setting import get_settings
+from modules.notifications.router import notify
 
 logger = get_logger("AUTH")
 settings = get_settings()
@@ -58,6 +59,16 @@ async def register_farm(db: AsyncSession, payload):
     user = await create_user(user_dict, db)
 
     await db.commit()
+
+    message = f"Your OTP for account verification is: {otp}. It expires in 10 minutes."
+    await notify(
+        db=db,
+        user=user,
+        title="Verify Your Farm Account",
+        message=message,
+        channels=["sms", "email"],
+        notification_type="verification"
+    )
 
     return user
 

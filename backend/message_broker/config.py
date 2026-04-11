@@ -26,12 +26,6 @@ def init_celery(app_name: str):
 
     app.conf.update(CELERY_CONFIG)
 
-    # app.conf.update(CELERY_CONFIG["task_routes"] == {
-    # "modules.livestock.tasks.*": {"queue": "livestock_service"},
-    # "modules.nutrition.tasks.*": {"queue": "nutrition_service"},
-    # "modules.auth.tasks.*": {"queue": "identity_service"},
-    # })
-    
     return app
 
 # Main instance used by the rest of the Monolith
