@@ -5,7 +5,8 @@ from dotenv import load_dotenv
 from sqlalchemy.ext.asyncio import create_async_engine
 from modules.auth.models import Users, RefreshToken, NewsSubscribers
 from modules.livestock.model import Livestock
-from modules.nutrition.model import Feeds
+from modules.notifications.model import  Notification, NotificationPreference, NotificationDelivery
+from modules.nutrition.model import Feeds, FeedUsage, FeedPurchase
 from alembic import context
 from config.database import Base
 
