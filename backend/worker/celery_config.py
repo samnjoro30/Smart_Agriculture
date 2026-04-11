@@ -7,9 +7,11 @@ settings = get_settings()
 
 ISPRODUCTION = os.getenv("RENDER", "false").lower() == "true"
 
+broker_url = settings.REDIS_URL_BROKER or ""
+
 CELERY_CONFIG = {
-    "broker_url": settings.REDIS_URL_BROKER,
-    "result_backend": settings.REDIS_URL_BROKER,
+    "broker_url": broker_url,
+    "result_backend": broker_url,
 
     "accept_content": ["json"],
     "task_serializer": "json",
@@ -37,6 +39,6 @@ if ISPRODUCTION:
     CELERY_CONFIG["redis_backend_use_ssl"] = ssl_conf
 else:
     # Handle local dev logic
-    if settings.REDIS_URL_BROKER.startswith("rediss"):
+    if broker_url.startswith("rediss"):
         CELERY_CONFIG["broker_use_ssl"] = {"ssl_cert_reqs": ssl.CERT_NONE}
         CELERY_CONFIG["redis_backend_use_ssl"] = {"ssl_cert_reqs": ssl.CERT_NONE}
