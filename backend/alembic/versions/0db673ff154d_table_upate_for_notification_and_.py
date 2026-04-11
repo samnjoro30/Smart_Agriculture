@@ -81,9 +81,10 @@ def upgrade() -> None:
     op.alter_column('livestock', 'tag',
                existing_type=sa.VARCHAR(length=150),
                nullable=True)
-    op.drop_index(op.f('idx_refresh_token_lookup'), table_name='refresh_token')
-    op.drop_index(op.f('idx_refresh_token_token'), table_name='refresh_token')
-    op.drop_index(op.f('idx_users_email'), table_name='users')
+        # Add if_exists=True to these three lines
+    op.drop_index(op.f('idx_refresh_token_lookup'), table_name='refresh_token', if_exists=True)
+    op.drop_index(op.f('idx_refresh_token_token'), table_name='refresh_token', if_exists=True)
+    op.drop_index(op.f('idx_users_email'), table_name='users', if_exists=True)
     # ### end Alembic commands ###
 
 
