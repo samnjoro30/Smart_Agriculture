@@ -155,15 +155,16 @@ export default function RegisterAnimal() {
       const res = await axiosInstance.post('/livestock/register', payload);
       const newAnimal = res.data.animal;
       setMessage('animal registered successfully');
+      setTimeout(() => {
+        setMessage('');
+      }, 3000);
       router.push(`/dashboard/animals/${newAnimal.tag}`);
     } catch (err: any) {
       if (err.response) {
         setError(err.response.data?.message || 'Something went wrong');
         console.log(err.response.data);
-      } else if (err.request) {
-        setError('Network error. Check your connection.');
       } else {
-        setError('Unexpected error occurred');
+        setError('Network error. Check your connection.');
       }
     } finally {
       setLoading(false);
@@ -196,13 +197,14 @@ export default function RegisterAnimal() {
         pregnant: 'no',
         lastInsemination: '',
         inseminationType: '',
+        // birthDate: '',
       }));
     } else {
       setFormData((prev) => ({
         ...prev,
         motherTag: '',
         fatherTag: '',
-        birthDate: '',
+        // birthDate: '',
       }));
     }
   }, [formData.category]);
@@ -283,17 +285,6 @@ export default function RegisterAnimal() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-green-50 to-emerald-50 py-4 px-2">
-      {message && (
-        <div className="bg-green-100 text-green-700 px-4 py-2 rounded-lg">
-          {message}
-        </div>
-      )}
-
-      {error && (
-        <div className="bg-red-100 text-red-700 px-4 py-2 rounded-lg">
-          {error}
-        </div>
-      )}
       <form
         onSubmit={handleSubmit}
         className="max-w-5xl mx-auto bg-white rounded-2xl shadow-xl overflow-hidden"
@@ -353,7 +344,7 @@ export default function RegisterAnimal() {
                 placeholder="e.g., Holstein, Jersey"
                 required
               />
-              <Input
+              {/* <Input
                 label="Age (months)"
                 name="age"
                 type="number"
@@ -361,7 +352,16 @@ export default function RegisterAnimal() {
                 onChange={handleChange}
                 icon={Calendar}
                 placeholder="Age in months"
+              /> */}
+              <Input
+                label="Birth Date dd/mm/yyyy"
+                name="birthDate"
+                type="date"
+                value={formData.birthDate}
+                onChange={handleChange}
+                icon={Calendar}
               />
+
               <Input
                 label="Health status"
                 name="healthStatus"
@@ -447,13 +447,13 @@ export default function RegisterAnimal() {
                     icon={Tag}
                     placeholder="Enter father tag (optional)"
                   />
-                  <Input
+                  {/* <Input
                     label="Birth Date DD/MM/YYYY"
                     name="birthDate"
                     type="Date"
                     value={formData.birthDate}
                     onChange={handleChange}
-                  />
+                  /> */}
                 </>
               )}
             </div>
@@ -473,6 +473,17 @@ export default function RegisterAnimal() {
             <span>{loading ? 'Registering...' : 'Register Animal'}</span>
           </button>
         </div>
+        {message && (
+          <div className="bg-green-100 text-green-700 px-4 py-2 rounded-lg">
+            {message}
+          </div>
+        )}
+
+        {error && (
+          <div className="bg-red-100 text-red-700 px-4 py-2 rounded-lg">
+            {error}
+          </div>
+        )}
       </form>
     </div>
   );

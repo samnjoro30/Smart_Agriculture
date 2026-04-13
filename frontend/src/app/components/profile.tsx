@@ -84,6 +84,17 @@ export default function ProfileSetting() {
     }
   };
 
+  const handleLogout = async () => {
+    try {
+      await axiosInstance.post('/auth/logout');
+      //queryClient.clear()
+    } catch (err) {
+      console.error('Error occurred during logout', err);
+    } finally {
+      window.location.replace('/auth/login');
+    }
+  };
+
   if (loading) {
     return (
       <p className="text-center text-gray-500 mt-10">Loading profile...</p>
@@ -92,48 +103,6 @@ export default function ProfileSetting() {
 
   return (
     <div className="max-w-5xl mx-auto p-2 space-y-3">
-      {/* Header */}
-      {/* <div className="relative overflow-hidden bg-gradient-to-r from-green-700 to-green-500 p-5 md:p-6 rounded-[1.5rem] shadow-md shadow-green-100/50">
-        <div className="absolute top-0 right-0 w-32 h-full bg-white/1 skew-x-[-20deg] translate-x-10"></div>
-
-        <div className="relative z-10 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-          {/* Left Side: Name & Status */}
-      {/* <div className="flex items-center gap-3">
-            <div className="hidden sm:flex h-10 w-10 bg-white/20 backdrop-blur-md rounded-xl items-center justify-center text-white">
-              <Leaf size={20} />
-            </div>
-            <div>
-              <h2 className="text-xl md:text-2xl font-black text-white leading-tight">
-                {profile?.username}
-              </h2>
-              <div className="flex items-center gap-1.5">
-                <span className="w-1.5 h-1.5 rounded-full bg-green-300 animate-pulse"></span>
-                <span className="text-[10px] font-bold text-green-100 uppercase tracking-widest">
-                  Digital Farm ID
-                </span>
-              </div>
-            </div> */}
-      {/* </div> */}
-
-      {/* Right Side: Decorative Farm Name Badge */}
-      {/* //   <div className="flex">
-        //     <div className="bg-white/10 backdrop-blur-md border border-white/20 px-4 py-2 rounded-2xl flex items-center gap-2 group hover:bg-white/20 transition-all cursor-default">
-        //       <div className="bg-green-400/30 p-1.5 rounded-lg">
-        //         <MapPin size={14} className="text-white" />
-        //       </div>
-        //       <div className="flex flex-col">
-        //         <span className="text-[9px] font-black text-green-200 uppercase leading-none mb-0.5">
-        //           Established Farm
-        //         </span>
-        //         <span className="text-sm font-extrabold text-white tracking-wide">
-        //           {profile?.farmname}
-        //         </span>
-        //       </div>
-        //     </div>
-        //   </div>
-        // </div> */}
-      {/* // </div>  */}
-
       {/* setting area */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 items-stretch">
         <div className="bg-white rounded-[2rem] shadow-sm border border-gray-100 overflow-hidden flex flex-col">
@@ -194,7 +163,10 @@ export default function ProfileSetting() {
                   Account Active
                 </span>
               </div>
-              <button className="text-xs font-bold text-red-500 hover:bg-red-100 px-5 py-2 rounded-lg transition-colors">
+              <button
+                className="text-xs font-bold text-red-500 hover:bg-red-100 px-5 py-2 rounded-lg transition-colors"
+                onClick={handleLogout}
+              >
                 Sign Out
               </button>
             </div>

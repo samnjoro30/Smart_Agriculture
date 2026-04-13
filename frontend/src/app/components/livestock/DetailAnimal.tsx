@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 
 import { useRouter } from 'next/navigation';
+import ArchiveAnimalCard from '../animal_update';
 
 import {
   Activity,
@@ -255,35 +256,8 @@ export default function AnimalDetails({ id, onBack }: Props) {
         </div>
       </div>
 
-      {/* 🔥 NEW: RELEASE LIVESTOCK */}
-      <div className="bg-red-50 border border-red-200 p-5 rounded-xl shadow-sm">
-        <h3 className="font-semibold text-red-600 mb-3">
-          ⚠️ Release / Remove Livestock
-        </h3>
-
-        <p className="text-sm text-gray-600 mb-4">
-          Use this when the animal is sold, has died, or removed from the farm.
-        </p>
-
-        <div className="grid md:grid-cols-3 gap-3">
-          <select className="border rounded-lg px-3 py-2 text-gray-700">
-            <option value="">Select Reason</option>
-            <option value="sold">Sold</option>
-            <option value="died">Died</option>
-            <option value="removed">Removed</option>
-          </select>
-
-          <input
-            type="text"
-            placeholder="Additional notes..."
-            className="border rounded-lg px-3 py-2"
-          />
-
-          <button className="bg-red-600 text-white rounded-lg px-4 py-2 hover:bg-red-700">
-            Confirm
-          </button>
-        </div>
-      </div>
+      < ArchiveAnimalCard animalTag={animal.tag} />
+        
     </div>
   );
 }

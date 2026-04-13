@@ -36,7 +36,7 @@ export default function TrustedPowered() {
             768: { slidesPerView: 4 },
             1024: { slidesPerView: 5 },
           }}
-          loop={true}
+          loop={logos.length > 5}
           autoplay={{ delay: 2000, disableOnInteraction: false }}
         >
           {logos.map((logo, index) => (

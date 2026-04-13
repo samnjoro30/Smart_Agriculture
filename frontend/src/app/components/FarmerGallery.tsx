@@ -91,8 +91,8 @@ export default function GalleryFarmer() {
               <Image
                 src={item.image}
                 alt={item.name}
-                width={500}
-                height={400}
+                width={400}
+                height={300}
                 className="w-full h-64 object-cover"
                 loading="lazy"
               />
