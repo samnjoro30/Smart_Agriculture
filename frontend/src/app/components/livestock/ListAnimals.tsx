@@ -4,6 +4,15 @@ import { useEffect, useState } from 'react';
 
 import { useRouter } from 'next/navigation';
 
+import {
+  Activity,
+  Baby,
+  Calendar,
+  ChevronRight,
+  Filter,
+  Search,
+} from 'lucide-react';
+
 import axiosInstance from '../../API/axiosInstance';
 import AnimalDetails from './DetailAnimal';
 
@@ -77,96 +86,142 @@ export default function AnimalsList() {
     );
 
   return (
-    <div className="max-w-7xl mx-auto p-4 space-y-6">
-      {/* HEADER */}
-      <div className="flex flex-col md:flex-row md:justify-between md:items-center gap-4">
-        <h2 className="text-2xl font-bold text-green-700">Livestock</h2>
+    <div className="max-w-7xl mx-auto p-6 space-y-8 bg-gray-50 min-h-screen">
+      {/* HEADER & CONTROLS */}
+      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
+        <div>
+          <h2 className="text-3xl font-extrabold text-gray-900 tracking-tight">
+            Livestock Inventory
+          </h2>
+          <p className="text-gray-500 mt-1">
+            Manage and monitor your herd's health and productivity.
+          </p>
+        </div>
 
-        {/* CONTROLS */}
-        <div className="flex flex-col md:flex-row gap-3 w-full md:w-auto">
-          {/* Search */}
-          <input
-            type="text"
-            placeholder="Search animals..."
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            className="border text-gray-700 rounded-lg px-4 py-2 w-full md:w-64 focus:ring-2 focus:ring-green-400"
-          />
+        <div className="flex flex-wrap gap-3">
+          {/* Search Input */}
+          <div className="relative group flex-1 min-w-[240px]">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400 group-focus-within:text-green-600" />
+            <input
+              type="text"
+              placeholder="Search by name or tag..."
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              className="w-full pl-10 pr-4 py-2.5 bg-white border border-gray-200 rounded-xl shadow-sm focus:ring-2 focus:ring-green-500 focus:border-transparent outline-none transition-all"
+            />
+          </div>
 
-          {/* Category Filter */}
-          <select
-            value={categoryFilter}
-            onChange={(e) => setCategoryFilter(e.target.value)}
-            className="border-green-400 text-gray-700 rounded-lg px-3 py-2"
-          >
-            <option value="all">All Categories</option>
-            <option value="cow">Cows</option>
-            <option value="bull">Bulls</option>
-            <option value="calf">Calves</option>
-          </select>
+          {/* Filter Dropdowns */}
+          <div className="flex gap-2">
+            <select
+              value={categoryFilter}
+              onChange={(e) => setCategoryFilter(e.target.value)}
+              className="bg-white border border-gray-200 text-gray-700 rounded-xl px-4 py-2.5 shadow-sm focus:ring-2 focus:ring-green-500 outline-none cursor-pointer hover:bg-gray-50"
+            >
+              <option value="all">All Species</option>
+              <option value="cow">Cows</option>
+              <option value="bull">Bulls</option>
+              <option value="calf">Calves</option>
+            </select>
 
-          {/* Health Filter */}
-          <select
-            value={healthFilter}
-            onChange={(e) => setHealthFilter(e.target.value)}
-            className="border-gray-700 text-gray-700 rounded-lg px-3 py-2"
-          >
-            <option value="all">All Health</option>
-            <option value="healthy">Good</option>
-            <option value="sick">Sick</option>
-          </select>
+            <select
+              value={healthFilter}
+              onChange={(e) => setHealthFilter(e.target.value)}
+              className="bg-white border border-gray-200 text-gray-700 rounded-xl px-4 py-2.5 shadow-sm focus:ring-2 focus:ring-green-500 outline-none cursor-pointer"
+            >
+              <option value="all">Health: All</option>
+              <option value="healthy">Good Status</option>
+              <option value="sick">Medical Attention</option>
+            </select>
+          </div>
         </div>
       </div>
 
-      {/* GRID */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+      {/* LIVESTOCK GRID */}
+      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
         {filteredAnimals.map((animal) => (
           <div
             key={animal.tag}
             onClick={() => setSelectedAnimalId(animal.tag)}
-            className="bg-green-200 border rounded-xl p-5 shadow-sm hover:shadow-md transition cursor-pointer"
+            className="group relative bg-white border border-gray-100 rounded-2xl p-5 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 cursor-pointer overflow-hidden"
           >
-            {/* Header */}
-            <div className="flex justify-between items-center mb-2">
-              <h3 className="text-lg font-bold text-green-700">
-                {animal.name || animal.tag}
-              </h3>
+            {/* Category Accent Bar */}
+            <div
+              className={`absolute top-0 left-0 w-full h-1.5 ${
+                animal.category === 'bull'
+                  ? 'bg-blue-500'
+                  : animal.category === 'calf'
+                    ? 'bg-amber-400'
+                    : 'bg-green-500'
+              }`}
+            />
 
+            <div className="flex justify-between items-start mb-4">
+              <div>
+                <span className="text-[10px] font-bold uppercase tracking-widest text-gray-400">
+                  #{animal.tag}
+                </span>
+                <h3 className="text-xl font-bold text-gray-800 group-hover:text-green-700 transition-colors">
+                  {animal.name || 'Unnamed Animal'}
+                </h3>
+              </div>
               <StatusBadge status={animal.healthStatus} />
             </div>
 
-            {/* Details */}
-            <div className="grid grid-cols-2 gap-y-3 gap-x-4 border-t border-gray-100 pt-3">
-              <div>
-                <p className="text-[10px] uppercase font-semibold text-gray-400">
-                  Breed
-                </p>
-                <p className="text-sm font-medium text-gray-800">
-                  {animal.breed}
-                </p>
+            {/* Info Grid */}
+            <div className="grid grid-cols-2 gap-4 py-4 border-y border-gray-50">
+              <div className="flex items-center gap-3">
+                <div className="p-2 bg-gray-100 rounded-lg text-gray-500">
+                  <Activity className="h-4 w-4" />
+                </div>
+                <div>
+                  <p className="text-[10px] text-gray-400 uppercase font-bold">
+                    Breed
+                  </p>
+                  <p className="text-sm font-semibold text-gray-700">
+                    {animal.breed}
+                  </p>
+                </div>
               </div>
-              <div>
-                <p className="text-[10px] uppercase font-semibold text-gray-400">
-                  Age
-                </p>
-                <p className="text-sm font-medium text-gray-800">
-                  {animal.age} months
-                </p>
+              <div className="flex items-center gap-3">
+                <div className="p-2 bg-gray-100 rounded-lg text-gray-500">
+                  <Calendar className="h-4 w-4" />
+                </div>
+                <div>
+                  <p className="text-[10px] text-gray-400 uppercase font-bold">
+                    Age
+                  </p>
+                  <p className="text-sm font-semibold text-gray-700">
+                    {animal.age} Months
+                  </p>
+                </div>
               </div>
             </div>
 
-            {/* Footer */}
-            <div className="mt-3 flex justify-between text-xs text-gray-500">
-              {animal.pregnant ? (
-                <span className="text-green-600 text-xl font-bold ">
-                  Status: Pregnant
-                </span>
-              ) : (
-                <>
-                  <span>Heat: {animal.heatStatus ? 'Yes' : 'No'}</span>
-                  <span>Pregnant: No</span>
-                </>
-              )}
+            {/* Reproductive Status Footer */}
+            <div className="mt-4 flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                {animal.pregnant ? (
+                  <div className="flex items-center gap-1.5 px-3 py-1 bg-green-50 text-green-700 rounded-full text-xs font-bold ring-1 ring-green-200">
+                    <Baby className="h-3 w-3" />
+                    Pregnant
+                  </div>
+                ) : (
+                  <div className="flex gap-3 text-xs font-medium text-gray-500">
+                    <span
+                      className={
+                        animal.heatStatus ? 'text-orange-600 font-bold' : ''
+                      }
+                    >
+                      Heat: {animal.heatStatus ? 'In Heat' : 'No'}
+                    </span>
+                    <span>•</span>
+                    <span>Open</span>
+                  </div>
+                )}
+              </div>
+
+              <ChevronRight className="h-5 w-5 text-gray-300 group-hover:text-green-500 group-hover:translate-x-1 transition-all" />
             </div>
           </div>
         ))}

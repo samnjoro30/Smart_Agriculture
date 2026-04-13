@@ -186,19 +186,19 @@ export default function Sidebar() {
                     onClick={() => setActive(id)}
                     className={`group flex items-center gap-3 w-full px-3 py-2.5 rounded-xl transition-all duration-200
                       ${
-                      isActive
-                      ? 'bg-white/10 text-white shadow-inner'
-                      : 'hover:bg-white/5 text-gray-300'
-                    }`}
+                        isActive
+                          ? 'bg-white/10 text-white shadow-inner'
+                          : 'hover:bg-white/5 text-gray-300'
+                      }`}
                   >
                     {/* Active Indicator */}
                     <span
                       className={`w-1.5 h-6 rounded-full transition-all
                         ${
-                        isActive
-                        ? 'bg-green-400'
-                        : 'bg-transparent group-hover:bg-white/20'
-                      }`}
+                          isActive
+                            ? 'bg-green-400'
+                            : 'bg-transparent group-hover:bg-white/20'
+                        }`}
                     />
 
                     <Icon size={18} />
@@ -218,10 +218,10 @@ export default function Sidebar() {
                 onClick={() => setActive('Contact')}
                 className={`flex items-center gap-2 text-sm w-full px-2 py-2 rounded-lg transition
                   ${
-                  active === 'Contact'
-                  ? 'bg-white/10 text-white'
-                  : 'text-gray-300 hover:bg-white/5'
-                }`}
+                    active === 'Contact'
+                      ? 'bg-white/10 text-white'
+                      : 'text-gray-300 hover:bg-white/5'
+                  }`}
               >
                 <Headphones size={16} />
                 Contact Support

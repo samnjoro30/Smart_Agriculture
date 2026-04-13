@@ -34,6 +34,7 @@ export default function Header() {
   const handleLogout = async () => {
     try {
       await axiosInstance.post('/auth/logout');
+      //queryClient.clear()
     } catch (err) {
       console.error('Error occurred during logout', err);
     } finally {

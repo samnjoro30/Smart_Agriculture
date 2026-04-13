@@ -1,5 +1,12 @@
 'use client';
-import { Trash2, AlertTriangle, Box, Banknote, ShoppingCart } from 'lucide-react';
+import {
+  AlertTriangle,
+  Banknote,
+  Box,
+  ShoppingCart,
+  Trash2,
+} from 'lucide-react';
+
 import { Feed } from '../../types/feed';
 
 type Props = {
@@ -17,8 +24,12 @@ export default function FeedInventoryList({ feeds, onDelete }: Props) {
             <Box size={20} />
           </div>
           <div>
-            <h2 className="text-xl font-black text-gray-900 tracking-tight">Feed Inventory</h2>
-            <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Stock Management</p>
+            <h2 className="text-xl font-black text-gray-900 tracking-tight">
+              Feed Inventory
+            </h2>
+            <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">
+              Stock Management
+            </p>
           </div>
         </div>
         <span className="bg-white px-3 py-1 rounded-full border border-gray-200 text-xs font-bold text-gray-500">
@@ -32,7 +43,9 @@ export default function FeedInventoryList({ feeds, onDelete }: Props) {
             <div className="bg-gray-50 h-16 w-16 rounded-full flex items-center justify-center mx-auto mb-4 text-gray-300">
               <ShoppingCart size={32} />
             </div>
-            <p className="text-gray-400 font-medium">No feeds added yet. Start by adding your first batch.</p>
+            <p className="text-gray-400 font-medium">
+              No feeds added yet. Start by adding your first batch.
+            </p>
           </div>
         ) : (
           <div className="overflow-x-auto">
@@ -60,7 +73,9 @@ export default function FeedInventoryList({ feeds, onDelete }: Props) {
                       {/* Name & Category */}
                       <td className="px-4 py-4 rounded-l-2xl border-y border-l border-gray-50 group-hover:border-green-100">
                         <div className="flex flex-col">
-                          <span className="font-bold text-gray-800 text-sm">{feed.name}</span>
+                          <span className="font-bold text-gray-800 text-sm">
+                            {feed.name}
+                          </span>
                           <span className="text-[10px] font-bold text-green-600 uppercase tracking-tighter">
                             {feed.category}
                           </span>
@@ -69,14 +84,25 @@ export default function FeedInventoryList({ feeds, onDelete }: Props) {
 
                       {/* Quantity with Low Stock Alert */}
                       <td className="px-4 py-4 border-y border-gray-50 group-hover:border-green-100 text-center">
-                        <div className={`inline-flex items-center gap-2 px-3 py-1 rounded-xl border ${
-                          isLow 
-                          ? 'bg-red-50 border-red-100 text-red-600' 
-                          : 'bg-green-50 border-green-100 text-green-700'
-                        }`}>
-                          {isLow && <AlertTriangle size={12} className="animate-pulse" />}
-                          <span className="text-sm font-black">{feed.quantity}</span>
-                          <span className="text-[10px] opacity-70 font-bold uppercase">{feed.unit}</span>
+                        <div
+                          className={`inline-flex items-center gap-2 px-3 py-1 rounded-xl border ${
+                            isLow
+                              ? 'bg-red-50 border-red-100 text-red-600'
+                              : 'bg-green-50 border-green-100 text-green-700'
+                          }`}
+                        >
+                          {isLow && (
+                            <AlertTriangle
+                              size={12}
+                              className="animate-pulse"
+                            />
+                          )}
+                          <span className="text-sm font-black">
+                            {feed.quantity}
+                          </span>
+                          <span className="text-[10px] opacity-70 font-bold uppercase">
+                            {feed.unit}
+                          </span>
                         </div>
                       </td>
 
@@ -84,7 +110,9 @@ export default function FeedInventoryList({ feeds, onDelete }: Props) {
                       <td className="px-4 py-4 border-y border-gray-50 group-hover:border-green-100">
                         <div className="flex items-center gap-1.5 text-gray-800 font-medium">
                           <Banknote size={14} className="text-gray-300" />
-                          <span className="text-sm">KES {feed.costPerUnit.toLocaleString()}</span>
+                          <span className="text-sm">
+                            KES {feed.costPerUnit.toLocaleString()}
+                          </span>
                         </div>
                       </td>
 
