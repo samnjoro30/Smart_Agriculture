@@ -4,24 +4,26 @@ import Footer from "../components/footer";
 import { Outlet } from "react-router-dom";
 
 const Dashboard = () => {
-    return( 
-        <div  className='min-h-screen flex flex-col'>
-            <Header />
-            <div className="pt-16 flex flex-1 pb-10">
-            <aside className="relative left-0 mt-5">
-                <Sidebar />
-            </aside>
+  return (
+    <div className="h-screen flex bg-gray-100">
+      
+      {/* 🔹 Sidebar */}
+      <Sidebar />
 
-            <main>
-                <Outlet />
-                <h2 className="text-xl font-semibold text-center mt-6">Welcome to the Smart Farm Admin Dashboard</h2>
-            </main>
-            
-            </div>
-            < Footer />
-        </div>
+      {/* 🔹 Main Area */}
+      <div className="flex-1 flex flex-col">
+        
+        <Header />
 
-    )
-}
+        <main className="flex-1 p-6 overflow-y-auto">
+          <Outlet />
+        </main>
+
+        <Footer />
+      </div>
+
+    </div>
+  );
+};
 
 export default Dashboard;

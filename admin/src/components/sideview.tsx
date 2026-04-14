@@ -5,12 +5,13 @@ import {
   Bell,
   BarChart3,
   Settings,
-  HelpCircle
+  Wallet,
+  CreditCard,
 } from "lucide-react";
 
 const sections = [
   {
-    title: "Overview",
+    title: "Main",
     items: [
       { name: "Dashboard", path: "/dashboard", icon: LayoutDashboard },
     ],
@@ -18,8 +19,16 @@ const sections = [
   {
     title: "Management",
     items: [
+      { name: "Livestock", path: "/dashboard/livestock", icon: LayoutDashboard },
       { name: "Farmers", path: "/dashboard/farmers", icon: Users },
       { name: "Notifications", path: "/dashboard/notifications", icon: Bell },
+    ],
+  },
+  {
+    title: "Business",
+    items: [
+      { name: "Finance", path: "/dashboard/finance", icon: Wallet },
+      { name: "Subscriptions", path: "/dashboard/subscriptions", icon: CreditCard },
     ],
   },
   {
@@ -38,13 +47,20 @@ const sections = [
 
 export default function Sidebar() {
   return (
-    <div className="fixed w-64 h-[calc(100vh-10rem)] bg-white rounded-xl shadow-md flex flex-col">
+    <aside className="w-64 h-auto l-1 bg-green-50 border-r mb-10 flex flex-col">
+
+      {/* Logo */}
+      <div className="h-16 flex items-center px-6 border-b">
+        <h1 className="text-lg font-bold text-gray-800">
+          🌱 Smart Farm
+        </h1>
+      </div>
 
       {/* Navigation */}
-      <div className="flex-1 overflow-y-auto p-4 space-y-6">
+      <div className="flex-1 overflow-y-auto px-4 py-6 space-y-6">
         {sections.map((section) => (
           <div key={section.title}>
-            <p className="text-xs uppercase text-gray-400 font-semibold mb-2">
+            <p className="text-xs font-semibold text-gray-400 uppercase mb-3 px-2">
               {section.title}
             </p>
 
@@ -55,22 +71,16 @@ export default function Sidebar() {
                   to={path}
                   end
                   className={({ isActive }) =>
-                    `flex items-center space-x-3 px-3 py-2 rounded-lg transition relative
-                    ${isActive
-                      ? "bg-green-100 text-green-700 font-semibold"
-                      : "text-gray-600 hover:bg-gray-100"}`
+                    `flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition
+                    ${
+                      isActive
+                        ? "bg-gray-100 text-green-600"
+                        : "text-gray-600 hover:bg-gray-50 hover:text-gray-900"
+                    }`
                   }
                 >
-                  {({ isActive }) => (
-                    <>
-                      {/* Active indicator */}
-                      {isActive && (
-                        <span className="absolute left-0 top-1/2 -translate-y-1/2 h-6 w-1 bg-green-600 rounded-r" />
-                      )}
-                      <Icon size={18} />
-                      <span>{name}</span>
-                    </>
-                  )}
+                  <Icon size={18} />
+                  <span>{name}</span>
                 </NavLink>
               ))}
             </div>
@@ -78,17 +88,12 @@ export default function Sidebar() {
         ))}
       </div>
 
-      {/* Sidebar Footer */}
+      {/* Footer */}
       <div className="border-t p-4 text-sm text-gray-500">
-        <div className="flex items-center space-x-2 hover:text-green-600 cursor-pointer">
-          <HelpCircle size={16} />
-          <span>Help & Support</span>
-        </div>
-        <p className="mt-2 text-xs text-gray-400">
-          Smart Farm Admin v1.0
-        </p>
+        <p>Smart Farm Admin</p>
+        <p className="text-xs text-gray-400">v1.0</p>
       </div>
 
-    </div>
+    </aside>
   );
 }
