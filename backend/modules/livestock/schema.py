@@ -23,3 +23,6 @@ class LivestockCreateRequest(BaseModel):
     # class Config:
     #     from_attributes = True
     
+class archiveLivestockRequest(BaseModel):
+    reason: str
+    notes: str = None

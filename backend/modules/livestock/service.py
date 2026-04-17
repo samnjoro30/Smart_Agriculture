@@ -1,4 +1,4 @@
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 
 from dotenv import load_dotenv
 from fastapi import APIRouter, Depends, HTTPException, Request, Response
@@ -143,3 +143,30 @@ async def update_livestock_ages_service(db: AsyncSession):
 async def group_animals_Age_group():
     pass
 
+async def archive_animal(db: AsyncSession, tag: str, payload, current_user):
+    animal = await get_animal_by_tag(db, tag)
+    if not animal:
+        logger.warning(
+            "Attempted to archive non-existent animal",
+            tag=tag,
+            user_id=current_user.id
+        )
+        raise HTTPException(status_code=404, detail="Animal not found")
+
+    if animal.status == "Archived":
+        logger.warning(
+            "Attempted to archive already archived animal",
+            tag=tag,
+            user_id=current_user.id
+        )
+        raise HTTPException(status_code=400, detail="Animal is already archived") 
+    
+    animal.status = "Archived"
+    animal.archived_at = datetime.now(timezone.utc).replace(tzinfo=None)
+    animal.archive_reason = payload.reason
+    animal.archive_notes = payload.notes
+
+    await db.commit()
+    await db.refresh(animal)
+
+    return animal
