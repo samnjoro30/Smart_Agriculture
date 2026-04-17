@@ -23,10 +23,16 @@ class Livestock(Base):
     birthDate = Column(DateTime(timezone=True))
     motherTag = Column(String(150))
     fatherTag = Column(String(150))
+
+    status = Column(String, default="ACTIVE") 
+    archive_reason = Column(String, nullable=True) # sold, died, removed
+    archive_notes = Column(String, nullable=True)
+    archived_at = Column(DateTime, nullable=True)
     user_id = Column(
         UUID(as_uuid=True), 
         ForeignKey('users.id', ondelete='CASCADE'),
         nullable=False
     )
+
     createdAt = Column(DateTime, server_default=func.now())
 

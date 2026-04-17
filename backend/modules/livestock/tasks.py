@@ -1,8 +1,11 @@
-from datetime import datetime
+from datetime import datetime, timedelta
 from celery import shared_task
 from config.database import AsyncSessionLocal 
 from sqlalchemy.ext.asyncio import AsyncSession
-from .service import update_livestock_ages_service
+from .service import (
+    update_livestock_ages_service,
+)
+from .repository import purge_old_archives
 from message_broker.config import celery_bus
 import asyncio
 #from .repostory import LivestockRepository
@@ -19,6 +22,18 @@ def update_livestock_ages():
     updated_count = asyncio.run(run())
     
     return {"updated_count": updated_count}
+
+@celery_bus.task(name="modules.livestock.tasks.cleanup_archived_animals")
+def cleanup_archived_animals():
+    async def run():
+        async with AsyncSessionLocal() as db:
+            deleted_count = await purge_old_archives(db)
+           
+            return deleted_count
+    
+    cleanup_result = asyncio.run(run())
+    
+    return {"status": "success", "permanently_removed": cleanup_result}
 
 def heat_cycle_metrics(last_insemination: datetime | None, pregnant: bool):
     if pregnant:

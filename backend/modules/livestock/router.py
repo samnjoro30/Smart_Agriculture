@@ -8,6 +8,7 @@ from .tasks import update_livestock_ages
 
 from .schema import (
     LivestockCreateRequest,
+    archiveLivestockRequest,
 )
 from .service import (
     register_animals,
@@ -15,6 +16,7 @@ from .service import (
     get_animal_by_tag_id,
     get_stats,
     update_livestock_ages_service,
+    archive_animal,
 )
 
 
@@ -70,4 +72,16 @@ async def get_animal_by_tag_by(
         raise HTTPException(status_code=404, detail="Animal not found")
 
     return {"animal": animal}
+
+@router.patch("/{tag}/archive")
+async def archive_livestock(
+    tag: str,
+    payload: archiveLivestockRequest,
+    db: AsyncSession = Depends(get_db), 
+    current_user = Depends(get_current_user)
+    ):
+
+    archived_livestock = await archive_animal(db, tag, payload, current_user)
+
+    return {"message": "Livestock archived successfully", "livestock": archived_livestock}
 
