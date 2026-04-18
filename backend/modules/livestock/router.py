@@ -4,7 +4,7 @@ from config.database import get_db
 from config.audit.logger import get_logger
 from config.setting import get_settings
 from config.security import get_current_user
-from .tasks import update_livestock_ages
+from .tasks import update_livestock_ages, cleanup_archived_animals
 
 from .schema import (
     LivestockCreateRequest,
