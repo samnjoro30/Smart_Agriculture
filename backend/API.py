@@ -29,6 +29,7 @@ from modules.auth.router import router as auth_farmer
 from modules.farmers.router import router as farm_router
 from modules.livestock.router import router as livestock_router
 from modules.nutrition.router import router as nutrition_router
+from modules.payments.router import router as payments_router
 
 
 setup_logging()
@@ -71,6 +72,7 @@ app.include_router(auth_farmer)
 app.include_router(farm_router)
 app.include_router(livestock_router)
 app.include_router(nutrition_router)
+app.include_router(payments_router)
 
 
 @app.get("/ping")
