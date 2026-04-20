@@ -76,6 +76,14 @@ class Settings(BaseSettings):
         return True
 
     
+    # mpesa
+    MPESA_CONSUMER_KEY: Optional[str] = None
+    MPESA_CONSUMER_SECRET: Optional[str] = None
+    MPESA_SHORTCODE: Optional[str] = None
+    MPESA_PASSKEY: Optional[str] = None
+    MPESA_AUTH_URL: Optional[str] = None
+    MPESA_STK_URL: Optional[str] = None
+    MPESA_CALLBACK_URL: Optional[str] = None
     
 
     # logs
