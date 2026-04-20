@@ -60,7 +60,7 @@ def upgrade() -> None:
     sa.Column('description', sa.String(length=255), nullable=True),
     sa.Column('created_at', sa.DateTime(timezone=True), server_default=sa.text('now()'), nullable=True),
     sa.ForeignKeyConstraint(['payment_id'], ['payment.id'], ),
-    sa.ForeignKeyConstraint(['user_id'], ['users.id'], ondelete='PROTECT'),
+    sa.ForeignKeyConstraint(['user_id'], ['users.id'], ondelete='CASCADE'),
     sa.PrimaryKeyConstraint('id')
     )
     op.create_index(op.f('ix_transactions_reference'), 'transactions', ['reference'], unique=True)
