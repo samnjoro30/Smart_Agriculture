@@ -11,7 +11,7 @@ import LivestockOverview from './livestock/overviewAnimals';
 //import axiosInstance from '../API/axiosInstance';
 
 export default function Farm() {
-  const [activeTab, setActiveTab] = useState('overview');
+  const [activeTab, setActiveTab] = useState('animals');
 
   return (
     <div className="p-4">
