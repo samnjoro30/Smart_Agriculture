@@ -29,6 +29,15 @@ const Gallery = dynamic(() => import('../components/FarmerGallery'), {
   ),
 });
 
+const PricingTable = dynamic(() => import('../payment/subscriptions'), {
+  ssr: false,
+  loading: () => (
+    <div className="flex items-center justify-center py-10">
+      <div className="w-12 h-12 border-4 border-green-500 border-t-transparent rounded-full animate-spin"></div>
+    </div>
+  ),
+});
+
 const Service = dynamic(() => import('../components/service'), {
   ssr: false,
   loading: () => (
@@ -95,6 +104,7 @@ export default function Homepage() {
         <Gallery />
         <LearningHub />
         <Service />
+        <PricingTable />
 
         <section className="py-12 px-4 bg-white">
           <h3 className="text-3xl md:text-4xl font-bold text-center text-green-700 mb-10">

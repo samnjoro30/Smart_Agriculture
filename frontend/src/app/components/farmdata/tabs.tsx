@@ -6,7 +6,7 @@ interface TabsProps {
 }
 
 const tabs = [
-  { id: 'overview', label: 'Overview' },
+  // { id: 'overview', label: 'Overview' },
   { id: 'animals', label: 'All Animals' },
   { id: 'register', label: 'Register Animal' },
   { id: 'categories', label: 'Categories' },

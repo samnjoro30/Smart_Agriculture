@@ -3,7 +3,6 @@
 import { useEffect, useState } from 'react';
 
 import { useRouter } from 'next/navigation';
-import ArchiveAnimalCard from '../animal_update';
 
 import {
   Activity,
@@ -19,6 +18,7 @@ import {
 } from 'lucide-react';
 
 import axiosInstance from '../../API/axiosInstance';
+import ArchiveAnimalCard from './animal_update';
 
 interface Animal {
   tag: string;
@@ -256,8 +256,7 @@ export default function AnimalDetails({ id, onBack }: Props) {
         </div>
       </div>
 
-      < ArchiveAnimalCard animalTag={animal.tag} />
-        
+      <ArchiveAnimalCard animalTag={animal.tag} />
     </div>
   );
 }

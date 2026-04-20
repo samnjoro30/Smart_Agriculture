@@ -16,12 +16,17 @@ import {
 } from 'lucide-react';
 
 import axiosInstance from '../API/axiosInstance';
+import MpesaPayment from '../payment/mpesa';
+import UserPlanStatus from '../payment/planStatus';
 
 interface Profile {
   email: string;
   username: string;
   farmname: string;
   phonenumber: string;
+  planName?: string; 
+  currentCows?:  number;
+  maxCows?: number; // e.g., current number of cows
 }
 
 export default function ProfileSetting() {
@@ -95,12 +100,12 @@ export default function ProfileSetting() {
     }
   };
 
-  if (loading) {
+  if (loading)
     return (
-      <p className="text-center text-gray-500 mt-10">Loading profile...</p>
+      <div className="flex justify-center items-center h-64">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-600"></div>
+      </div>
     );
-  }
-
   return (
     <div className="max-w-5xl mx-auto p-2 space-y-3">
       {/* setting area */}
@@ -251,77 +256,22 @@ export default function ProfileSetting() {
           </div>
         </div>
       </div>
-      {/* Notifications + Subscription */}
-      {/* <div className="grid md:grid-cols-2 gap-6"> */}
-      {/* Notification Preferences */}
-      {/* <div className="bg-green-100 p-6 rounded-xl shadow-sm border space-y-4">
-          <h3 className="text-lg font-semibold text-green-700">
-            Notification Preferences
-          </h3>
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 items-stretch">
+        {/* Left: Plan Status Card */}
+        <div className="h-full">
+          <UserPlanStatus 
+            currentPlan={profile?.planName} // e.g., "Basic"
+            animalCount={profile?.currentCows} 
+            maxAnimals={profile?.maxCows}
+            loading={loading} 
+          />
+        </div>
 
-          <div className="space-y-3 text-gray-700">
-            <label className="flex items-center justify-between">
-              <span>📱 WhatsApp Alerts</span>
-              <input type="checkbox" className="accent-green-600" />
-            </label>
-
-            <label className="flex items-center justify-between">
-              <span>📩 SMS Notifications</span>
-              <input type="checkbox" className="accent-green-600" />
-            </label>
-
-            <label className="flex items-center justify-between">
-              <span>📧 Email Updates</span>
-              <input type="checkbox" className="accent-green-600" />
-            </label>
-          </div>
-
-          <button
-            onClick={async () => {
-              try {
-                await axiosInstance.put('/users/preferences', {
-                  whatsapp: true,
-                  sms: false,
-                  email: true,
-                });
-                alert('Preferences updated');
-              } catch (err) {
-                console.error(err);
-              }
-            }}
-            className="w-full mt-4 bg-green-600 text-white py-2 rounded-lg hover:bg-green-700"
-          >
-            Save Preferences
-          </button>
-        </div> */}
-
-      {/* Subscription Plan */}
-      {/* <div className="bg-green-100 p-6 rounded-xl shadow-sm border space-y-4">
-          <h3 className="text-lg font-semibold text-green-700">
-            Subscription Plan
-          </h3>
-
-          <div className="bg-green-50 p-4 rounded-lg">
-            <p className="text-gray-700">
-              <strong>Plan:</strong> Basic
-            </p>
-
-            <p className="text-gray-700">
-              <strong>Status:</strong>
-              <span className="text-green-600 font-medium ml-1">Active</span>
-            </p>
-
-            <p className="text-gray-500 text-sm mt-2">
-              Access to livestock tracking, reproduction monitoring, and basic
-              analytics.
-            </p>
-          </div>
-
-          <button className="w-full bg-green-600 text-white py-2 rounded-lg hover:bg-green-700">
-            Upgrade Plan
-          </button>
-        </div> */}
-      {/* </div> */}
+        {/* Right: M-Pesa Payment Card */}
+        <div className="h-full">
+          <MpesaPayment/>
+        </div>
+      </div>
     </div>
   );
 }
