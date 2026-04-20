@@ -2,38 +2,35 @@
 
 import { revalidatePath } from 'next/cache';
 
-export async function archiveAnimal(formData: {
+//import { cookies } from 'next/headers';
+import { serverAPI } from '../API/serverAPI';
+
+type ArchiveAnimalPayload = {
   tag: string;
   reason: string;
-  notes: string;
-}) {
+  notes?: string;
+};
+
+export async function archiveAnimal({
+  tag,
+  reason,
+  notes,
+}: ArchiveAnimalPayload) {
   try {
-    const response = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/livestock/${formData.tag}/release`,
-      {
-        method: 'PATCH',
-        headers: {
-          'Content-Type': 'application/json',
-          // If you have auth, add your token here
-          // 'Authorization': `Bearer ${token}`
-        },
-        body: JSON.stringify({
-          reason: formData.reason,
-          notes: formData.notes,
-        }),
-      }
-    );
+    await serverAPI.patch(`/livestock/${tag}/archive`, {
+      reason,
+      notes,
+    });
 
-    if (!response.ok) {
-      throw new Error('Failed to update animal in FastAPI');
-    }
+    revalidatePath('/dashboard');
 
-    // This tells Next.js to refresh the data on the livestock page
-    revalidatePath('/dashboard/animals');
-
-    return { success: true };
-  } catch (error) {
-    console.error(error);
-    return { success: false, message: 'Server error occurred' };
+    return {
+      success: true,
+    };
+  } catch (error: any) {
+    return {
+      success: false,
+      message: 'Failed to archive animal',
+    };
   }
 }
