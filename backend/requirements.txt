@@ -86,6 +86,7 @@ python-dateutil==2.9.0.post0
 python-dotenv==1.1.0
 python-jose==3.5.0
 pytokens==0.3.0
+pytz==2026.1.post1
 PyYAML==6.0.3
 redis==7.2.0
 requests==2.32.5

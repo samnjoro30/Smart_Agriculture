@@ -24,6 +24,7 @@ class Users(Base):
         back_populates="user",
         cascade="all, delete-orphan",
     )
+    transactions = relationship("PaymentTransaction", back_populates="user")
 
 
 class RefreshToken(Base):
