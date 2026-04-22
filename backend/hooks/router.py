@@ -8,9 +8,14 @@ app = APIRouter()
 @app.websocket("/ws/{user_id}")
 async def websocket_endpoint(websocket: WebSocket, user_id: str):
     token  = websocket.query_params.get("token")
-    user_id = await get_current_user(token=token)
+    #user_id = await get_current_user(token=token)
+    try:
+        user = await get_current_user(token=token)
+        if str(user.id) != user_id:
+            await websocket.close(code=1008)
+            return
 
-    if not user_id:
+    except Exception:
         await websocket.close(code=1008)
         return
     
