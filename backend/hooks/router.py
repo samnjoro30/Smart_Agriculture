@@ -23,6 +23,8 @@ async def websocket_endpoint(websocket: WebSocket, user_id: str):
 
     try:
         while True:
-            await websocket.receive_text()
+            data = await websocket.receive_text()
+            if data == "pong":
+                manager.update_heartbeat(user_id, websocket)
     except Exception as e:
         manager.disconnect(websocket, user_id)
