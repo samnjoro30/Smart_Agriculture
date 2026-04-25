@@ -71,7 +71,7 @@ async def check_payment_status(
         raise HTTPException(status_code=500, detail="Internal server error")
 
 
-@router.post("/mpesa/stk-push-callback")
+@router.post("/mpesa/callback")
 async def stk_push_callback(
     request: Request,
     db: AsyncSession = Depends(get_db)
