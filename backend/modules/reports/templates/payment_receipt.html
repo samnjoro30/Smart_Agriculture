@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        .receipt-card { width: 300px; margin: auto; border: 1px dashed #000; padding: 20px; }
+        .center { text-align: center; }
+    </style>
+</head>
+<body>
+    <div class="receipt-card">
+        <h2 class="center">PAYMENT RECEIPT</h2>
+        <p><strong>Transaction Ref:</strong> {{ mpesa_receipt_number }}</p>
+        <p><strong>Date:</strong> {{ completed_at }}</p>
+        <p><strong>Phone:</strong> {{ phone_number }}</p>
+        <hr>
+        <p><strong>Service:</strong> {{ report_type }} Generation</p>
+        <h3 class="center">Amount Paid: {{ currency }} {{ amount }}</h3>
+        <p class="center" style="font-size: 10px;">Thank you for using our Smart Farm System</p>
+    </div>
+</body>
+</html>
