@@ -5,6 +5,12 @@ import uuid
 from sqlalchemy.orm import relationship
 from config.database import Base
 
+# from enum import Enum
+# import enum
+
+# class UserRole(str, enum.Enum):
+#     ADMIN = "admin"
+#     FARMER = "farmer"
 
 class Users(Base):
     __tablename__ = "users"
@@ -19,12 +25,16 @@ class Users(Base):
     phonenumber = Column(String(200), unique=True, index=True)
     password = Column(String(200))
     createdAt = Column(DateTime, server_default=func.now())
+    is_active = Column(Boolean(), default=True, index=True)
     refresh_tokens = relationship(
         "RefreshToken",
         back_populates="user",
         cascade="all, delete-orphan",
     )
     transactions = relationship("PaymentTransaction", back_populates="user")
+    #role = Column(String(20), default=UserRole.FARMER, nullable=False)
+
+    reports = relationship("ReportRecord", backref="user")
 
 
 class RefreshToken(Base):

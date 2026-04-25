@@ -8,6 +8,10 @@ from modules.livestock.model import Livestock
 from modules.notifications.model import  Notification, NotificationPreference, NotificationDelivery
 from modules.nutrition.model import Feeds, FeedUsage, FeedPurchase
 from modules.payments.model import PaymentCheck, PaymentTransaction
+from modules.reproduction.model import MilkRecord
+from modules.reports.model import ReportRecord, ReportConfig
+
+from modules.Admins.auth.model import Admin
 from alembic import context
 from config.database import Base
 

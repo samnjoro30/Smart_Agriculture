@@ -72,6 +72,35 @@ async def register_farm(db: AsyncSession, payload):
 
     return user
 
+async def login_user(db: AsyncSession, payload, required_role: str = None):
+    user = await get_user_by_identifier(db, payload.identifier)
+    
+    if not user or not await verify_password(payload.password, user.password):
+        raise HTTPException(status_code=400, detail="Invalid credentials")
+
+    # If you want to restrict this specific endpoint to Admins only:
+    if required_role and user.role != required_role:
+        raise HTTPException(status_code=403, detail="Access denied: Admin only")
+
+    # Include role in the JWT payload
+    access_token = create_access_token(data={"sub": user.email, "role": user.role})
+    refresh_token = create_refresh_token({"sub": user.email})
+
+    await store_refresh_token(
+        db=db,
+        user_id=user.id,
+        token=refresh_token,
+        expires_at=datetime.utcnow() + timedelta(days=7),
+    )
+
+    await db.commit()
+    # ... rest of your code ...
+    return {
+        "user_id": user.id,
+        "role": user.role, # Return role to frontend
+        "access_token": access_token,
+        "refresh_token": refresh_token,
+    }
 
 async def login_farmer(db: AsyncSession, payload):
     user = await get_user_by_identifier(db, payload.identifier)
