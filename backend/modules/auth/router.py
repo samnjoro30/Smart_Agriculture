@@ -18,6 +18,7 @@ from .schemas import (
 from .service import (
     register_farm,
     login_farmer, 
+    login_user,
     logout_user, 
     Verify_farmer, 
     refresh_access_token, 
@@ -39,6 +40,9 @@ async def register(payload: RegisterRequest, db: AsyncSession = Depends(get_db))
     logger.info("farm registered succesfully", user_id=user.id)
     return {"message": "Registered successfully"}
 
+@router.post("/admin/login", response_model=Token)
+async def admin_login(payload: LoginRequest, db: AsyncSession = Depends(get_db)):
+    return await login_user(db, payload, required_role="admin")
 
 @router.post("/login", response_model=Token)
 async def login(
