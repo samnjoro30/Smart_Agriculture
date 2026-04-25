@@ -37,11 +37,14 @@ class PaymentCheck(Base):
     initiated_at = Column(DateTime(timezone=True), server_default=func.now())
     updated_at = Column(DateTime(timezone=True), onupdate=func.now())
     completed_at = Column(DateTime(timezone=True), nullable=True)
+
+    report = relationship("ReportRecord", backref="payment_origin", uselist=False)
      
     __table_args__ = (
         Index("idx_user_status", "user_id", "status"),
-        Index("idx_checkout_status", "checkout_request_id", "status"), 
+        Index("idx_checkout_status", "checkout_request_id", "status"),
     )
+
 
 class PaymentTransaction(Base):
     __tablename__ = 'transactions'

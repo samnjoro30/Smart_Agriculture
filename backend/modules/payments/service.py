@@ -7,6 +7,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from starlette.status import HTTP_201_CREATED
 from config.setting import get_settings
 from config.audit.logger import get_logger
+import asyncio
 import httpx
 import base64
 import pytz
@@ -16,6 +17,7 @@ from .repository import (
     update_callback,
     update_callback_with_retry,
     get_payment_by_checkout_id_from_db,
+    update_payment_and_ledger,
 )
 from .model import PaymentCheck
 
@@ -109,9 +111,11 @@ async def initiate_stk_push(db: AsyncSession, payload, current_user):
 
 
 async def handle_stk_push_callback(db: AsyncSession, callback_data):
+    await asyncio.sleep(2)  # Short delay to allow DB record creation, can be optimized with better retry logic
     logger.info("MPESA CALLBACK RAW", payload=callback_data)
     data = callback_data.get("Body", {}).get("stkCallback", {})
     res_code = data.get("ResultCode")
+    res_desc = data.get("ResultDesc")
     checkout_id = data.get("CheckoutRequestID")
     
 
@@ -122,17 +126,20 @@ async def handle_stk_push_callback(db: AsyncSession, callback_data):
 
     if res_code == 0:
         mpesa_receipt = extract_metadata(metadata_items, "MpesaReceiptNumber")
-        status = "success"
+        status = "SUCCESS"
     else:
         mpesa_receipt = None
         status = "FAILED"
 
     # Process the update
-    payment = await update_callback_with_retry(
-        db, 
-        checkout_id, 
-        status=status, 
-        mpesa_receipt_number=mpesa_receipt
+    payment = await update_payment_and_ledger(
+        db=db,
+        checkout_id=checkout_id,
+        status=status,
+        res_code=res_code,
+        res_desc=res_desc,
+        mpesa_receipt=mpesa_receipt,
+        raw_payload=callback_data
     )
 
     if not payment:
