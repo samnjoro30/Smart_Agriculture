@@ -7,11 +7,12 @@ import Tabs from './farmdata/tabs';
 import AnimalsList from './livestock/ListAnimals';
 import RegisterAnimal from './livestock/RegisterAnimals';
 import LivestockOverview from './livestock/overviewAnimals';
+import MilkProduction from './milkProduction/milk';
 
 //import axiosInstance from '../API/axiosInstance';
 
 export default function Farm() {
-  const [activeTab, setActiveTab] = useState('animals');
+  const [activeTab, setActiveTab] = useState('register');
 
   return (
     <div className="p-4">
@@ -19,6 +20,7 @@ export default function Farm() {
       <div className="mt-2">
         {activeTab === 'overview' && <LivestockOverview />}
         {activeTab === 'register' && <RegisterAnimal />}
+        {activeTab === 'milk production' && <MilkProduction />}
         {activeTab === 'animals' && <AnimalsList />}
         {activeTab === 'Feed stock' && <FeedStockPage />}
       </div>
