@@ -2,6 +2,7 @@ import ssl
 import os
 import certifi
 from config.setting import get_settings
+import worker.models
 
 settings = get_settings()
 

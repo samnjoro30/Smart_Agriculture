@@ -9,9 +9,11 @@ celery_app = Celery(
 celery_app.conf.beat_schedule = BEAT_SCHEDULE
 celery_app.conf.update(CELERY_CONFIG)
 
+
 # Optional: auto-discover tasks in modules
 celery_app.autodiscover_tasks([
     "modules.auth.tasks",
     "modules.livestock.tasks",
     "modules.nutrition.tasks",
+    "modules.notifications.tasks",
 ])
