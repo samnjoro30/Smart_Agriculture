@@ -75,6 +75,11 @@ class Settings(BaseSettings):
     def cookie_secure(self) -> bool:
         return True
 
+    MAIL_FROM: Optional[str] = None
+    MAIL_PASSWORD: Optional[str] = None
+    MAIL_USERNAME: Optional[str] = None
+    MAIL_PORT: Optional[int] = None
+    MAIL_SERVER: Optional[str] = None
     
     # mpesa
     MPESA_CONSUMER_KEY: Optional[str] = None
