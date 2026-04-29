@@ -30,6 +30,14 @@ from modules.farmers.router import router as farm_router
 from modules.livestock.router import router as livestock_router
 from modules.nutrition.router import router as nutrition_router
 from modules.payments.router import router as payments_router
+from modules.reproduction.router import router as reproduction_router
+from modules.analytics.router import router as analytics_router
+from modules.reports.router import router as reports_router
+
+from modules.Admins.auth.router import router as auth_admin
+
+from hooks.tasks import cleanup_dead_connections
+from hooks.call import manager
 
 
 setup_logging()
@@ -73,6 +81,12 @@ app.include_router(farm_router)
 app.include_router(livestock_router)
 app.include_router(nutrition_router)
 app.include_router(payments_router)
+app.include_router(reproduction_router)
+app.include_router(analytics_router)
+app.include_router(reports_router)
+
+app.include_router(auth_admin)
+
 
 
 @app.get("/ping")
@@ -93,6 +107,8 @@ async def add_process_time_header(request: Request, call_next):
 @app.on_event("startup")
 async def startup():
     await init_redis()
+    asyncio.create_task(manager.send_ping())
+    asyncio.create_task(cleanup_dead_connections(manager))
     async def warm_db():
         async with engine.begin() as conn:
             await conn.execute(text("SELECT 1"))
