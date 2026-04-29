@@ -158,14 +158,9 @@ export default function RegisterAnimal() {
       setTimeout(() => {
         setMessage('');
       }, 3000);
-      router.push(`/dashboard/animals/${newAnimal.tag}`);
+      //router.push(`/dashboard/animals/${newAnimal.tag}`);
     } catch (err: any) {
-      if (err.response) {
-        setError(err.response.data?.message || 'Something went wrong');
-        console.log(err.response.data);
-      } else {
-        setError('Network error. Check your connection.');
-      }
+      console.error('Registration error:', err);
     } finally {
       setLoading(false);
     }
