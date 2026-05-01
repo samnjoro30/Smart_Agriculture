@@ -27,6 +27,9 @@ const Profile = dynamic(() => import('./profile'), {
 const NotificationComponent = dynamic(() => import('./notification'), {
   loading: () => <p>Loading...</p>,
 });
+const Reports = dynamic(() => import('./reports'), {
+  loading: () => <p>Loading...</p>,
+});
 const FarmerInput = dynamic(() => import('./FarmerInput'), {
   loading: () => <p>Loading...</p>,
 });
@@ -43,8 +46,9 @@ const Alerts = dynamic(() => import('./alerts'), {
 const mobileNavItems = [
   { id: 'overview', label: 'Home', icon: Home },
   { id: 'farmer', label: 'Inputs', icon: Package },
+  { id: 'reports', label: 'Reports', icon: Brain },
   { id: 'Analytics', label: 'Analytics', icon: BarChart3 },
-  { id: 'alerts', label: 'Alerts', icon: AlertCircle },
+  //{ id: 'alerts', label: 'Alerts', icon: AlertCircle },
   { id: 'profile', label: 'Profile', icon: User },
 ];
 
@@ -53,16 +57,17 @@ const drawerSections = [
     title: 'Main',
     items: [
       { id: 'overview', label: 'Overview', icon: LayoutDashboard },
-      { id: 'notifications', label: 'Notifications', icon: Bell },
+      // { id: 'notifications', label: 'Notifications', icon: Bell },
     ],
   },
   {
     title: 'Product',
     items: [
       { id: 'farmer', label: 'Farm Inputs', icon: Package },
-      { id: 'AI Insights', label: 'AI Insights', icon: Brain },
+      { id: 'reports', label: 'Reports', icon: Brain },
+     // { id: 'AI Insights', label: 'AI Insights', icon: Brain },
       { id: 'Analytics', label: 'Farm Analytics', icon: BarChart3 },
-      { id: 'alerts', label: 'Alerts', icon: AlertCircle },
+      // { id: 'alerts', label: 'Alerts', icon: AlertCircle },
       { id: 'profile', label: 'Farmer Profile', icon: User },
     ],
   },
@@ -91,12 +96,14 @@ export default function Sidebar() {
         return <Profile />;
       case 'Contact':
         return <Contact />;
+      case 'reports':
+        return <Reports />;
       case 'farmer':
         return <FarmerInput />;
       case 'Analytics':
         return <FarmAnalytics />;
-      case 'alerts':
-        return <Alerts />;
+      // case 'alerts':
+      //   return <Alerts />;
       default:
         return <p className="p-4 text-gray-500">Coming soon</p>;
     }
@@ -130,7 +137,7 @@ export default function Sidebar() {
             <div className="space-y-1.5">
               {[
                 { id: 'overview', label: 'Overview', icon: LayoutDashboard },
-                { id: 'notifications', label: 'Notifications', icon: Bell },
+                // { id: 'notifications', label: 'Notifications', icon: Bell },
               ].map(({ id, label, icon: Icon }) => {
                 const isActive = active === id;
 
@@ -173,9 +180,9 @@ export default function Sidebar() {
             <div className="space-y-1.5">
               {[
                 { id: 'farmer', label: 'Farm Inputs', icon: Package },
-                { id: 'AI Insights', label: 'AI Insights', icon: Brain },
+                { id: 'reports', label: 'Reports', icon: Brain },
                 { id: 'Analytics', label: 'Farm Analytics', icon: BarChart3 },
-                { id: 'alerts', label: 'Alerts', icon: AlertCircle },
+                // { id: 'alerts', label: 'Alerts', icon: AlertCircle },
                 { id: 'profile', label: 'Farmer Profile', icon: User },
               ].map(({ id, label, icon: Icon }) => {
                 const isActive = active === id;

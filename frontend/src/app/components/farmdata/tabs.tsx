@@ -7,11 +7,13 @@ interface TabsProps {
 
 const tabs = [
   // { id: 'overview', label: 'Overview' },
-  { id: 'animals', label: 'All Animals' },
+  
   { id: 'register', label: 'Register Animal' },
+  { id: 'milk production', label: 'Milk Production' },
   { id: 'categories', label: 'Categories' },
   { id: 'Feed stock', label: 'Feed stock' },
-  { id: 'reports', label: 'Reports' },
+  { id: 'animals', label: 'All Animals' },
+ // { id: 'reports', label: 'Reports' },
 ];
 
 export default function Tabs({ activeTab, setActiveTab }: TabsProps) {
