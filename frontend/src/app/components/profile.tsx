@@ -24,8 +24,8 @@ interface Profile {
   username: string;
   farmname: string;
   phonenumber: string;
-  planName?: string; 
-  currentCows?:  number;
+  planName?: string;
+  currentCows?: number;
   maxCows?: number; // e.g., current number of cows
 }
 
@@ -259,17 +259,17 @@ export default function ProfileSetting() {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 items-stretch">
         {/* Left: Plan Status Card */}
         <div className="h-full">
-          <UserPlanStatus 
+          <UserPlanStatus
             currentPlan={profile?.planName} // e.g., "Basic"
-            animalCount={profile?.currentCows} 
+            animalCount={profile?.currentCows}
             maxAnimals={profile?.maxCows}
-            loading={loading} 
+            loading={loading}
           />
         </div>
 
         {/* Right: M-Pesa Payment Card */}
         <div className="h-full">
-          <MpesaPayment/>
+          <MpesaPayment />
         </div>
       </div>
     </div>
