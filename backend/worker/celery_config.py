@@ -13,17 +13,13 @@ broker_url = settings.REDIS_URL_BROKER or ""
 CELERY_CONFIG = {
     "broker_url": broker_url,
     "result_backend": broker_url,
-
     "accept_content": ["json"],
     "task_serializer": "json",
     "result_serializer": "json",
-
     "timezone": "Africa/Nairobi",
     "enable_utc": True,
-
     "task_track_started": True,
     "task_time_limit": 30 * 60,
-
     # Reliability
     "task_acks_late": True,
     "worker_prefetch_multiplier": 1,
