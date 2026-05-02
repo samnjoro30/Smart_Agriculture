@@ -104,13 +104,13 @@ export default function ReportsDashboard() {
             <h1 className="text-3xl font-bold text-gray-900">Farm Analytics</h1>
             <p className="text-gray-500">Monitor your livestock financial performance</p>
           </div>
-          {/* <button 
+          <button 
             onClick={handleRequestReport}
             disabled={isProcessingPayment}
             className="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-xl font-bold shadow-lg shadow-green-200 transition-all disabled:bg-gray-400"
           >
             {isProcessingPayment ? "Processing M-Pesa..." : "Generate Official Report"}
-          </button> */}
+          </button>
         </div>
 
         {/* Filters */}
