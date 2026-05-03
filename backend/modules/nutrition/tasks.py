@@ -1,5 +1,13 @@
+from datetime import datetime, timedelta
+from celery import shared_task
+from config.database import AsyncSessionLocal 
+from sqlalchemy.ext.asyncio import AsyncSession
+
+from message_broker.config import celery_bus
+import asyncio
 
 
+@celery_bus.task(name="modules.nutrition.tasks.feed_inventory_check")
 def get_feed_usage():
     #total_used
     #avg_daily_usage

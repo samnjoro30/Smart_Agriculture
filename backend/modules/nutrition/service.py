@@ -11,46 +11,86 @@ from config.audit.logger import get_logger
 
 from .model import (
     Feeds,
+    FeedPurchase,
+    FeedUsage,
 )
 
-from .repository import (
-        create_feed,
-        get_all_feeds,
-        update_feed,
-        delete_feed,
-        get_feeds_summary,
-    )
+from .repository import FeedRepository
 
 logger = get_logger("NUTRITION")
 
-async def create_feed_service(db: AsyncSession, payload, current_user):
+class FeedService:
 
-    if payload.quantity< 0:
-        raise ValueError("Quantity cannot be negative")
+    @staticmethod
+    async def create_feed_service(db: AsyncSession, payload, current_user):
 
-    feed_data = payload.model_dump(exclude_unset=True)
-    feed_data["user_id"] = current_user.id
+        if payload.quantity< 0:
+            raise ValueError("Quantity cannot be negative")
+
+        feed_data = payload.model_dump(exclude_unset=True)
+        feed_data["user_id"] = current_user.id
     
-    feed = await create_feed(feed_data, db)
+        feed = await FeedRepository.create_feed(feed_data, db)
 
-    await db.commit()
+        await db.commit()
     
-    return feed
+        return feed
+    
+    @staticmethod
+    async def purchase_feed_service(db: AsyncSession, feed_id, quantity, total_cost, current_user):
+        feed = await FeedRepository.get_feed(db, feed_id, current_user.id)
+        if not feed:
+            raise HTTPException(status_code=404, detail="Feed not found")
+        
+        purchase = FeedPurchase(
+            feed_id=feed.id,
+            quantity=feed.quantity,
+            total_cost=feed.quantity * feed.costPerUnit,
+            purchased_at=feed.createdAt
+        )
+        feed.quantity += quantity
 
-async def get_all_feeds_service(db: AsyncSession, current_user):
-    feeds = await get_all_feeds(db, current_user.id)
-    summary = await get_feeds_summary(db, current_user.id)
+        await FeedRepository.create_purchase(db, purchase)
+        return feed
 
-    return {
-        "totalValue": summary["total_value"],
-        "totalItems": summary["total_items"],
-        "lowStock": summary["low_stock_items"],
-        "feeds": feeds
-    }
+    @staticmethod
+    async def usage_feed(db: AsyncSession, feed_id, quantity, current_user):
+        feed = await FeedRepository.get_feed(db, feed_id, livestock_id, quantity, current_user.id)
+        if not feed:
+            raise HTTPException(status_code=404, detail="Feed not found")
+        
+        if feed.quantity < quantity:
+            raise HTTPException(status_code=400, detail="Insufficient feed stock")
+        
+        usage = FeedUsage(
+            feed_id=feed.id,
+            livestock_id=livestock_id,
+            quantity=quantity,
+            used_at=datetime.utcnow()
+        )
+
+        feed.quantity -= quantity
+
+        await FeedRepository.create_usage(db, usage)
+
+        await db.commit()
+        return usage
+
+    @staticmethod
+    async def get_all_feeds_service(db: AsyncSession, current_user):
+        feeds = await FeedRepository.get_all_feeds(db, current_user.id)
+        summary = await FeedRepository.get_feeds_summary(db, current_user.id)
+
+        return {
+            "totalValue": summary["total_value"],
+            "totalItems": summary["total_items"],
+            "lowStock": summary["low_stock_items"],
+            "feeds": feeds
+        }
    
 
-async def update_feed_service(db: AsyncSession):
-    pass
+    async def update_feed_service(db: AsyncSession):
+        pass
 
-async def delete_feed_service(db: AsyncSession):
-    pass
+    async def delete_feed_service(db: AsyncSession):
+        pass

@@ -1,6 +1,3 @@
-
-
-
 async def filter_channels(preferences, channels: list[str]) -> list[str]:
     if not preferences:
         return ["email"]  # fallback: allow all

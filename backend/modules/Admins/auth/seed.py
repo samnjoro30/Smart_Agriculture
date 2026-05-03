@@ -1,8 +1,9 @@
 import asyncio
-from config.database import AsyncSessionLocal 
+from config.database import AsyncSessionLocal
 from .model import Admin
 from utils.hashing import hash_password
 from sqlalchemy import select
+
 
 async def seed():
     async with AsyncSessionLocal() as db:
@@ -21,9 +22,11 @@ async def seed():
         new_admin = Admin(
             full_name="samuel njoroge",
             email=admin_email,
-            password= await hash_password("Samnjoro@2030") # Ensure hash_password uses bcrypt/argon2
+            password=await hash_password(
+                "Samnjoro@2030"
+            ),  # Ensure hash_password uses bcrypt/argon2
         )
-        
+
         try:
             db.add(new_admin)
             await db.commit()
@@ -32,7 +35,8 @@ async def seed():
             await db.rollback()
             print(f"An error occurred during seeding: {e}")
 
+
 if __name__ == "__main__":
-    # If you are on Windows and see "Event loop is closed" errors, 
+    # If you are on Windows and see "Event loop is closed" errors,
     # you can use: asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
     asyncio.run(seed())

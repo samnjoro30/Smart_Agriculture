@@ -3,6 +3,7 @@ from typing import Optional, List
 from uuid import UUID
 from datetime import datetime
 
+
 class FeedBase(BaseModel):
     name: str
     category: Optional[str] = None
@@ -11,8 +12,10 @@ class FeedBase(BaseModel):
     costPerUnit: Optional[float] = 0.0
     supplier: Optional[str] = None
 
+
 class FeedCreate(FeedBase):
     pass
+
 
 class FeedUpdate(BaseModel):
     name: Optional[str]
@@ -22,11 +25,13 @@ class FeedUpdate(BaseModel):
     costPerUnit: Optional[float]
     supplier: Optional[str]
 
+
 class FeedStockResponse(BaseModel):
     totalValue: float
     totalItems: int
     lowStock: int
     feeds: List[FeedCreate]
+
 
 class FeedOut(FeedBase):
     id: UUID

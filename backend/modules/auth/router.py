@@ -1,4 +1,11 @@
-from fastapi import APIRouter, Depends, HTTPException, Request, Response, BackgroundTasks
+from fastapi import (
+    APIRouter,
+    Depends,
+    HTTPException,
+    Request,
+    Response,
+    BackgroundTasks,
+)
 from sqlalchemy.ext.asyncio import AsyncSession
 from fastapi.responses import JSONResponse
 from config.database import get_db
@@ -17,13 +24,13 @@ from .schemas import (
 )
 from .service import (
     register_farm,
-    login_farmer, 
+    login_farmer,
     login_user,
-    logout_user, 
-    Verify_farmer, 
-    refresh_access_token, 
-    resend_verification_code, 
-    store_refresh_token_background, 
+    logout_user,
+    Verify_farmer,
+    refresh_access_token,
+    resend_verification_code,
+    store_refresh_token_background,
     RegisterForNewsLetter,
 )
 
@@ -40,9 +47,11 @@ async def register(payload: RegisterRequest, db: AsyncSession = Depends(get_db))
     logger.info("farm registered succesfully", user_id=user.id)
     return {"message": "Registered successfully"}
 
+
 @router.post("/admin/login", response_model=Token)
 async def admin_login(payload: LoginRequest, db: AsyncSession = Depends(get_db)):
     return await login_user(db, payload, required_role="admin")
+
 
 @router.post("/login", response_model=Token)
 async def login(
@@ -61,7 +70,7 @@ async def login(
         datetime.utcnow() + timedelta(days=7),
     )
 
-    #response = JSONResponse(content=result)
+    # response = JSONResponse(content=result)
 
     response.set_cookie(
         key="access_token",
@@ -80,8 +89,8 @@ async def login(
         samesite=settings.cookie_samesite,
         path="/",
     )
-    
-    #logger.info("login successful", user_id=result.id)
+
+    # logger.info("login successful", user_id=result.id)
 
     return result
 
@@ -96,7 +105,7 @@ async def refresh(
 
     result = await refresh_access_token(db, old_token)
 
-    #response = JSONResponse(content={"access_token": result["access_token"]})
+    # response = JSONResponse(content={"access_token": result["access_token"]})
 
     response.set_cookie(
         key="access_token",
@@ -156,5 +165,6 @@ async def news_letter(payload: RegisterSubscribers, db: AsyncSession = Depends(g
     result = await RegisterForNewsLetter(db, payload)
 
     return result
+
 
 # @router.post("/auth/resend-verificion-code")

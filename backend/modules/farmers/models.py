@@ -5,5 +5,6 @@ import uuid
 from sqlalchemy.orm import relationship
 from config.database import Base
 
+
 class Farmer(Base):
-    __tablename__ = 'farmers'
+    __tablename__ = "farmers"

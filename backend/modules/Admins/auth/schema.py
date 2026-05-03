@@ -3,9 +3,11 @@ from uuid import UUID
 from datetime import datetime
 from typing import List, Dict
 
+
 class AdminLoginRequest(BaseModel):
     email: EmailStr
     password: str
+
 
 class AdminResponse(BaseModel):
     id: UUID
@@ -16,16 +18,19 @@ class AdminResponse(BaseModel):
     class Config:
         from_attributes = True
 
+
 class TokenResponse(BaseModel):
     access_token: str
     token_type: str = "bearer"
     user: AdminResponse
+
 
 class ActivityItem(BaseModel):
     id: str
     name: str
     email: str
     time: str
+
 
 class DashboardOverviewResponse(BaseModel):
     admin_name: str
@@ -35,13 +40,16 @@ class DashboardOverviewResponse(BaseModel):
     revenue: int
     recent_activities: List[ActivityItem]
 
+
 class ReproStats(BaseModel):
     pregnant: int
     in_heat: int
 
+
 class SpeciesItem(BaseModel):
     species: str
     count: int
+
 
 class AdminLivestockStatsResponse(BaseModel):
     total_animals: int
@@ -49,6 +57,7 @@ class AdminLivestockStatsResponse(BaseModel):
     health_distribution: Dict[str, int]
     species_breakdown: List[SpeciesItem]
     system_health_score: float
+
 
 class FarmerListResponse(BaseModel):
     id: str
@@ -59,8 +68,10 @@ class FarmerListResponse(BaseModel):
     is_active: bool
     joined_at: str
 
+
 class UpdateStatusSchema(BaseModel):
     is_active: bool
+
 
 class TransactionItem(BaseModel):
     id: str
@@ -69,6 +80,7 @@ class TransactionItem(BaseModel):
     category: str
     reference: str
     date: str
+
 
 class FinanceOverviewResponse(BaseModel):
     total_revenue: float

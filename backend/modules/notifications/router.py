@@ -12,19 +12,15 @@ async def notify(
     title: str,
     message: str,
     channels: list[str],
-    notification_type: str
+    notification_type: str,
 ):
-    prefs = await get_user_preferences(
-        db,
-        user.id,
-        notification_type
-    )
+    prefs = await get_user_preferences(db, user.id, notification_type)
 
     filtered_channels = await filter_channels(prefs, channels)
 
     if not filtered_channels:
         return  # user disabled everything
-    
+
     notification = Notification(
         user_id=user.id,
         title=title,
@@ -41,7 +37,7 @@ async def notify(
         recipient = get_recipient(user, channel)
 
         if not recipient:
-            continue  
+            continue
 
         payload = {
             "to": recipient,
@@ -51,5 +47,3 @@ async def notify(
 
         # send per channel
         send_notification_task.delay(payload, channel)
-    
-    

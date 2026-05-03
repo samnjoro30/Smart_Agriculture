@@ -1,6 +1,6 @@
 import africastalking
 from config.setting import get_settings
-from config.audit.logger import get_logger  
+from config.audit.logger import get_logger
 from modules.notifications.schemas import NotificationPayload
 
 settings = get_settings()

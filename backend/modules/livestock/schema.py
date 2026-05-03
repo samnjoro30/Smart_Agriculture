@@ -3,6 +3,7 @@ from uuid import UUID
 from datetime import datetime
 from typing import Optional
 
+
 class LivestockCreateRequest(BaseModel):
     tag: constr(min_length=1)
     name: Optional[str] = None
@@ -22,7 +23,8 @@ class LivestockCreateRequest(BaseModel):
 
     # class Config:
     #     from_attributes = True
-    
+
+
 class archiveLivestockRequest(BaseModel):
     reason: str
     notes: str = None

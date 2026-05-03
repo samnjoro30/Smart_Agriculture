@@ -3,6 +3,7 @@ from sqlalchemy import Column, String, DateTime, func
 from sqlalchemy.dialects.postgresql import UUID
 from config.database import Base
 
+
 class Admin(Base):
     __tablename__ = "admins"
 

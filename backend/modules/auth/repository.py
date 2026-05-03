@@ -1,4 +1,4 @@
-#from db.postgre_db import AsyncSession
+# from db.postgre_db import AsyncSession
 from datetime import datetime
 from sqlalchemy.orm import selectinload
 from sqlalchemy import text, select, or_
@@ -8,10 +8,9 @@ from .security import detect_identifier, normalize_identifier
 
 
 async def get_user_by_email(db: AsyncSession, email: str):
-    result = await db.execute(
-        select(Users).where(Users.email == email)
-    )
+    result = await db.execute(select(Users).where(Users.email == email))
     return result.scalar_one_or_none()
+
 
 async def get_user_by_identifier(db: AsyncSession, identifier: str):
     id_type = detect_identifier(identifier)
@@ -19,7 +18,7 @@ async def get_user_by_identifier(db: AsyncSession, identifier: str):
         query = select(Users).where(Users.email == identifier)
 
     elif id_type == "phone":
-        #identifier = normalize_identifier(identifier)
+        # identifier = normalize_identifier(identifier)
         query = select(Users).where(Users.phonenumber == identifier)
 
     else:
@@ -28,11 +27,12 @@ async def get_user_by_identifier(db: AsyncSession, identifier: str):
     result = await db.execute(query)
     return result.scalar_one_or_none()
 
+
 async def create_user(user_data: dict, db: AsyncSession):
-    user = Users(**user_data)   
-    db.add(user)                
-    await db.flush()            
-    await db.refresh(user)      
+    user = Users(**user_data)
+    db.add(user)
+    await db.flush()
+    await db.refresh(user)
     return user
 
 
@@ -49,6 +49,7 @@ async def store_refresh_token(
     await db.flush()
     return refresh
 
+
 async def get_refresh_token(db: AsyncSession, token: str):
     result = await db.execute(
         select(RefreshToken)
@@ -60,29 +61,29 @@ async def get_refresh_token(db: AsyncSession, token: str):
 
 
 async def revoke_refresh_token(db: AsyncSession, token: str):
-    result = await db.execute(
-        select(RefreshToken).where(RefreshToken.token == token)
-    )
+    result = await db.execute(select(RefreshToken).where(RefreshToken.token == token))
 
-    token_obj = result.scalars().first() 
+    token_obj = result.scalars().first()
 
     if token_obj:
         token_obj.is_revoked = True
 
+
 async def verified_update(user: Users):
     user.is_verified = True
     user.otp = None
+
 
 async def get_subscriber_by_email(db: AsyncSession, email: str):
     result = await db.execute(
         select(NewsSubscribers).where(NewsSubscribers.email == email)
     )
     return result.scalar_one_or_none()
-    
+
+
 async def Create_news_letter_subscriber(db: AsyncSession, email: str):
     subscriber = NewsSubscribers(email=email, is_verified=False)
     db.add(subscriber)
     await db.flush()
     await db.refresh(subscriber)
     return subscriber
-

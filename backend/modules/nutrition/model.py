@@ -21,6 +21,9 @@ class Feeds(Base):
         nullable=False
     )
     createdAt = Column(DateTime, server_default=func.now())
+ 
+    usages = relationship("FeedUsage", backref="feed", cascade="all, delete")
+    purchases = relationship("FeedPurchase", backref="feed", cascade="all, delete")
 
 class FeedUsage(Base):
     __tablename__ = "feed_usage"
@@ -31,9 +34,13 @@ class FeedUsage(Base):
         ForeignKey("feeds.id"),
         nullable=False,
         )
-    quantity_used = Column(Float)
+    livestock_id = Column(
+        UUID(as_uuid=True), 
+        ForeignKey("livestock.id", ondelete='SET NULL'), 
+        nullable=True
+    )
+    quantity_used = Column(Float,  nullable=False)
     used_at = Column(DateTime, default=func.now())
-    livestock_id = Column(UUID, nullable=True) 
 
 class FeedPurchase(Base):
     __tablename__ = "feed_purchases"
@@ -46,4 +53,4 @@ class FeedPurchase(Base):
     )    
     quantity = Column(Float)
     total_cost = Column(Float)
-    purchased_at = Column(DateTime)
+    purchased_at = Column(DateTime, server_default=func.now())
