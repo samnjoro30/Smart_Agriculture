@@ -8,8 +8,8 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from starlette.status import HTTP_201_CREATED
 
 from .models import (
-    Users, 
-    RefreshToken, 
+    Users,
+    RefreshToken,
     NewsSubscribers,
 )
 from .repository import (
@@ -38,7 +38,7 @@ REFRESH_TOKEN_DAYS = 7
 
 
 async def register_farm(db: AsyncSession, payload):
-    existing_user = await get_user_by_email(db, payload.email) 
+    existing_user = await get_user_by_email(db, payload.email)
     if existing_user:
         raise HTTPException(status_code=409, detail="email already exists")
 
@@ -67,14 +67,15 @@ async def register_farm(db: AsyncSession, payload):
         title="Verify Your Farm Account",
         message=message,
         channels=["sms", "email"],
-        notification_type="verification"
+        notification_type="verification",
     )
 
     return user
 
+
 async def login_user(db: AsyncSession, payload, required_role: str = None):
     user = await get_user_by_identifier(db, payload.identifier)
-    
+
     if not user or not await verify_password(payload.password, user.password):
         raise HTTPException(status_code=400, detail="Invalid credentials")
 
@@ -97,10 +98,11 @@ async def login_user(db: AsyncSession, payload, required_role: str = None):
     # ... rest of your code ...
     return {
         "user_id": user.id,
-        "role": user.role, # Return role to frontend
+        "role": user.role,  # Return role to frontend
         "access_token": access_token,
         "refresh_token": refresh_token,
     }
+
 
 async def login_farmer(db: AsyncSession, payload):
     user = await get_user_by_identifier(db, payload.identifier)
@@ -133,13 +135,9 @@ async def login_farmer(db: AsyncSession, payload):
 
 
 async def store_refresh_token_background(db, user_id, token, expiry):
-    await store_refresh_token(
-        db=db,
-        user_id=user_id,
-        token=token,
-        expires_at=expiry
-    )
+    await store_refresh_token(db=db, user_id=user_id, token=token, expires_at=expiry)
     await db.commit()
+
 
 async def refresh_access_token(
     db: AsyncSession,
@@ -152,14 +150,14 @@ async def refresh_access_token(
 
     if not stored_token or stored_token.is_revoked:
         raise HTTPException(status_code=401, detail="Invalid refresh token")
-    
+
     if stored_token.expires_at < datetime.utcnow():
         await db.delete(stored_token)
         await db.commit()
         raise HTTPException(status_code=401, detail="Refresh token expired")
 
     user = stored_token.user
-    
+
     new_refresh_token = create_refresh_token({"sub": str(user.id)})
     new_access_token = create_access_token({"sub": str(user.id)})
 
@@ -202,6 +200,7 @@ async def Verify_farmer(db: AsyncSession, email: str, otp: str):
 
     await db.commit()
 
+
 async def resend_verification_code(db: AsyncSession, email: str):
     user = await get_user_by_email(db, email)
 
@@ -222,7 +221,8 @@ async def resend_verification_code(db: AsyncSession, email: str):
     await db.commit()
     await db.refresh(user)
 
-    return new_otp 
+    return new_otp
+
 
 async def reset_password(db: AsyncSession, email: str, new_password: str):
     user = await reset_password_check_user(db, email)
@@ -244,7 +244,7 @@ async def RegisterForNewsLetter(db: AsyncSession, payload):
 
     if existing_subscriber:
         raise HTTPException(status_code=409, detail="Email already subscribed")
-    
+
     subscriber = await Create_news_letter_subscriber(db, payload.email)
 
     await db.commit()

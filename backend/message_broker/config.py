@@ -10,12 +10,13 @@ REDIS_CONFIG = {
     "retry_on_timeout": True,
 }
 
+
 def init_celery(app_name: str):
     """Factory to create a Celery app instance."""
     app = Celery(
         app_name,
-        broker=CELERY_CONFIG['broker_url'],
-        backend=CELERY_CONFIG['result_backend'],
+        broker=CELERY_CONFIG["broker_url"],
+        backend=CELERY_CONFIG["result_backend"],
     )
 
     app.conf.task_routes = {
@@ -28,6 +29,7 @@ def init_celery(app_name: str):
     app.conf.update(CELERY_CONFIG)
 
     return app
+
 
 # Main instance used by the rest of the Monolith
 celery_bus = init_celery("smart_agri_bus")

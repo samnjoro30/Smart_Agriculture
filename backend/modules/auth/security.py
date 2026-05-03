@@ -1,5 +1,6 @@
 import re
 
+
 def detect_identifier(identifier: str) -> str:
     identifier = identifier.strip()
 
@@ -24,4 +25,3 @@ def normalize_identifier(identifier: str):
         return "phone", identifier
     else:  # assume username
         return "username", identifier.lower()
-  

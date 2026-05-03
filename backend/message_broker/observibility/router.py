@@ -4,6 +4,7 @@ from message_broker.redis import redis_client
 
 router = APIRouter(prefix="/admin/metrics", tags=["metrics"])
 
+
 @router.get("/queues/{queue}")
 async def queue_metrics(queue: str):
     return await get_queue_metrics(queue)

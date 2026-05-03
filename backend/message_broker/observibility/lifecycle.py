@@ -11,9 +11,7 @@ import asyncio
 
 
 def record_timeline(task_id: str, state: str):
-    asyncio.run(
-        redis_client.rpush(task_timeline_key(task_id), state)
-    )
+    asyncio.run(redis_client.rpush(task_timeline_key(task_id), state))
 
 
 def on_task_queued(task_id: str, queue: str):

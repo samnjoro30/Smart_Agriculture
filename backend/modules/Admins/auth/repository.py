@@ -7,6 +7,7 @@ from modules.auth.models import Users
 from modules.livestock.model import Livestock
 from modules.payments.model import PaymentCheck, PaymentTransaction
 
+
 class AdminRepository:
     def __init__(self, db: AsyncSession):
         self.db = db
@@ -37,30 +38,40 @@ class AdminRepository:
             "total_farmers": total_farmers,
             "recent_farmers": recent_farmers,
             # For now, we'll return placeholders for livestock/revenue
-            "livestock_monitored": 0, 
+            "livestock_monitored": 0,
             "active_alerts": 12,
-            "revenue": 450000
+            "revenue": 450000,
         }
-    
+
     async def get_all_livestock_metrics(self):
         # 1. Total count (Active only)
-        total_stmt = select(func.count(Livestock.id)).where(Livestock.status == "ACTIVE")
-        
+        total_stmt = select(func.count(Livestock.id)).where(
+            Livestock.status == "ACTIVE"
+        )
+
         # 2. Category distribution (Cows, Goats, etc.)
-        category_stmt = select(Livestock.category, func.count(Livestock.id))\
-            .where(Livestock.status == "ACTIVE")\
+        category_stmt = (
+            select(Livestock.category, func.count(Livestock.id))
+            .where(Livestock.status == "ACTIVE")
             .group_by(Livestock.category)
-            
+        )
+
         # 3. Reproductive Status (Pregnancy & Heat)
         repro_stmt = select(
-            func.count(Livestock.id).filter(Livestock.pregnant == True).label("total_pregnant"),
-            func.count(Livestock.id).filter(Livestock.heatStatus == True).label("total_in_heat")
+            func.count(Livestock.id)
+            .filter(Livestock.pregnant == True)
+            .label("total_pregnant"),
+            func.count(Livestock.id)
+            .filter(Livestock.heatStatus == True)
+            .label("total_in_heat"),
         ).where(Livestock.status == "ACTIVE")
 
         # 4. Health Status distribution
-        health_stmt = select(Livestock.healthStatus, func.count(Livestock.id))\
-            .where(Livestock.status == "ACTIVE")\
+        health_stmt = (
+            select(Livestock.healthStatus, func.count(Livestock.id))
+            .where(Livestock.status == "ACTIVE")
             .group_by(Livestock.healthStatus)
+        )
 
         # Execute all
         total = await self.db.execute(total_stmt)
@@ -76,9 +87,10 @@ class AdminRepository:
             "health_summary": {row[0]: row[1] for row in health.all()},
             "reproductive": {
                 "pregnant": repro_data["total_pregnant"],
-                "in_heat": repro_data["total_in_heat"]
-            }
+                "in_heat": repro_data["total_in_heat"],
+            },
         }
+
 
 class AdminFarmerRepository:
     def __init__(self, session: AsyncSession):
@@ -100,7 +112,8 @@ class AdminFarmerRepository:
         )
         result = await self.session.execute(stmt)
         return result.scalar()
-    
+
+
 class AdminFinanceRepository:
     def __init__(self, session: AsyncSession):
         self.session = session
@@ -108,11 +121,17 @@ class AdminFinanceRepository:
     async def get_financial_metrics(self):
         # 1. Total Successful Revenue (from Transactions)
         revenue_stmt = select(func.sum(PaymentTransaction.amount))
-        
+
         # 2. M-Pesa Success Rate (from PaymentCheck)
-        success_stmt = select(func.count(PaymentCheck.id)).where(PaymentCheck.status == "SUCCESS")
-        failed_stmt = select(func.count(PaymentCheck.id)).where(PaymentCheck.status == "FAILED")
-        pending_stmt = select(func.count(PaymentCheck.id)).where(PaymentCheck.status == "PENDING")
+        success_stmt = select(func.count(PaymentCheck.id)).where(
+            PaymentCheck.status == "SUCCESS"
+        )
+        failed_stmt = select(func.count(PaymentCheck.id)).where(
+            PaymentCheck.status == "FAILED"
+        )
+        pending_stmt = select(func.count(PaymentCheck.id)).where(
+            PaymentCheck.status == "PENDING"
+        )
 
         # 3. Recent Transactions with User info
         # We join with Users to show who paid
@@ -137,8 +156,9 @@ class AdminFinanceRepository:
                 "failed": fail_res.scalar() or 0,
                 "pending": pend_res.scalar() or 0,
             },
-            "recent": recent_res.all()
+            "recent": recent_res.all(),
         }
+
 
 class AdminReportRepository:
     def __init__(self, session: AsyncSession):
@@ -155,15 +175,20 @@ class AdminReportRepository:
         # 2. Livestock Reproduction Summary
         repro_stats = await self.session.execute(
             select(
-                func.count(Livestock.id).filter(Livestock.pregnant == True).label("pregnant"),
-                func.count(Livestock.id).filter(Livestock.heatStatus == True).label("in_heat")
+                func.count(Livestock.id)
+                .filter(Livestock.pregnant == True)
+                .label("pregnant"),
+                func.count(Livestock.id)
+                .filter(Livestock.heatStatus == True)
+                .label("in_heat"),
             ).where(Livestock.status == "ACTIVE")
         )
 
         # 3. Financial Performance
         revenue = await self.session.execute(
-            select(func.sum(PaymentTransaction.amount))
-            .where(PaymentTransaction.created_at >= since_date)
+            select(func.sum(PaymentTransaction.amount)).where(
+                PaymentTransaction.created_at >= since_date
+            )
         )
 
         # 4. Category Breakdown for Revenue
@@ -178,5 +203,7 @@ class AdminReportRepository:
             "new_farmers": new_farmers.scalar() or 0,
             "repro": repro_stats.mappings().first(),
             "period_revenue": float(revenue.scalar() or 0),
-            "revenue_by_category": {row[0]: float(row[1]) for row in category_rev.all()}
+            "revenue_by_category": {
+                row[0]: float(row[1]) for row in category_rev.all()
+            },
         }

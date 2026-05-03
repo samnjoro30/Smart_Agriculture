@@ -6,8 +6,9 @@ import uuid
 from sqlalchemy.orm import relationship
 from config.database import Base
 
+
 class Livestock(Base):
-    __tablename__ = 'livestock'
+    __tablename__ = "livestock"
 
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     tag = Column(String(150), unique=True, nullable=True)
@@ -17,7 +18,7 @@ class Livestock(Base):
     heatStatus = Column(Boolean, default=False)
     pregnant = Column(Boolean, default=False)
     lastInsemination = Column(DateTime(timezone=True))
-    #nextHeatDate = Column(DateTime(timezone=True), nullable=True)
+    # nextHeatDate = Column(DateTime(timezone=True), nullable=True)
     age = Column(Integer, nullable=True)
     healthStatus = Column(String(200))
     inseminationType = Column(String(100))
@@ -25,15 +26,14 @@ class Livestock(Base):
     motherTag = Column(String(150))
     fatherTag = Column(String(150))
 
-    status = Column(String, default="ACTIVE", server_default="ACTIVE", nullable=False, index=True) 
-    archive_reason = Column(String, nullable=True) # sold, died, removed
+    status = Column(
+        String, default="ACTIVE", server_default="ACTIVE", nullable=False, index=True
+    )
+    archive_reason = Column(String, nullable=True)  # sold, died, removed
     archive_notes = Column(String, nullable=True)
     archived_at = Column(DateTime, nullable=True, index=True)
     user_id = Column(
-        UUID(as_uuid=True), 
-        ForeignKey('users.id', ondelete='CASCADE'),
-        nullable=False
+        UUID(as_uuid=True), ForeignKey("users.id", ondelete="CASCADE"), nullable=False
     )
 
     createdAt = Column(DateTime, server_default=func.now())
-

@@ -12,6 +12,7 @@ from config.database import Base
 #     ADMIN = "admin"
 #     FARMER = "farmer"
 
+
 class Users(Base):
     __tablename__ = "users"
 
@@ -32,7 +33,7 @@ class Users(Base):
         cascade="all, delete-orphan",
     )
     transactions = relationship("PaymentTransaction", back_populates="user")
-    #role = Column(String(20), default=UserRole.FARMER, nullable=False)
+    # role = Column(String(20), default=UserRole.FARMER, nullable=False)
 
     reports = relationship("ReportRecord", backref="user")
 
@@ -51,6 +52,7 @@ class RefreshToken(Base):
     is_revoked = Column(Boolean, default=False)
     user = relationship("Users", back_populates="refresh_tokens")
 
+
 class OTPVerification(Base):
     __tablename__ = "otp_verification"
 
@@ -60,6 +62,7 @@ class OTPVerification(Base):
     expires_at = Column(DateTime, nullable=False)
     created_at = Column(DateTime, server_default=func.now())
     user = relationship("Users")
+
 
 class NewsSubscribers(Base):
     __tablename__ = "subscribers"

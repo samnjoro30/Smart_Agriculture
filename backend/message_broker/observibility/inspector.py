@@ -1,5 +1,6 @@
 from message_broker.config import celery_bus
 
+
 def get_active_tasks():
     i = celery_bus.control.inspect()
     return i.active()

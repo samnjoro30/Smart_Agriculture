@@ -8,7 +8,7 @@
 #     async def get_financial_metrics(self):
 #         # 1. Total Successful Revenue (from Transactions)
 #         revenue_stmt = select(func.sum(PaymentTransaction.amount))
-        
+
 #         # 2. M-Pesa Success Rate (from PaymentCheck)
 #         success_stmt = select(func.count(PaymentCheck.id)).where(PaymentCheck.status == "SUCCESS")
 #         failed_stmt = select(func.count(PaymentCheck.id)).where(PaymentCheck.status == "FAILED")

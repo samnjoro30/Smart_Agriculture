@@ -1,5 +1,3 @@
-
-
 from datetime import datetime, timezone
 
 from fastapi import APIRouter, Depends, HTTPException, Request, Response
@@ -24,6 +22,7 @@ from .model import PaymentCheck
 settings = get_settings()
 logger = get_logger("PAYMENTS")
 
+
 def format_phone(phone: str) -> str:
     phone = phone.strip()
 
@@ -33,21 +32,24 @@ def format_phone(phone: str) -> str:
         return phone[1:]
     return phone
 
+
 def extract_metadata(items, key):
     for item in items:
         if item.get("Name") == key:
             return item.get("Value")
     return None
 
-def get_mpesa_timestamp():
-    return datetime.now(pytz.timezone('Africa/Nairobi')).strftime("%Y%m%d%H%M%S")
 
-#key improvement to add later: implement token caching to avoid redundant API calls for each payment initiation
+def get_mpesa_timestamp():
+    return datetime.now(pytz.timezone("Africa/Nairobi")).strftime("%Y%m%d%H%M%S")
+
+
+# key improvement to add later: implement token caching to avoid redundant API calls for each payment initiation
 async def get_mpesa_access_token():
     async with httpx.AsyncClient() as client:
         response = await client.get(
             settings.MPESA_AUTH_URL,
-            auth=(settings.MPESA_CONSUMER_KEY, settings.MPESA_CONSUMER_SECRET)
+            auth=(settings.MPESA_CONSUMER_KEY, settings.MPESA_CONSUMER_SECRET),
         )
     return response.json().get("access_token")
 
@@ -74,18 +76,14 @@ async def initiate_stk_push(db: AsyncSession, payload, current_user):
         "PhoneNumber": phone,
         "CallBackURL": settings.MPESA_CALLBACK_URL,
         "AccountReference": f"user-{current_user.id}",
-        "TransactionDesc": "Payment"
+        "TransactionDesc": "Payment",
     }
 
-    headers = {
-        "Authorization": f"Bearer {access_token}"
-    }
+    headers = {"Authorization": f"Bearer {access_token}"}
 
     async with httpx.AsyncClient(timeout=10.0) as client:
         response = await client.post(
-            settings.MPESA_STK_URL,
-            json=stk_payload,
-            headers=headers
+            settings.MPESA_STK_URL, json=stk_payload, headers=headers
         )
 
     data = response.json()
@@ -100,7 +98,7 @@ async def initiate_stk_push(db: AsyncSession, payload, current_user):
         phone_number=phone,
         status="PENDING",
         checkout_request_id=data.get("CheckoutRequestID"),
-        merchant_request_id=data.get("MerchantRequestID")
+        merchant_request_id=data.get("MerchantRequestID"),
     )
 
     db.add(payment)
@@ -111,16 +109,17 @@ async def initiate_stk_push(db: AsyncSession, payload, current_user):
 
 
 async def handle_stk_push_callback(db: AsyncSession, callback_data):
-    await asyncio.sleep(2)  # Short delay to allow DB record creation, can be optimized with better retry logic
+    await asyncio.sleep(
+        2
+    )  # Short delay to allow DB record creation, can be optimized with better retry logic
     logger.info("MPESA CALLBACK RAW", payload=callback_data)
     data = callback_data.get("Body", {}).get("stkCallback", {})
     res_code = data.get("ResultCode")
     res_desc = data.get("ResultDesc")
     checkout_id = data.get("CheckoutRequestID")
-    
 
     metadata_items = data.get("CallbackMetadata", {}).get("Item", [])
-    #mpesa_receipt = extract_metadata(metadata_items, "MpesaReceiptNumber")
+    # mpesa_receipt = extract_metadata(metadata_items, "MpesaReceiptNumber")
     amount = extract_metadata(metadata_items, "Amount")
     phone = extract_metadata(metadata_items, "PhoneNumber")
 
@@ -139,7 +138,7 @@ async def handle_stk_push_callback(db: AsyncSession, callback_data):
         res_code=res_code,
         res_desc=res_desc,
         mpesa_receipt=mpesa_receipt,
-        raw_payload=callback_data
+        raw_payload=callback_data,
     )
 
     if not payment:
@@ -147,9 +146,9 @@ async def handle_stk_push_callback(db: AsyncSession, callback_data):
         return {"ResultCode": 1, "ResultDesc": "Internal Error - Record Not Found"}
 
     return {
-        "ResultCode": 0, 
+        "ResultCode": 0,
         "ResultDesc": "Success",
-        "checkout_request_id": checkout_id
+        "checkout_request_id": checkout_id,
     }
 
 
@@ -167,8 +166,9 @@ async def get_payment_by_checkout_id(db, checkout_id, current_user):
         "result_code": payment.result_code,
         "result_desc": payment.result_desc,
         "created_at": payment.created_at,
-        "completed_at": payment.completed_at
+        "completed_at": payment.completed_at,
     }
+
 
 async def get_payment_status(db: AsyncSession, checkout_request_id):
     pass

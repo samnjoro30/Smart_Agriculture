@@ -4,6 +4,7 @@ from config.setting import get_settings
 from config.audit.logger import get_logger
 from modules.notifications.schemas import NotificationPayload
 import os
+
 settings = get_settings()
 logger = get_logger("push_provider")
 

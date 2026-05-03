@@ -1,4 +1,3 @@
-
 from fastapi import HTTPException, status
 from .repository import AdminRepository, AdminFarmerRepository
 from config.security import create_access_token, create_refresh_token
@@ -19,7 +18,7 @@ class AdminFinanceService:
 
     async def get_finance_overview(self):
         data = await self.repo.get_financial_metrics()
-        
+
         return {
             "total_revenue": float(data["total_revenue"]),
             "currency": "KES",
@@ -31,7 +30,8 @@ class AdminFinanceService:
                     "amount": float(row[0].amount),
                     "category": row[0].category,
                     "reference": row[0].reference,
-                    "date": row[0].created_at.isoformat()
-                } for row in data["recent"]
-            ]
+                    "date": row[0].created_at.isoformat(),
+                }
+                for row in data["recent"]
+            ],
         }

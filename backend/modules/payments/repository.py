@@ -1,4 +1,3 @@
-
 from datetime import datetime, timedelta, timezone
 from sqlalchemy.sql import func, case
 from sqlalchemy import text, select, or_, delete
@@ -10,12 +9,20 @@ import asyncio
 
 logger = get_logger("PAYMENTS")
 
-async def update_callback(db: AsyncSession, checkout_request_id: str, status: str, mpesa_receipt_number: str | None = None):
+
+async def update_callback(
+    db: AsyncSession,
+    checkout_request_id: str,
+    status: str,
+    mpesa_receipt_number: str | None = None,
+):
     result = await db.execute(
-        select(PaymentCheck).where(PaymentCheck.checkout_request_id == checkout_request_id)
+        select(PaymentCheck).where(
+            PaymentCheck.checkout_request_id == checkout_request_id
+        )
     )
     payment = result.scalar_one_or_none()
-    
+
     if not payment:
         return None
 
@@ -26,40 +33,47 @@ async def update_callback(db: AsyncSession, checkout_request_id: str, status: st
     payment.status = status
     if mpesa_receipt_number:
         payment.mpesa_receipt_number = mpesa_receipt_number
-    
+
     payment.updated_at = datetime.now(timezone.utc)
 
     await db.commit()
     await db.refresh(payment)
     return payment
 
-async def update_callback_with_retry(db: AsyncSession, checkout_id: str, status: str, receipt: str, retries=3):
+
+async def update_callback_with_retry(
+    db: AsyncSession, checkout_id: str, status: str, receipt: str, retries=3
+):
     for i in range(retries):
         payment = await update_callback(db, checkout_id, status, receipt)
         if payment:
             return payment
         # Wait 1.5 seconds before trying again to let the main thread commit
-        await asyncio.sleep(1.5) 
+        await asyncio.sleep(1.5)
     return None
 
-async def get_payment_by_checkout_id_from_db(db: AsyncSession, checkout_id: str, user_id: UUID):
+
+async def get_payment_by_checkout_id_from_db(
+    db: AsyncSession, checkout_id: str, user_id: UUID
+):
     result = await db.execute(
         select(PaymentCheck).where(
             PaymentCheck.checkout_request_id == checkout_id,
-            PaymentCheck.user_id == user_id
+            PaymentCheck.user_id == user_id,
         )
     )
 
     return result.scalar_one_or_none()
 
+
 async def update_payment_and_ledger(
-    db: AsyncSession, 
-    checkout_id: str, 
-    status: str, 
+    db: AsyncSession,
+    checkout_id: str,
+    status: str,
     res_code: int,
     res_desc: str,
     mpesa_receipt: str | None,
-    raw_payload: dict
+    raw_payload: dict,
 ):
     """
     Atomic operation to update payment and create a transaction ledger entry.
@@ -73,8 +87,8 @@ async def update_payment_and_ledger(
         payment = result.scalar_one_or_none()
         if payment:
             break
-        await asyncio.sleep(1) # Wait 1s before retrying
-    
+        await asyncio.sleep(1)  # Wait 1s before retrying
+
     if not payment:
         return None
 
@@ -98,12 +112,12 @@ async def update_payment_and_ledger(
                 payment_id=payment.id,
                 amount=payment.amount,
                 transaction_type="CREDIT",
-                category="FARM_UPGRADE", 
+                category="FARM_UPGRADE",
                 reference=f"TXN-{mpesa_receipt or uuid.uuid4().hex[:8]}",
-                description=f"M-Pesa Payment Received: {mpesa_receipt}"
+                description=f"M-Pesa Payment Received: {mpesa_receipt}",
             )
             db.add(ledger_entry)
-            
+
             # TODO: Add logic here to actually update the User's plan in the 'users' table
             # e.g., user = await db.get(User, payment.user_id); user.plan = "Premium"
 

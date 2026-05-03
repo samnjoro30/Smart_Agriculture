@@ -7,6 +7,4 @@ redis_client = redis.Redis.from_url(
     settings.REDIS_URL_BROKER,
     decode_responses=True,
     max_connections=50,
-    
 )
-
