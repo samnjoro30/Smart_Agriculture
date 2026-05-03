@@ -5,6 +5,7 @@ import asyncio
 
 # ASYNC
 
+
 async def increment_queue(queue: str):
     await redis_client.incr(queue_count_key(queue))
 
@@ -30,6 +31,7 @@ async def get_queue_metrics(queue: str):
         "queued": int(queued or 0),
         "processing": int(processing or 0),
     }
+
 
 # SYNC (Celery safe)
 def sync_increment_queue(queue: str):
