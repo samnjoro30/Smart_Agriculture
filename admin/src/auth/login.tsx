@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import axiosInstance from "../api/axiosInstance";
 import { useNavigate } from "react-router-dom";
 import logo from '../assets/logo.png';
+import axios from "axios";
 
 interface AdminLoginProps {
   email: string;
@@ -31,14 +32,23 @@ const Login = () => {
     setLoading(true);
 
     try {
-      const response = await axiosInstance.post("/auth/login", {
+      const response = await axiosInstance.post("/admin/auth/login", {
         email: adminData.email,
         password: adminData.password,
       });
+      console.log("Login request sent with:", adminData.email)
+      console.log("Login request sent with:", adminData.password)
+      console.log("Login response:", response.data);
 
       setMessage(response.data.message || "Login successful");
       navigate('/dashboard');
     } catch (err) {
+      console.log("FULL ERROR:", err);
+      if (axios.isAxiosError(err) && err.response) {
+        console.log("BACKEND ERROR:", err.response.data);
+      } else {
+        console.log("BACKEND ERROR:", err);
+      }
       const error =
         err instanceof Error
           ? err.message
