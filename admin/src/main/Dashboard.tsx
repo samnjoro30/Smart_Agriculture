@@ -1,29 +1,49 @@
-import Header from "../components/header";
+import { useState } from "react";
 import Sidebar from "../components/sideview";
-import Footer from "../components/footer";
-import { Outlet } from "react-router-dom";
+import type { AdminTab } from "../components/sideview";
+import Header from "../components/header";
+import Overview from "../components/overview";
+import Livestock from "../components/livestock";
+import Farmers  from "../components/farmer";
+import Finance from "../components/finance";
+import Reports from "../components/report";
+// import Farmers from "./pages/Farmers"; // Import your other pages here
 
-const Dashboard = () => {
+export default function DashboardLayout() {
+  const [activeTab, setActiveTab] = useState<AdminTab>("Overview");
+
+  // Function to render the correct component based on activeTab
+  const renderContent = () => {
+    switch (activeTab) {
+      case "Overview":
+        return <Overview />;
+      case "Farmers":
+        return <Farmers />;
+      case "Livestock":
+        return <Livestock />;
+      case "Reports":
+        return <Reports />;
+      case "Finance":
+        return <Finance />;
+      default:
+        return <Overview />;
+    }
+  };
+
   return (
-    <div className="h-screen flex bg-gray-100">
-      
-      {/* 🔹 Sidebar */}
-      <Sidebar />
+    <div className="flex min-h-screen bg-gray-50">
+      {/* Sidebar - Passing state props */}
+      <Sidebar activeTab={activeTab} setActiveTab={setActiveTab} />
 
-      {/* 🔹 Main Area */}
       <div className="flex-1 flex flex-col">
-        
+        {/* Header */}
         <Header />
 
-        <main className="flex-1 p-6 overflow-y-auto">
-          <Outlet />
+        {/* Main Content Area */}
+        <main className="flex-1">
+          {renderContent()}
         </main>
-
-        <Footer />
       </div>
-
     </div>
   );
-};
-
-export default Dashboard;
+}
