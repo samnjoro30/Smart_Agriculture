@@ -36,6 +36,7 @@ async def check_user_by_email(db: AsyncSession, email: str):
     return result.scalar_one_or_none()
 
 
+
 async def UpdateEmail(db: AsyncSession, user_id: UUID, new_email: str):
     await db.execute(update(Users).where(Users.id == user_id).values(email=new_email))
     await db.commit()
