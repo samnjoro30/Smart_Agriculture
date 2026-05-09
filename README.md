@@ -71,6 +71,7 @@ The platform enables farmers to track breeding cycles, health events, treatments
 - Docker + Docker Compose
 - Git
 - Optional: Python (for local FastAPI dev), Node.js (for local frontend dev)
+- Ensure you configure .env file as most  services won't work without it
 
 ### 🔧 Local Development
 
@@ -79,13 +80,51 @@ The platform enables farmers to track breeding cycles, health events, treatments
 git clone https://github.com/samnjoro30/Smart_Agriculture.git
 cd Smart_Agriculture
 
-# Start services
-docker-compose up --build
+
+```
+
+## Option 1: Run with Docker 
+```bash
+  docker-compose up --build
+```
+
+## option 2: Manual Development Setup for controlled development
+### Navigate to backend folder and activate the environment
+```bash
+# backend folder
+  cd backend
+# create virtual environment (if not already created)
+  python -m venv .venv
+# activate environment
+  source .venv/bin/activate
+# install dependencies
+  pip install -r requirements.txt
+# run backend server
+  uvicorn API:app --reload
+```
+
+### frontend server
+```bash
+# navigate to frontend structure
+   cd frontend
+   npm install
+   npm run dev
+```
+
+### running celery worker 
+```bash
+   cd backend
+# make sure redis is running before running celery worker
+celery -A worker.celery_app worker \
+  --loglevel=info \
+  -Q livestock_service,default
 ```
 
 # Backend Infrastructure
 
-## Backend Architecture
+## Backend System Architecture
+- for folder structure check out on docs/structure.md
+
 
 ### DevOps ecosystem(backend)
 
