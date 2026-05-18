@@ -51,3 +51,9 @@ html.dark {
 .animate-slide-up {
   animation: slide-up 0.3s ease-out;
 }
+
+
+/* Forces Swiper to move continuously without jerky starting and stopping points */
+.premium-marquee-swiper .swiper-wrapper {
+  transition-timing-function: linear !important;
+}
