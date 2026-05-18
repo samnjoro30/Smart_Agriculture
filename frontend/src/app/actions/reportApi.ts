@@ -18,7 +18,7 @@ export const reportApi = {
     // 3. Check status (used for polling after STK Push)
     getReportStatus: async (reportId: string) => {
       const { data } = await axiosInstance.get(`/reports/status/${reportId}`);
-      return data; // Returns { id, status: 'PAID' | 'PENDING' | 'FAILED' }
+      return data; 
     },
   
     // 4. Trigger the PDF download

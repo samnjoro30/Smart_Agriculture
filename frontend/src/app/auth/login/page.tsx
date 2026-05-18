@@ -49,7 +49,7 @@ export default function Login() {
       //sessionStorage.setItem("access_token", res.data.access_token);
       setMessage(res.data.message || 'login successful');
       router.push('/dashboard');
-      setTimeout(() => setMessage(''), 3000);
+      setTimeout(() => setMessage(''), 5000);
     } catch (err: any) {
       if (axios.isAxiosError(err)) {
         if (err.response?.status === 403) {
@@ -199,7 +199,9 @@ export default function Login() {
           </div>
         </form>
         {error && <p style={{ color: 'red' }}>{error}</p>}
-        {message && <p style={{ color: 'green' }}>{message}</p>}
+        {message && (
+          <p style={{ color: 'green' }}>{message}</p>
+        )}
         <Link href="/" className="text-green-600 hover:underline pr-5">
           {' '}
           ← Back to Home

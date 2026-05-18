@@ -4,7 +4,9 @@ import dynamic from 'next/dynamic';
 import Link from 'next/link';
 
 import FooterHome from '../components/footerHome';
+//import FooterHome from '../components/footer1';
 import HeaderHome from '../components/headerHomepage';
+
 
 const LearningHub = dynamic(() => import('../components/learningHub'), {
   ssr: false,
