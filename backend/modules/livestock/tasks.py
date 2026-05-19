@@ -38,6 +38,14 @@ def cleanup_archived_animals():
     return {"status": "success", "permanently_removed": cleanup_result}
 
 
+@celery_bus.task(name="modules.livestock.tasks.heat_cycle_metrics")
+def calculate_heat_cycle_metrics(last_insemination: datetime | None, pregnant: bool):
+    async def run():
+        return heat_cycle_metrics(last_insemination, pregnant)
+        
+
+
+
 def heat_cycle_metrics(last_insemination: datetime | None, pregnant: bool):
     if pregnant:
         return {"next_heat": None, "status": "Pregnant"}

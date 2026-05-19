@@ -19,11 +19,12 @@ logger = get_logger("FARMER")
 
 async def get_username(db: AsyncSession, current_user):
 
-    username = await get_username_l(db, current_user.email)
-    if not username:
+    user_data = await get_username_l(db, current_user.email)
+    if not user_data:
         raise HTTPException(status_code=404, detail="User not found")
 
-    return username
+    username, farmname = user_data
+    return {"username": username, "farmname": farmname}
 
 
 async def farmUser(db: AsyncSession, current_user):
