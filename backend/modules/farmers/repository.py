@@ -26,8 +26,9 @@ async def get_userProfile(db: AsyncSession, email: str):
 
 
 async def get_username_l(db: AsyncSession, email: str):
-    result = await db.execute(select(Users.username).where(Users.email == email))
-    return result.scalar()
+    result = await db.execute(select(Users.username, Users.farmname).where(Users.email == email))
+    #return result.scalar()
+    return result.first()
 
 
 async def check_user_by_email(db: AsyncSession, email: str):

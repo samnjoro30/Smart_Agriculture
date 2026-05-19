@@ -38,8 +38,8 @@ async def get_username_letters(
     db: AsyncSession = Depends(get_db), current_user=Depends(get_current_user)
 ):
 
-    username = await get_username(db, current_user)
-    return {"username": username}
+    info = await get_username(db, current_user)
+    return info
 
 
 @router.put("/update-email")
