@@ -18,7 +18,7 @@ class Livestock(Base):
     heatStatus = Column(Boolean, default=False)
     pregnant = Column(Boolean, default=False)
     lastInsemination = Column(DateTime(timezone=True))
-    #nextHeatDate = Column(DateTime(timezone=True), nullable=True)
+    nextHeatDate = Column(DateTime(timezone=True), nullable=True)
     age = Column(Integer, nullable=True)
     healthStatus = Column(String(200))
     inseminationType = Column(String(100))
