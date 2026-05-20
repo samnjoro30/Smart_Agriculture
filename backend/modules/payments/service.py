@@ -5,10 +5,13 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from starlette.status import HTTP_201_CREATED
 from config.setting import get_settings
 from config.audit.logger import get_logger
+from hooks.call import manager
+
 import asyncio
 import httpx
 import base64
 import pytz
+import json
 
 
 from .repository import (
@@ -144,6 +147,38 @@ async def handle_stk_push_callback(db: AsyncSession, callback_data):
     if not payment:
         logger.warning(f"CheckoutID {checkout_id} not found in DB yet.")
         return {"ResultCode": 1, "ResultDesc": "Internal Error - Record Not Found"}
+
+    user_record = getattr(payment, 'temp_user_context', None)
+    package_name_display = f"{user_record.package_tier.title()} Access" if user_record else "Basic Mode"
+    expiry_timestamp = user_record.package_expiry.isoformat() if user_record else None
+
+    websocket_message = {
+        "type": "PAYMENT_STATUS",
+        "status": payment.status,
+        "checkout_request_id": checkout_id,
+        "mpesa_receipt": mpesa_receipt,
+        "package_info": {
+            "package_is_active": True,
+            "features_unlocked": True,
+            "package_name": package_name_display,
+            "package_expiry": expiry_timestamp,
+        } if status == "SUCCESS" else {
+            "package_is_active": False,
+            "features_unlocked": False,
+            "package_name": "Basic Mode",
+            "package_expiry": None
+        },
+        
+        "message": (
+            "Your payment has been fully verified and system features unlocked!"
+            if status == "SUCCESS"
+            else "Payment failed or was cancelled."
+        ),
+    }
+
+    await manager.send_json_message(
+        message=json.dumps(websocket_message), user_id=str(payment.user_id)
+    )
 
     return {
         "ResultCode": 0,

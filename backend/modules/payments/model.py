@@ -45,6 +45,8 @@ class PaymentCheck(Base):
     updated_at = Column(DateTime(timezone=True), onupdate=func.now())
     completed_at = Column(DateTime(timezone=True), nullable=True)
 
+    idempotency_key = Column(String(100), unique=True, nullable=True, index=True)
+
     report = relationship("ReportRecord", backref="payment_origin", uselist=False)
 
     __table_args__ = (

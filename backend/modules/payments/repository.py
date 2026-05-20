@@ -3,11 +3,21 @@ from sqlalchemy.sql import func, case
 from sqlalchemy import text, select, or_, delete
 from sqlalchemy.ext.asyncio import AsyncSession
 from .model import PaymentCheck, PaymentTransaction
+from modules.auth.models import Users
 from sqlalchemy.dialects.postgresql import UUID
 from config.audit.logger import get_logger
+
+from decimal import Decimal
 import asyncio
 
+
 logger = get_logger("PAYMENTS")
+
+TIER_MAPPING = {
+    1: "STARTER",
+    450: "STANDARD",
+    950: "PREMIUM"
+}
 
 
 async def update_callback(
@@ -117,6 +127,28 @@ async def update_payment_and_ledger(
                 description=f"M-Pesa Payment Received: {mpesa_receipt}",
             )
             db.add(ledger_entry)
+
+            user_result = await db.execute(
+                select(Users).where(Users.id == payment.user_id)
+            )
+
+            user = user_result.scalar_one_or_none()
+
+            if user:
+                user.package_is_active = True
+                paid_amount = int(float(payment.amount))
+                user.package_tier = TIER_MAPPING.get(paid_amount, "BASIC") # Or dynamically determine based on payment.amount
+                
+                # If they have an existing active package, extend from that date. Otherwise, start from now.
+                now = datetime.now(timezone.utc)
+                if user.package_expiry and user.package_expiry > now:
+                    user.package_expiry = user.package_expiry + timedelta(days=30)
+                else:
+                    user.package_expiry = now + timedelta(days=30)
+                
+                logger.info(f"Successfully extended farmer package for User {user.id} until {user.package_expiry}")
+
+            # Atomic commit: everything succeeds together or fails together
 
             # TODO: Add logic here to actually update the User's plan in the 'users' table
             # e.g., user = await db.get(User, payment.user_id); user.plan = "Premium"
