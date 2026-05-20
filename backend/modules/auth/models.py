@@ -27,6 +27,10 @@ class Users(Base):
     password = Column(String(200))
     createdAt = Column(DateTime, server_default=func.now())
     is_active = Column(Boolean(), default=True, index=True)
+
+    package_is_active = Column(Boolean(), default=False, nullable=True)
+    package_tier = Column(String(20), default="BASIC", nullable=False)
+    package_expiry = Column(DateTime(timezone=True), nullable=True)
     refresh_tokens = relationship(
         "RefreshToken",
         back_populates="user",
