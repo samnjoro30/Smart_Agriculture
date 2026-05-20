@@ -19,10 +19,12 @@ from config.audit.logger import setup_logging
 from config.middleware import audit_middleware
 from config.audit.middleware.request_id import request_id_middleware
 from config.audit.middleware.performance import performance_middleware
-#from config.audit.middleware.auth_context import auth_context_middleware
+
+# from config.audit.middleware.auth_context import auth_context_middleware
 from config.audit.middleware.error import error_middleware
 from config.audit.middleware.logging import logging_middleware
 from config.audit.middleware.security import security_middleware
+
 # from config.lifespan import Lifespan
 
 from modules.auth.router import router as auth_farmer
@@ -36,6 +38,7 @@ from modules.reports.router import router as reports_router
 
 from modules.Admins.auth.router import router as auth_admin
 
+from hooks.router import app as ws_router
 from hooks.tasks import cleanup_dead_connections
 from hooks.call import manager
 
@@ -49,11 +52,12 @@ app = FastAPI(
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
-        # "*"
+        "*"
         # "http://localhost:3000",
+        # " http://localhost:5173",
         # "https://smart-agriculture-git-main-samnjoro30s-projects.vercel.app",
-        "https://smart-agriculture-pied.vercel.app",
-        "https://smart-farming-agriculture.web.app",
+        #"https://smart-agriculture-pied.vercel.app",
+        #"https://smart-farming-agriculture.web.app",
         # "https://smart-farming-agriculture.firebaseapp.com",
     ],
     allow_credentials=True,
@@ -68,10 +72,10 @@ app.state.limiter = limiter
 app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
 
 app.middleware("http")(performance_middleware)
-#app.middleware("http")(audit_middleware)
+# app.middleware("http")(audit_middleware)
 app.middleware("http")(error_middleware)
 app.middleware("http")(request_id_middleware)
-#app.middleware("http")(auth_context_middleware)
+# app.middleware("http")(auth_context_middleware)
 app.middleware("http")(logging_middleware)
 app.middleware("http")(security_middleware)
 
@@ -87,6 +91,7 @@ app.include_router(reports_router)
 
 app.include_router(auth_admin)
 
+app.include_router(ws_router, tags=["Real-Time Notifications"])
 
 
 @app.get("/ping")
@@ -109,6 +114,7 @@ async def startup():
     await init_redis()
     asyncio.create_task(manager.send_ping())
     asyncio.create_task(cleanup_dead_connections(manager))
+
     async def warm_db():
         async with engine.begin() as conn:
             await conn.execute(text("SELECT 1"))
@@ -124,10 +130,11 @@ async def startup():
                     print("Self-ping successful")
                 except Exception as e:
                     print("Self-ping failed:", e)
-                
-                await asyncio.sleep(600) 
+
+                await asyncio.sleep(600)
 
     asyncio.create_task(keep_alive())
+
 
 @app.on_event("shutdown")
 async def shutdown():
