@@ -1,6 +1,6 @@
 import { cookies } from 'next/headers';
 
-const BASE_URL = 'https://smart-agriculture-21dt.onrender.com';
+const BASE_URL = 'https://smart-agriculture-zkky.onrender.com';
 
 async function request(method: string, url: string, body?: any) {
   const cookieStore = await cookies();
