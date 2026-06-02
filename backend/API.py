@@ -58,14 +58,29 @@ app.add_middleware(
         "https://smart-farming-agriculture.web.app",
         "https://smart-farming-agriculture.firebaseapp.com",
     ],
+
     allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
+    allow_methods=[
+        "GET",
+        "POST",
+        "PUT",
+        "PATCH",
+        "DELETE",
+        "OPTIONS",
+    ],
+
+    allow_headers=[
+        "Authorization",
+        "Content-Type",
+        "Accept",
+        "Origin",
+        "X-Requested-ID",
+    ],
 )
 
-app.add_middleware(GZipMiddleware, minimum_size=1000)
-# limiting number of request from ip
+app.add_middleware(GZipMiddleware, minimum_size=2000)
 
+# limiting number of request from ip
 app.state.limiter = limiter
 app.add_middleware(SlowAPIMiddleware)
 
