@@ -22,7 +22,7 @@ def setup_logging():
     shared_processors = [
         structlog.contextvars.merge_contextvars,  # inject request context
         structlog.processors.add_log_level,
-       # structlog.processors.add_logger_name,
+        # structlog.processors.add_logger_name,
         structlog.processors.StackInfoRenderer(),
         structlog.processors.format_exc_info,
         timestamper,

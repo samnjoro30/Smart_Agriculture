@@ -14,16 +14,12 @@ async def performance_middleware(request: Request, call_next):
     path = request.url.path
     method = request.method
 
-
-
     try:
         response = await call_next(request)
     except Exception as e:
         duration = time.perf_counter() - start_time
-        
-        logger.error(
-            f"[ERROR] {method} {path} failed in {duration:.3f}s"
-        )
+
+        logger.error(f"[ERROR] {method} {path} failed in {duration:.3f}s")
         raise e
 
     duration = time.perf_counter() - start_time
