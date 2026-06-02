@@ -4,7 +4,7 @@ from redis.asyncio import Redis
 from .client import get_redis
 
 
-DEFAULT_TTL = 60 
+DEFAULT_TTL = 60
 
 
 async def set_cache(key: str, value: Any, ttl: int = DEFAULT_TTL):

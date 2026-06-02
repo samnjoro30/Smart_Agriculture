@@ -1,5 +1,6 @@
 from uuid import UUID
 
+
 def user_profile_key(user_id: UUID) -> str:
     return f"user:{user_id}:profile"
 
