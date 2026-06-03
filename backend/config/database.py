@@ -15,12 +15,13 @@ NEONB = settings.NEON_DB
 engine = create_async_engine(
     NEONB,
     echo=True,
-    pool_size=5,  
-    max_overflow=10,  
-    pool_timeout=30, 
+    pool_size=5,
+    max_overflow=10,
+    pool_timeout=30,
     pool_recycle=1800,
     pool_pre_ping=True,
 )
+
 
 @event.listens_for(engine.sync_engine, "before_cursor_execute")
 def before_cursor_execute(conn, cursor, statement, parameters, context, executemany):
@@ -28,11 +29,14 @@ def before_cursor_execute(conn, cursor, statement, parameters, context, executem
     count = query_count.get()
     query_count.set(count + 1)
 
+
 @event.listens_for(engine.sync_engine, "after_cursor_execute")
 def after_cursor_execute(conn, cursor, statement, parameters, context, executemany):
     total = time.perf_counter() - context._query_start_time
     if total > 0.5:
         print(f"[SLOW QUERY] {total:.3f}s: {statement}")
+
+
 # Create async sessionmaker
 AsyncSessionLocal = sessionmaker(
     bind=engine,
@@ -40,20 +44,8 @@ AsyncSessionLocal = sessionmaker(
     class_=AsyncSession,
 )
 
-# sync_engine = create_engine(
-#     SYNC_NEONB,
-#     pool_pre_ping=True,
-#     pool_recycle=1800
-# )
-
-# # 3. Standard SessionLocal for Worker
-# SessionLocal = sessionmaker(
-#     autocommit=False,
-#     autoflush=False,
-#     bind=sync_engine
-# )
-
 Base = declarative_base()
+
 
 # function to run db
 async def get_db():

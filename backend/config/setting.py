@@ -21,17 +21,17 @@ class Settings(BaseSettings):
 
     REDIS_URL: str | None = None
     REDIS_CACHE_TTL: int = 300
+    GOOGLE_API_KEY: Optional[str] = None
 
     # celery worker
     CELERY_BROKER_URL: Optional[str] = REDIS_URL_CACHE
     CELERY_RESULT_BACKEND: Optional[str] = REDIS_URL_CACHE
 
-    #notification apis
+    # notification apis
     AFRICASTALKING_USERNAME: Optional[str] = None
     AFRICASTALKING_API_KEY: Optional[str] = None
 
     FIREBASE_CREDENTIALS_PATH: Optional[str] = None
-   
 
     SLOW_REQUEST_THRESHOLD: float = 0.5
 
@@ -54,7 +54,7 @@ class Settings(BaseSettings):
     ACCESS_EXPIRE_MINUTES: int = 15
     REFRESH_EXPIRE_DAY: int = 7
 
-    #Cookies
+    # Cookies
     COOKIE_SECURE: bool = True
     COOKIE_SAMESITE: Literal["lax", "strict", "none"] = "none"
     COOKIE_HTTPONLY: bool = True
@@ -66,7 +66,7 @@ class Settings(BaseSettings):
     # @property
     # def cookie_samesite(self) -> str:
     #     return "none" if self.ENV == "prod" else "lax"
-    
+
     @property
     def cookie_samesite(self) -> str:
         return "none"
@@ -80,7 +80,7 @@ class Settings(BaseSettings):
     MAIL_USERNAME: Optional[str] = None
     MAIL_PORT: Optional[int] = None
     MAIL_SERVER: Optional[str] = None
-    
+
     # mpesa
     MPESA_CONSUMER_KEY: Optional[str] = None
     MPESA_CONSUMER_SECRET: Optional[str] = None
@@ -89,7 +89,6 @@ class Settings(BaseSettings):
     MPESA_AUTH_URL: Optional[str] = None
     MPESA_STK_URL: Optional[str] = None
     MPESA_CALLBACK_URL: Optional[str] = None
-    
 
     # logs
     LOG_LEVEL: Literal["DEBUG", "INFO", "WARNING", "ERROR"] = "INFO"

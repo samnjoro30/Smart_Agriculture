@@ -13,19 +13,18 @@ from config.redis.client import init_redis, close_redis
 from slowapi import Limiter, _rate_limit_exceeded_handler
 from slowapi.errors import RateLimitExceeded
 from slowapi.util import get_remote_address
+from slowapi.middleware import SlowAPIMiddleware
 
 from config.audit.logger import setup_logging
-
-from config.middleware import audit_middleware
 from config.audit.middleware.request_id import request_id_middleware
 from config.audit.middleware.performance import performance_middleware
 
-# from config.audit.middleware.auth_context import auth_context_middleware
 from config.audit.middleware.error import error_middleware
 from config.audit.middleware.logging import logging_middleware
 from config.audit.middleware.security import security_middleware
 
-# from config.lifespan import Lifespan
+from config.rate_limiting import limiter
+from config.lifespan import Lifespan
 
 from modules.auth.router import router as auth_farmer
 from modules.farmers.router import router as farm_router
@@ -47,35 +46,47 @@ setup_logging()
 
 app = FastAPI(
     title="Smart farm API",
+    version="1.0.0",
+    lifespan=Lifespan
 )
 
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
-        "*"
-        # "http://localhost:3000",
-        # " http://localhost:5173",
-        # "https://smart-agriculture-git-main-samnjoro30s-projects.vercel.app",
-        #"https://smart-agriculture-pied.vercel.app",
-        #"https://smart-farming-agriculture.web.app",
-        # "https://smart-farming-agriculture.firebaseapp.com",
+        "https://smart-agriculture-git-main-samnjoro30s-projects.vercel.app",
+        "https://smart-agriculture-pied.vercel.app",
+        "https://smart-farming-agriculture.web.app",
+        "https://smart-farming-agriculture.firebaseapp.com",
     ],
+
     allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
+    allow_methods=[
+        "GET",
+        "POST",
+        "PUT",
+        "PATCH",
+        "DELETE",
+        "OPTIONS",
+    ],
+
+    allow_headers=[
+        "Authorization",
+        "Content-Type",
+        "Accept",
+        "Origin",
+        "X-Requested-ID",
+    ],
 )
 
-app.add_middleware(GZipMiddleware, minimum_size=1000)
+app.add_middleware(GZipMiddleware, minimum_size=2000)
+
 # limiting number of request from ip
-limiter = Limiter(key_func=get_remote_address)
 app.state.limiter = limiter
-app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
+app.add_middleware(SlowAPIMiddleware)
 
 app.middleware("http")(performance_middleware)
-# app.middleware("http")(audit_middleware)
 app.middleware("http")(error_middleware)
 app.middleware("http")(request_id_middleware)
-# app.middleware("http")(auth_context_middleware)
 app.middleware("http")(logging_middleware)
 app.middleware("http")(security_middleware)
 
@@ -108,34 +119,3 @@ async def add_process_time_header(request: Request, call_next):
     response.headers["X-Process-Time"] = str(process_time)
     return response
 
-
-@app.on_event("startup")
-async def startup():
-    await init_redis()
-    asyncio.create_task(manager.send_ping())
-    asyncio.create_task(cleanup_dead_connections(manager))
-
-    async def warm_db():
-        async with engine.begin() as conn:
-            await conn.execute(text("SELECT 1"))
-
-    async def keep_alive():
-        async with httpx.AsyncClient(timeout=5.0) as client:
-
-            while True:
-                try:
-                    await client.get(
-                        "https://smart-agriculture-21dt.onrender.com/ping", timeout=5
-                    )
-                    print("Self-ping successful")
-                except Exception as e:
-                    print("Self-ping failed:", e)
-
-                await asyncio.sleep(600)
-
-    asyncio.create_task(keep_alive())
-
-
-@app.on_event("shutdown")
-async def shutdown():
-    await close_redis()

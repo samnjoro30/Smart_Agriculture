@@ -11,7 +11,7 @@ logger = get_logger("AUDIT")
 async def logging_middleware(request: Request, call_next):
     start_time = time.time()
 
-    try: 
+    try:
         response = await call_next(request)
 
         duration = round(time.time() - start_time, 3)
@@ -30,7 +30,6 @@ async def logging_middleware(request: Request, call_next):
                 status_code=response.status_code,
                 duration=duration,
             )
-
 
         return response
 
