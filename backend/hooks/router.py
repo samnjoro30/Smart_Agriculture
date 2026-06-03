@@ -5,10 +5,11 @@ from fastapi import APIRouter
 
 app = APIRouter()
 
+
 @app.websocket("/ws/{user_id}")
 async def websocket_endpoint(websocket: WebSocket, user_id: str):
-    token  = websocket.query_params.get("token")
-    #user_id = await get_current_user(token=token)
+    token = websocket.query_params.get("token")
+    # user_id = await get_current_user(token=token)
     try:
         user = await get_current_user(token=token)
         if str(user.id) != user_id:
@@ -18,7 +19,7 @@ async def websocket_endpoint(websocket: WebSocket, user_id: str):
     except Exception:
         await websocket.close(code=1008)
         return
-    
+
     await manager.connect(websocket, user_id)
 
     try:

@@ -15,14 +15,13 @@ from slowapi.errors import RateLimitExceeded
 from slowapi.util import get_remote_address
 from slowapi.middleware import SlowAPIMiddleware
 
-from config.audit.logger import setup_logging
 from config.audit.middleware.request_id import request_id_middleware
 from config.audit.middleware.performance import performance_middleware
-
 from config.audit.middleware.error import error_middleware
 from config.audit.middleware.logging import logging_middleware
 from config.audit.middleware.security import security_middleware
 
+from config.audit.logger import setup_logging
 from config.rate_limiting import limiter
 from config.lifespan import Lifespan
 
