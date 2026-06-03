@@ -1,7 +1,6 @@
 """
 Common functions for providing cross-python version compatibility.
 """
-
 import sys
 import re
 import binascii
@@ -86,7 +85,9 @@ if sys.version_info < (3, 0):  # pragma: no branch
                 (val >> i) & 0xFF for i in reversed(range(0, length * 8, 8))
             )
         if byteorder == "little":
-            return bytearray((val >> i) & 0xFF for i in range(0, length * 8, 8))
+            return bytearray(
+                (val >> i) & 0xFF for i in range(0, length * 8, 8)
+            )
         raise ValueError("Only 'big' or 'little' endian supported")
 
 else:

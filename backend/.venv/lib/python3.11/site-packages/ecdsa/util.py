@@ -119,7 +119,9 @@ class PRNG:
     def block_generator(self, seed):
         counter = 0
         while True:
-            for byte in sha256(("prng-%d-%s" % (counter, seed)).encode()).digest():
+            for byte in sha256(
+                ("prng-%d-%s" % (counter, seed)).encode()
+            ).digest():
                 yield byte
             counter += 1
 
