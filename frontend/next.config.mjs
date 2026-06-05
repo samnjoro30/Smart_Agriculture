@@ -6,14 +6,14 @@ const nextConfig = {
     unoptimized: true,
   },
   reactStrictMode: true,
-  turbopack: {},
+  //turbopack: {},
 };
 
 export default nextPWA({
   dest: 'public',
   register: true,
   skipWaiting: true,
- // disable: process.env.NODE_ENV === "development",
+  disable: process.env.NODE_ENV === "development",
 })(nextConfig);
 
 // import type { NextConfig } from "next";
