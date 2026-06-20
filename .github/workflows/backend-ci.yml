@@ -30,13 +30,13 @@ jobs:
               uses: actions/setup-python@v4
               with:
                 python-version: '3.11'
-
+            - name: Install uv
+              uses: astral-sh/setup-uv@v5
+              
             - name: Install dependencies
               working-directory: ./backend
               run: |
-                python -m pip install --upgrade pip
-                pip install -r requirements.txt
-                pip install pytest httpx pytest-asyncio
+                uv sync --dev
 
             - name: Posgre connection
               run: |
@@ -60,5 +60,5 @@ jobs:
                 JWT_SECRET: test-secret-key
                 JWT_REFRESH: test-refresh-key
                 ENV: test
-              run: pytest --maxfail=1 --disable-warnings -v
+              run: uv run pytest --maxfail=1 --disable-warnings -v
     

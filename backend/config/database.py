@@ -5,12 +5,15 @@ from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
 from sqlalchemy.orm import declarative_base, sessionmaker
 from sqlalchemy import event, create_engine
 from config.audit.context import query_count
+from config.audit.logger import get_logger
 
 from .setting import get_settings
 
 load_dotenv()
 settings = get_settings()
 NEONB = settings.NEON_DB
+
+logger = get_logger("DATABASE")
 
 engine = create_async_engine(
     NEONB,
@@ -34,7 +37,12 @@ def before_cursor_execute(conn, cursor, statement, parameters, context, executem
 def after_cursor_execute(conn, cursor, statement, parameters, context, executemany):
     total = time.perf_counter() - context._query_start_time
     if total > 0.5:
-        print(f"[SLOW QUERY] {total:.3f}s: {statement}")
+       logger.warning(
+            "Slow database query detected",
+            duration=round(total, 3),
+            statement=statement,
+            query_sequence_number=current_count
+        )
 
 
 # Create async sessionmaker

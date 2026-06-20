@@ -8,6 +8,9 @@ import requests
 from fastapi import FastAPI, Request, Response, APIRouter
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.middleware.gzip import GZipMiddleware
+
+from prometheus_fastapi_instrumentator import Instrumentator
+
 from config.redis.client import init_redis, close_redis
 
 from slowapi import Limiter, _rate_limit_exceeded_handler
@@ -48,6 +51,8 @@ app = FastAPI(
     version="1.0.0",
     lifespan=Lifespan
 )
+
+Instrumentator().instrument(app).expose(app)
 
 app.add_middleware(
     CORSMiddleware,
