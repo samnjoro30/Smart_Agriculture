@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const axiosInstance = axios.create({
-  baseURL: 'https://smart-agriculture-21dt.onrender.com', // "https://smart-agriculture-21dt.onrender.com", // "http://localhost:8000", // , //process.env.BACKEND_URL,
+  baseURL: "https://SmartAgricultureALB-440637526.us-east-1.elb.amazonaws.com", //'https://smart-agriculture-21dt.onrender.com', // "https://smart-agriculture-21dt.onrender.com", // "http://localhost:8000", // , //process.env.BACKEND_URL,
   withCredentials: true,
 });
 
