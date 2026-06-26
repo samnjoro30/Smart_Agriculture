@@ -31,21 +31,21 @@ async def Lifespan(app: FastAPI):
         async with engine.begin() as conn:
             await conn.execute(text("SELECT 1"))
 
-    async def keep_alive():
-        async with httpx.AsyncClient(timeout=5.0) as client:
+    # async def keep_alive():
+    #     async with httpx.AsyncClient(timeout=5.0) as client:
 
-            while True:
-                try:
-                    await client.get(
-                        "https://smart-agriculture-21dt.onrender.com/ping", timeout=5
-                    )
-                    print("Self-ping successful")
-                except Exception as e:
-                    print("Self-ping failed:", e)
+    #         while True:
+    #             try:
+    #                 await client.get(
+    #                     "https://smart-agriculture-21dt.onrender.com/ping", timeout=5
+    #                 )
+    #                 print("Self-ping successful")
+    #             except Exception as e:
+    #                 print("Self-ping failed:", e)
 
-                await asyncio.sleep(600)
+    #             await asyncio.sleep(600)
 
-    asyncio.create_task(keep_alive())
+    # asyncio.create_task(keep_alive())
 
     async def shutdown():
         await close_redis()

@@ -57,10 +57,13 @@ Instrumentator().instrument(app).expose(app)
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
+        "https://SmartAgricultureALB-440637526.us-east-1.elb.amazonaws.com"
+        "http://localhost:3000",
         "https://smart-agriculture-git-main-samnjoro30s-projects.vercel.app",
         "https://smart-agriculture-pied.vercel.app",
         "https://smart-farming-agriculture.web.app",
         "https://smart-farming-agriculture.firebaseapp.com",
+        
     ],
 
     allow_credentials=True,

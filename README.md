@@ -94,11 +94,11 @@ cd Smart_Agriculture
 # backend folder
   cd backend
 # create virtual environment (if not already created)
-  python -m venv .venv
+  uv venv  --python 3.11
 # activate environment
   source .venv/bin/activate
 # install dependencies
-  pip install -r requirements.txt
+  uv sync
 # run backend server
   uvicorn API:app --reload
 ```
@@ -107,8 +107,8 @@ cd Smart_Agriculture
 ```bash
 # navigate to frontend structure
    cd frontend
-   npm install
-   npm run dev
+   pnpm install
+   pnpm run dev
 ```
 
 ### running celery worker 
@@ -131,7 +131,7 @@ celery -A worker.celery_app worker \
 
 
 ## Scurity features for backend
-Bandit - for security linting
+Bandit - f or security linting
 
 # Future Features
 
