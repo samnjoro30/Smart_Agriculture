@@ -1,3 +1,6 @@
+# File structure and architectre design 
+
+
 .
 ├── Nginx
 │   └── nginx.config
@@ -578,3 +581,31 @@
 │   └── tsconfig.json
 ├── k8s
 └── render.yaml
+
+
+
+
+## API endpoint design 
+
+FastAPI
+│
+├── CORSMiddleware
+│      Allowed Origins
+│      Allowed Methods
+│      Allowed Headers
+│
+├── GZipMiddleware
+│
+├── Security Middleware
+├── Logging Middleware
+├── Request ID Middleware
+├── Error Middleware
+│
+├── Rate Limiter (Redis)
+│
+├── Redis Cache
+│
+├── Redis Queue
+│      └── Celery
+│
+└── PostgreSQL

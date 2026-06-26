@@ -41,7 +41,7 @@ def after_cursor_execute(conn, cursor, statement, parameters, context, executema
             "Slow database query detected",
             duration=round(total, 3),
             statement=statement,
-            query_sequence_number=current_count
+            # query_sequence_number=current_count
         )
 
 

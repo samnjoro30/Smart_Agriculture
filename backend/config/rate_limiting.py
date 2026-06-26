@@ -7,11 +7,11 @@ settings = get_settings()
 
 limiter = Limiter(
     key_func=get_remote_address,
-    storage_uri=settings.REDIS_URL_CACHE,
+    storage_uri=settings.REDIS_URL_BROKER,
     default_limits=["100/minute"],
     headers_enabled=True,
     storage_options={
-        "socket_connect_timeout": 5,
+        "socket_connect_timeout": 50,
         "socket_timeout": 5,
         "retry_on_timeout": True,
     },
