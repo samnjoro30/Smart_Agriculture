@@ -8,12 +8,15 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     libpq-dev \
     gcc \
     build-essential \
+    libglib2.0-0 \
+    libcairo2 \
     libpango-1.0-0 \
     libharfbuzz0b \
     libpangoft2-1.0-0 \
     libgdk-pixbuf-2.0-0 \
     libffi-dev \
     shared-mime-info \
+    libopenjp2-7 \
     && rm -rf /var/lib/apt/lists/*
 
 # Install uv globally inside the container natively
@@ -27,5 +30,4 @@ COPY . .
 
 EXPOSE 8000
 
-# Fire up the app using standard python execution paths
 CMD ["uv", "run", "gunicorn", "API:app", "-w", "4", "-k", "uvicorn.workers.UvicornWorker", "-b", "0.0.0.0:8000"]
