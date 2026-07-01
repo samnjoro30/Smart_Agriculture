@@ -3,3 +3,22 @@ Dockerfile
 __pycache__
 deploy
 configruncommands
+.venv/
+venv/
+ENV/
+**/__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Ignore IDEs and OS junk
+.git/
+.gitignore
+.vscode/
+.idea/
+.DS_Store
+
+# Ignore local data or logs
+*.log
+*.sqlite3
+.pre-commit-config.yaml

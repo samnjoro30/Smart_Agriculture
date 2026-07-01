@@ -1,19 +1,6 @@
 version: "3.8"
 services:
-#development
-  # next-dev:
-  #   build:
-  #     context: ./frontend
-  #     target: dev
-  #   ports:
-  #     - "3000:3000"
-  #   volumes:
-  #     - ./frontend:/app
-  #     - /app/node_modules
-  #   environment:
-  #     - NODE_ENV=development
-  #   command: pnpm dev
-  
+
   # production
   backend:
     build: ./backend
@@ -21,30 +8,19 @@ services:
       - "8000:8000"
     env_file:
       - ./backend/.env
-    
-    # volumes:
-    #   - ./backend/logs:/app/logs
     depends_on:
       - db
-  # next-prod:
-  #   build:
-  #     context: ./frontend
-  #     target: runner
-  #   ports:
-  #     - "3005:3000"
+  next-prod:
+    build:
+      context: ./frontend
+      target: runner
+    ports:
+      - "3005:3000"
 
-  #   environment:
-  #     - NODE_ENV=production
+    environment:
+      - NODE_ENV=production
 
-  #   restart: unless-stopped
-  # frontend:
-  #   build: ./frontend
-  #   ports: 
-  #     - "3000:3000"
-  #   environment:
-  #     - NEXT_RENDER_URL
-  #   depends_on:
-  #     - backend
+    restart: unless-stopped
   
   prometheus:
     image: prom/prometheus:latest
