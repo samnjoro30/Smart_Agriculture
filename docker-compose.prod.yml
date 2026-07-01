@@ -1,0 +1,16 @@
+
+
+
+
+services:
+  backend:
+    image: ${ECR_IMAGE_URL}
+    ports:
+      - "8000:8000"
+    restart: unless-stopped
+
+     
+    
+
+
+
