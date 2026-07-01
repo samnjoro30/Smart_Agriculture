@@ -19,14 +19,6 @@ jobs:
 
         steps: 
             - uses: actions/checkout@v4
-
-            - name: Deploy to render 
-              run: | 
-                echo "deploying to render ..."
-                curl -X POST "${{ secrets.RENDER_DEPLOY_HOOK }}"
-            - name: Deploy to AWS
-              run: |
-
             - name: Deploy Frontend to vercel
               env:
                 VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
