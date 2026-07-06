@@ -1,6 +1,6 @@
 import { cookies } from 'next/headers';
 
-const BASE_URL = 'http://locahost:8000';
+const BASE_URL = "http://localhost:8000";
 
 async function request(method: string, url: string, body?: any) {
   const cookieStore = await cookies();
