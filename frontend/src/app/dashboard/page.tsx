@@ -6,7 +6,7 @@ export const dynamic = 'force-dynamic';
 export default async function DashboardPage() {
   try {
     const res = await fetch(
-      "https://SmartAgricultureALB-440637526.us-east-1.elb.amazonaws.com/ping",
+      "'https://smart-agriculture-21dt.onrender.com',/ping",
       {
         cache: 'no-store',
       }
