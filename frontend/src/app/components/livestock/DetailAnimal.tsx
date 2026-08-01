@@ -237,7 +237,36 @@ export default function AnimalDetails({ id, onBack }: Props) {
         </div>
       </div>
 
-      {/* 🔹 LINEAGE */}
+      {/* Predicted reproduction */}
+      {animal.category === 'cow' && (
+        <div className="bg-green-50 p-5 rounded-xl shadow-sm">
+          <h3 className="font-semibold text-green-700 mb-3 flex items-center gap-2">
+            <Calendar size={18} /> Predicted Reproduction
+          </h3>
+
+          <div className="grid grid-cols-2 gap-4 text-sm text-gray-700">
+            <div>
+              <p className="text-gray-500 text-xs">Next Heat</p>
+              <p className="font-medium">
+                {animal.heatStatus
+                  ? new Date(animal.lastInsemination).toLocaleDateString()
+                  : 'N/A'}
+              </p>
+            </div>
+
+            <div>
+              <p className="text-gray-500 text-xs">Expected Calving</p>
+              <p className="font-medium">
+                {animal.pregnant
+                  ? new Date(animal.lastInsemination).toLocaleDateString()
+                  : 'N/A'}
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/*  LINEAGE */}
       <div className="bg-green-50 p-5 rounded-xl shadow-sm">
         <h3 className="font-semibold text-green-700 mb-3 flex items-center gap-2">
           <Baby size={18} /> Lineage
