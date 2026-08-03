@@ -86,3 +86,20 @@ async def purge_old_archives(db: AsyncSession):
     await db.commit()
 
     return result.rowcount
+    
+async def get_active_livestock(db: AsyncSession) -> list[Livestock]:
+    """Fetch all active livestock records with lastInsemination populated."""
+    query = select(Livestock).where(
+        Livestock.status == "ACTIVE",
+        Livestock.lastInsemination.isnot(None)
+    )
+    result = await db.execute(query)
+    return list(result.scalars().all())
+
+async def update_cows_delivery_date(db: AsyncSession, animal: Livestock, expected_delivery_date: datetime, next_heat_date: datetime | None):
+    animal.expectedDelivery = expected_delivery_date
+    animal.nextHeatDate = next_heat_date
+    db.add(animal)
+    await db.commit()
+    await db.refresh(animal)
+    return animal

@@ -17,6 +17,7 @@ class Livestock(Base):
     breed = Column(String(200))
     heatStatus = Column(Boolean, default=False)
     pregnant = Column(Boolean, default=False)
+    expectedDelivery = Column(DateTime(timezone=True), nullable=True)
     lastInsemination = Column(DateTime(timezone=True))
     nextHeatDate = Column(DateTime(timezone=True), nullable=True)
     age = Column(Integer, nullable=True)
