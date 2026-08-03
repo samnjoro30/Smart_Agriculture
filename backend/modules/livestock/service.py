@@ -149,6 +149,39 @@ async def update_livestock_ages_service(db: AsyncSession):
 
     return updated_count
 
+async def expected_delivery_date(last_insemination: datetime | None, pregnant: bool, now: datetime | None = None):
+
+    now = now or datetime.now(timezone.utc)
+
+    if not last_insemination:
+        return {"expectedDelivery": None, "nextHeatDate": None}
+    
+    if last_insemination.tzinfo is None:
+        last_insemination = last_insemination.replace(tzinfo=timezone.utc)
+
+    days_passed = (now - last_insemination).days
+    if days_passed > 310:
+        return {"expectedDelivery": None, "nextHeatDate": None}
+    
+    if pregnant:
+        gestation_period_days = 283
+        expected_delivery_date = last_insemination + timedelta(days=gestation_period_days)
+
+        return {
+            "expectedDelivery": expected_delivery_date,
+            "nextHeatDate": None,
+        }
+    
+    cycles = max(1, (days_passed // 21) + 1)
+    next_heat_date = last_insemination + timedelta(days=cycles * 21)
+
+    return {
+        "expectedDelivery": None,
+        "nextHeatDate": next_heat_date,
+    }
+
+
+
 
 async def group_animals_Age_group():
     pass

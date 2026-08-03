@@ -4,9 +4,15 @@ from config.database import AsyncSessionLocal
 from sqlalchemy.ext.asyncio import AsyncSession
 from .service import (
     update_livestock_ages_service,
+    expected_delivery_date,
 )
-from .repository import purge_old_archives
+from .repository import  (
+    purge_old_archives,
+    update_cows_delivery_date,
+    get_active_livestock,
+)
 from message_broker.config import celery_bus
+
 import asyncio
 
 # from .repostory import LivestockRepository
@@ -37,6 +43,31 @@ def cleanup_archived_animals():
 
     return {"status": "success", "permanently_removed": cleanup_result}
 
+@celery_bus.task(name="modules.livestock.tasks.calculate_expected_delivery_date")
+def calculate_expected_delivery_date():
+    async def run():
+        async with AsyncSessionLocal() as db:
+
+            cows = await get_active_livestock(db)
+            processed_count = 0
+            
+            for cow in cows:
+                calculated = await expected_delivery_date(
+                    last_insemination=cow.lastInsemination,
+                    pregnant=cow.pregnant,
+                )
+                
+                await update_cows_delivery_date(
+                    db=db,
+                    animal=cow,
+                    expected_delivery_date=calculated["expectedDelivery"],
+                    next_heat_date=calculated["nextHeatDate"]
+                )
+                processed_count += 1
+
+            return {"status": "success", "cows_processed": processed_count}
+
+    return asyncio.run(run())
 
 @celery_bus.task(name="modules.livestock.tasks.heat_cycle_metrics")
 def calculate_heat_cycle_metrics(last_insemination: datetime | None, pregnant: bool):
