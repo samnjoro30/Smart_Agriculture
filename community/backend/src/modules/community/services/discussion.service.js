@@ -98,6 +98,49 @@ export const getDiscussions = async (query) => {
     };
 };
 
+export const getDiscussionById = async (discussionId) => {
+    const discussion = await prisma.discussion.findUnique({
+        where: {
+            id: discussionId,
+        },
 
+        include: {
+            category: {
+                select: {
+                    id: true,
+                    name: true,
+                    description: true,
+                },
+            },
+
+            replies: {
+                orderBy: {
+                    createdAt: "asc",
+                },
+
+                select: {
+                    id: true,
+                    message: true,
+                    authorId: true,
+                    createdAt: true,
+                    updatedAt: true,
+                },
+            },
+
+            _count: {
+                select: {
+                    replies: true,
+                    likes: true,
+                },
+            },
+        },
+    });
+
+    if (!discussion) {
+        throw new Error("Discussion not found");
+    }
+
+    return discussion;
+};
 
 
