@@ -11,6 +11,11 @@ export const createReplySchema = z.object({
         .trim()
         .min(1, "Discussion ID is required"),
 
+    replyToId: z
+        .string()
+        .trim()
+        .optional(),
+
     message: z
         .string()
         .trim()

@@ -66,11 +66,17 @@ model Reply {
   discussionId String
   discussion   Discussion @relation(fields: [discussionId], references: [id], onDelete: Cascade)
 
+  replyToId    String?
+
+  replyTo      Reply?  @relation("ReplyReference", fields: [replyToId], references: [id])
+  childReplies Reply[] @relation("ReplyReference")
+
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
 
   @@index([discussionId])
   @@index([authorId])
+  @@index([replyToId])
 
   @@schema("community")
 }
