@@ -5,79 +5,89 @@ generator client {
 
 datasource db {
   provider = "postgresql"
+  schemas  = ["community"]
 }
 
 enum DiscussionStatus {
   OPEN
   RESOLVED
   CLOSED
+
+  @@schema("community")
 }
 
 model CommunityCategory {
-  id          String       @id @default(cuid())
-  name        String       @unique
+  id          String   @id @default(cuid())
+  name        String   @unique
   description String?
 
   discussions Discussion[]
 
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
+
+  @@schema("community")
 }
 
 model Discussion {
-  id          String   @id @default(cuid())
+  id         String @id @default(cuid())
 
-  title       String
-  body        String @db.Text
+  title      String
+  body       String @db.Text
 
-  authorId    String
+  authorId   String
 
-  status      DiscussionStatus @default(OPEN)
+  status     DiscussionStatus @default(OPEN)
 
-  categoryId  String
-  category    CommunityCategory @relation(fields: [categoryId], references: [id])
+  categoryId String
+  category   CommunityCategory @relation(fields: [categoryId], references: [id])
 
-  replies     Reply[]
-  likes       DiscussionLike[]
+  replies    Reply[]
+  likes      DiscussionLike[]
 
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
 
   @@index([authorId])
   @@index([categoryId])
   @@index([status])
   @@index([createdAt])
+
+  @@schema("community")
 }
 
 model Reply {
-  id            String @id @default(cuid())
+  id           String @id @default(cuid())
 
-  message       String @db.Text
+  message      String @db.Text
 
-  authorId      String
+  authorId     String
 
-  discussionId  String
-  discussion    Discussion @relation(fields: [discussionId], references: [id], onDelete: Cascade)
+  discussionId String
+  discussion   Discussion @relation(fields: [discussionId], references: [id], onDelete: Cascade)
 
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
-
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
 
   @@index([discussionId])
   @@index([authorId])
+
+  @@schema("community")
 }
 
 model DiscussionLike {
-  id            String @id @default(cuid())
+  id           String @id @default(cuid())
 
-  discussionId  String
-  discussion    Discussion @relation(fields: [discussionId], references: [id], onDelete: Cascade)
+  discussionId String
+  discussion   Discussion @relation(fields: [discussionId], references: [id], onDelete: Cascade)
 
-  userId        String
+  userId       String
 
-  createdAt     DateTime @default(now())
+  createdAt    DateTime @default(now())
 
   @@unique([discussionId, userId])
   @@index([discussionId])
   @@index([userId])
+
+  @@schema("community")
 }
