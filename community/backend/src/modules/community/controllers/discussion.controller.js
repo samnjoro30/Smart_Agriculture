@@ -1,11 +1,4 @@
-import { createDiscussion } from "../services/discussion.service.js";
-
-export const getDiscussions = async (req, res) => {
-    return res.json({
-        success: true,
-        message: "Discussion endpoint is working",
-    });
-};
+import { createDiscussion, getDiscussions } from "../services/discussion.service.js";
 
 export const createDiscussionController = async (req, res) => {
     try {
@@ -19,9 +12,37 @@ export const createDiscussionController = async (req, res) => {
     } catch (error) {
         console.error(error);
 
+        if (error.message === "Category not found") {
+            return res.status(404).json({
+                success: false,
+                message: error.message,
+            });
+        }
+
         return res.status(500).json({
             success: false,
             message: "Failed to create discussion",
+        });
+    }
+};
+
+
+export const getDiscussionsController = async (req, res) => {
+    try {
+        const result = await getDiscussions(req.query);
+
+        return res.status(200).json({
+            success: true,
+            message: "Discussions retrieved successfully",
+            pagination: result.pagination,
+            data: result.discussions,
+        });
+    } catch (error) {
+        console.error(error);
+
+        return res.status(500).json({
+            success: false,
+            message: "Failed to retrieve discussions",
         });
     }
 };

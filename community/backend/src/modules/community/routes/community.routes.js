@@ -6,7 +6,7 @@ import { createDiscussionSchema } from "../validators/discussion.validator.js";
 import { createCategorySchema } from "../validators/category.validator.js";
 
 import {
-    getDiscussions,
+    getDiscussionsController,
     createDiscussionController,
 } from "../controllers/discussion.controller.js";
 
@@ -37,7 +37,7 @@ router.post(
 |--------------------------------------------------------------------------
 */
 
-router.get("/discussions", getDiscussions);
+router.get("/discussions", getDiscussionsController);
 
 router.post(
     "/discussions",
