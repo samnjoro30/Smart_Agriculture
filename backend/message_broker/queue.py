@@ -6,4 +6,5 @@ celery_bus.conf.task_queues = (
     Queue("livestock_service"),
     Queue("nutrition_service"),
     Queue("identity_service"),
+    
 )
