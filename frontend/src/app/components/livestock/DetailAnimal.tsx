@@ -13,8 +13,6 @@ import {
   Edit3,
   Heart,
   PlusCircle,
-  User,
-  Users,
 } from 'lucide-react';
 
 import axiosInstance from '../../API/axiosInstance';
@@ -30,6 +28,8 @@ interface Animal {
   heatStatus: string;
   pregnant: string;
   lastInsemination: string;
+  expectedDelivery: string;
+  nextHeatDate: string;
 
   // lineage
   motherTag?: string;
@@ -249,7 +249,7 @@ export default function AnimalDetails({ id, onBack }: Props) {
               <p className="text-gray-500 text-xs">Next Heat</p>
               <p className="font-medium">
                 {animal.heatStatus
-                  ? new Date(animal.lastInsemination).toLocaleDateString()
+                  ? new Date(animal.nextHeatDate).toLocaleDateString()
                   : 'N/A'}
               </p>
             </div>
@@ -258,7 +258,7 @@ export default function AnimalDetails({ id, onBack }: Props) {
               <p className="text-gray-500 text-xs">Expected Calving</p>
               <p className="font-medium">
                 {animal.pregnant
-                  ? new Date(animal.lastInsemination).toLocaleDateString()
+                  ? new Date(animal.expectedDelivery).toLocaleDateString()
                   : 'N/A'}
               </p>
             </div>
