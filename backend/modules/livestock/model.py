@@ -26,7 +26,6 @@ class Livestock(Base):
     birthDate = Column(DateTime(timezone=True))
     motherTag = Column(String(150))
     fatherTag = Column(String(150))
-
     status = Column(
         String, default="ACTIVE", server_default="ACTIVE", nullable=False, index=True
     )

@@ -47,23 +47,26 @@ def cleanup_archived_animals():
 def calculate_expected_delivery_date():
     async def run():
         async with AsyncSessionLocal() as db:
-
-            cows = await get_active_livestock(db)
-            processed_count = 0
-            
-            for cow in cows:
-                calculated = await expected_delivery_date(
-                    last_insemination=cow.lastInsemination,
-                    pregnant=cow.pregnant,
-                )
+            async with db.begin():  # Manually control the transaction context
+                cows = await get_active_livestock(db)
                 
-                await update_cows_delivery_date(
-                    db=db,
-                    animal=cow,
-                    expected_delivery_date=calculated["expectedDelivery"],
-                    next_heat_date=calculated["nextHeatDate"]
-                )
-                processed_count += 1
+                for cow in cows:
+                    calculated = await expected_delivery_date(
+                        last_insemination=cow.lastInsemination,
+                        pregnant=cow.pregnant,
+                    )
+                    
+                    await update_cows_delivery_date(
+                        db=db,
+                        animal=cow,
+                        expected_delivery_date=calculated["expectedDelivery"],
+                        next_heat_date=calculated["nextHeatDate"]
+                    )
+
+                    processed_count = len(cows)
+                
+                # Single commit for all processed records
+                await db.commit()
 
             return {"status": "success", "cows_processed": processed_count}
 
