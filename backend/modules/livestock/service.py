@@ -106,6 +106,7 @@ async def get_stats(db: AsyncSession, current_user):
 
 async def get_animal_by_tag_id(db: AsyncSession, tag: str, current_user):
     animal = await get_animal_by_tag(db, tag)
+    print("animal gotten", animal)
     if not animal:
         logger.warning(
             "Attempted to access non-existent animal by tag",
@@ -123,6 +124,7 @@ async def get_animal_by_tag_id(db: AsyncSession, tag: str, current_user):
         raise HTTPException(
             status_code=403, detail="Forbidden: You do not have access to this animal"
         )
+
 
     return animal
 

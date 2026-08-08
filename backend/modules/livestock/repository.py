@@ -8,6 +8,7 @@ from sqlalchemy.dialects.postgresql import UUID
 
 async def get_animal_by_tag(db: AsyncSession, tag: str):
     result = await db.execute(select(Livestock).where(Livestock.tag == tag))
+    
     return result.scalar_one_or_none()
 
 
@@ -100,6 +101,6 @@ async def update_cows_delivery_date(db: AsyncSession, animal: Livestock, expecte
     animal.expectedDelivery = expected_delivery_date
     animal.nextHeatDate = next_heat_date
     db.add(animal)
-    await db.commit()
-    await db.refresh(animal)
+    # await db.commit()
+    # await db.refresh(animal)
     return animal

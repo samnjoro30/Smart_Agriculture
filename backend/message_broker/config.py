@@ -24,6 +24,7 @@ def init_celery(app_name: str):
         "modules.nutrition.tasks.*": {"queue": "nutrition_service"},
         "modules.auth.tasks.*": {"queue": "identity_service"},
         "modules.notifications.tasks.*": {"queue": "notification_service"},
+        
     }
 
     app.conf.update(CELERY_CONFIG)

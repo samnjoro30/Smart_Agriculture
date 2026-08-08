@@ -4,9 +4,9 @@ BEAT_SCHEDULE = {
     "calculate-ages-every-midnight": {
         "task": "update_livestock_ages",
         "schedule": crontab(
-            #minute='*/2'
+            # minute='*/2'
             hour=0, minute=0
-            ),  # Runs daily at midnight
+        ),  # Runs daily at midnightå
     },
     "cleanup-archived-animals-weekly": {
         "task": "cleanup_archived_animals",
@@ -17,7 +17,7 @@ BEAT_SCHEDULE = {
     },
     "calculate-expected-delivery-date-weekend-day": {
         "task": "modules.livestock.tasks.calculate_expected_delivery_date",
-        "schedule": crontab(minute='*/2'),
+        "schedule": crontab(minute='*/10'),
         "options": {
             "queue": "livestock_service"
         },
