@@ -56,19 +56,22 @@ export const getDiscussions = async (query) => {
         where.status = query.status;
     }
 
-    // Get total number of discussions
+    const userId = query.userId;
+
     const total = await prisma.discussion.count({
         where,
     });
 
-    // Get paginated discussions
     const discussions = await prisma.discussion.findMany({
         where,
+
         skip,
         take: limit,
+
         orderBy: {
             createdAt: "desc",
         },
+
         include: {
             category: {
                 select: {
@@ -76,6 +79,18 @@ export const getDiscussions = async (query) => {
                     name: true,
                 },
             },
+
+            likes: userId
+                ? {
+                    where: {
+                        userId,
+                    },
+                    select: {
+                        id: true,
+                    },
+                }
+                : false,
+
             _count: {
                 select: {
                     replies: true,
@@ -85,8 +100,24 @@ export const getDiscussions = async (query) => {
         },
     });
 
+    const formattedDiscussions = discussions.map((discussion) => {
+        const { likes, ...rest } = discussion;
+
+        return {
+            ...rest,
+
+            likeCount: discussion._count.likes,
+            replyCount: discussion._count.replies,
+
+            likedByCurrentUser: userId
+                ? likes.length > 0
+                : false,
+        };
+    });
+
     return {
-        discussions,
+        discussions: formattedDiscussions,
+
         pagination: {
             page,
             limit,
@@ -98,7 +129,7 @@ export const getDiscussions = async (query) => {
     };
 };
 
-export const getDiscussionById = async (discussionId) => {
+export const getDiscussionById = async (discussionId, userId) => {
     const discussion = await prisma.discussion.findUnique({
         where: {
             id: discussionId,
@@ -113,19 +144,16 @@ export const getDiscussionById = async (discussionId) => {
                 },
             },
 
-            replies: {
-                orderBy: {
-                    createdAt: "asc",
-                },
-
-                select: {
-                    id: true,
-                    message: true,
-                    authorId: true,
-                    createdAt: true,
-                    updatedAt: true,
-                },
-            },
+            likes: userId
+                ? {
+                    where: {
+                        userId,
+                    },
+                    select: {
+                        id: true,
+                    },
+                }
+                : false,
 
             _count: {
                 select: {
@@ -140,7 +168,17 @@ export const getDiscussionById = async (discussionId) => {
         throw new Error("Discussion not found");
     }
 
-    return discussion;
-};
+    const { likes, ...rest } = discussion;
 
+    return {
+        ...rest,
+
+        likeCount: discussion._count.likes,
+        replyCount: discussion._count.replies,
+
+        likedByCurrentUser: userId
+            ? likes.length > 0
+            : false,
+    };
+};
 

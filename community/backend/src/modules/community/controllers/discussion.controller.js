@@ -51,8 +51,13 @@ export const getDiscussionByIdController = async (req, res) => {
     try {
         const { discussionId } = req.params;
 
-        const discussion = await getDiscussionById(discussionId);
+        //const discussion = await getDiscussionById(discussionId);
+        const { userId } = req.query;
 
+        const discussion = await getDiscussionById(
+            discussionId,
+            userId
+        );
         return res.status(200).json({
             success: true,
             message: "Discussion retrieved successfully",
@@ -75,3 +80,4 @@ export const getDiscussionByIdController = async (req, res) => {
         });
     }
 };
+

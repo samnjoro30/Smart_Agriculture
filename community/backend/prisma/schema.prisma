@@ -8,92 +8,72 @@ datasource db {
   schemas  = ["community"]
 }
 
-enum DiscussionStatus {
-  OPEN
-  RESOLVED
-  CLOSED
-
-  @@schema("community")
-}
-
 model CommunityCategory {
-  id          String   @id @default(cuid())
-  name        String   @unique
+  id          String       @id @default(cuid())
+  name        String       @unique
   description String?
-
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
   discussions Discussion[]
-
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
 
   @@schema("community")
 }
 
 model Discussion {
-  id         String @id @default(cuid())
-
+  id         String            @id @default(cuid())
   title      String
-  body       String @db.Text
-
+  body       String
   authorId   String
-
-  status     DiscussionStatus @default(OPEN)
-
+  status     DiscussionStatus  @default(OPEN)
   categoryId String
+  createdAt  DateTime          @default(now())
+  updatedAt  DateTime          @updatedAt
   category   CommunityCategory @relation(fields: [categoryId], references: [id])
-
-  replies    Reply[]
   likes      DiscussionLike[]
-
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
+  replies    Reply[]
 
   @@index([authorId])
   @@index([categoryId])
   @@index([status])
   @@index([createdAt])
-
   @@schema("community")
 }
 
 model Reply {
-  id           String @id @default(cuid())
-
-  message      String @db.Text
-
+  id           String     @id @default(cuid())
+  message      String
   authorId     String
-
   discussionId String
-  discussion   Discussion @relation(fields: [discussionId], references: [id], onDelete: Cascade)
-
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
   replyToId    String?
-
-  replyTo      Reply?  @relation("ReplyReference", fields: [replyToId], references: [id])
-  childReplies Reply[] @relation("ReplyReference")
-
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
+  discussion   Discussion @relation(fields: [discussionId], references: [id], onDelete: Cascade)
+  replyTo      Reply?     @relation("ReplyReference", fields: [replyToId], references: [id])
+  childReplies Reply[]    @relation("ReplyReference")
 
   @@index([discussionId])
   @@index([authorId])
   @@index([replyToId])
-
   @@schema("community")
 }
 
 model DiscussionLike {
-  id           String @id @default(cuid())
-
+  id           String     @id @default(cuid())
   discussionId String
-  discussion   Discussion @relation(fields: [discussionId], references: [id], onDelete: Cascade)
-
   userId       String
-
-  createdAt    DateTime @default(now())
+  createdAt    DateTime   @default(now())
+  discussion   Discussion @relation(fields: [discussionId], references: [id], onDelete: Cascade)
 
   @@unique([discussionId, userId])
   @@index([discussionId])
   @@index([userId])
+  @@schema("community")
+}
+
+enum DiscussionStatus {
+  OPEN
+  RESOLVED
+  CLOSED
 
   @@schema("community")
 }
