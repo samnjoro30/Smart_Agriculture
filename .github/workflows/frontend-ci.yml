@@ -3,14 +3,12 @@ name: Frontend CI
 on:
   push:
     branches: [ developer ]
-    paths: [ 'frontend/**']
+    paths: [ 'frontend/**' ]
   pull_request:
     paths: [ 'frontend/**' ]
-    
+
 jobs:
-
   test:
-
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -19,20 +17,20 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Install pnpm
+        uses: pnpm/action-setup@v3
+        with:
+          version: 9
+
       - name: Use Node.js
         uses: actions/setup-node@v4
-        with: 
+        with:
           node-version: '20'
-            
-      - name: Install depencies
-        run: npm install
+          cache: 'pnpm'
+          cache-dependency-path: './frontend/pnpm-lock.yaml'
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
 
       - name: Build and deploy
-        run: npm run build
-      # - name: Deploying to preview in firebase
-      #   uses: FirebaseExtended/action-hosting-deploy@v0
-      #   with:
-      #     -
-         
-                
-    
+        run: pnpm run build
